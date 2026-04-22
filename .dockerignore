@@ -1,0 +1,38 @@
+# ─── Docker ignore ────────────────────────────────────────────────────────────
+# Keeps the build context small and avoids leaking secrets into the image.
+
+# Dependencies (re-installed inside the image)
+node_modules/
+
+# Next.js build output (rebuilt inside the image)
+.next/
+
+# Local env files — never ship secrets into the image
+.env
+.env.local
+.env.*.local
+
+# Git & editor
+.git/
+.gitignore
+.editorconfig
+.vscode/
+.idea/
+
+# Dev tooling
+*.log
+npm-debug.log*
+.eslintcache
+.prettierignore
+.pre-commit-config.yaml
+
+# Docs & scripts (not needed at runtime)
+docs/
+scripts/
+skills/
+*.md
+!README.md
+
+# OS artifacts
+.DS_Store
+Thumbs.db

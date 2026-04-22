@@ -1,0 +1,57 @@
+# AgentFoundry — Docker Compose
+#
+# Offline / self-hosted (no MongoDB):
+#   docker compose up app
+#
+# Full stack with MongoDB (enterprise storage):
+#   docker compose --profile enterprise up
+#
+# Environment variables are read from .env.local (see .env.sample).
+# At minimum, create .env.local with:
+#   OPENAI_API_KEY=sk-...
+
+services:
+  # ── Next.js application ────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agentfoundry:latest
+    container_name: agentfoundry
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env.local
+    environment:
+      # When the enterprise profile is active, point the app at the
+      # co-located MongoDB service. .env.local can override this.
+      MONGODB_URI: "${MONGODB_URI:-}"
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+        required: false # app starts even without MongoDB (offline mode)
+
+  # ── MongoDB (enterprise profile only) ─────────────────────────────────────
+  mongodb:
+    image: mongo:7
+    container_name: agentfoundry-mongo
+    profiles:
+      - enterprise
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: agentfoundry
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+    driver: local

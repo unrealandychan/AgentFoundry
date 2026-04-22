@@ -1,0 +1,924 @@
+[
+  {
+    "id": "filesystem-mcp",
+    "category": "Dev Tools",
+    "name": "Filesystem",
+    "description": "Secure file read/write with configurable access controls. The most fundamental MCP server for any coding agent.",
+    "mcpServers": [
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "description": "Secure file operations with configurable access controls"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-filesystem /path/to/project"
+  },
+  {
+    "id": "memory-mcp",
+    "category": "Dev Tools",
+    "name": "Memory (Knowledge Graph)",
+    "description": "Persistent knowledge graph memory that survives across sessions. Great for long-running projects and context accumulation.",
+    "mcpServers": [
+      {
+        "name": "memory",
+        "package": "@modelcontextprotocol/server-memory",
+        "description": "Knowledge graph-based persistent memory system"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-memory"
+  },
+  {
+    "id": "fetch-mcp",
+    "category": "Search & RAG",
+    "name": "Fetch",
+    "description": "Web content fetching optimised for LLM usage. Converts pages to Markdown. Ideal for doc lookups during coding.",
+    "mcpServers": [
+      {
+        "name": "fetch",
+        "package": "@modelcontextprotocol/server-fetch",
+        "description": "Fetch external URLs and convert to LLM-friendly Markdown"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-fetch"
+  },
+  {
+    "id": "sequential-thinking-mcp",
+    "category": "Dev Tools",
+    "name": "Sequential Thinking",
+    "description": "Forces the agent to think step-by-step via reflective thought sequences. Dramatically improves planning and reasoning quality.",
+    "mcpServers": [
+      {
+        "name": "sequential-thinking",
+        "package": "@modelcontextprotocol/server-sequential-thinking",
+        "description": "Dynamic problem-solving through explicit thought sequences"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-sequential-thinking"
+  },
+  {
+    "id": "git-mcp",
+    "category": "Dev Tools",
+    "name": "Git",
+    "description": "Read, search, and manipulate Git repositories. Inspect commits, diffs, branches, and blame information.",
+    "mcpServers": [
+      {
+        "name": "git",
+        "package": "@modelcontextprotocol/server-git",
+        "description": "Tools to read, search, and manipulate Git repositories"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-git"
+  },
+  {
+    "id": "github-mcp",
+    "category": "Dev Tools",
+    "name": "GitHub",
+    "description": "Full GitHub API access: issues, PRs, code search, repo management. Requires a personal access token.",
+    "mcpServers": [
+      {
+        "name": "github",
+        "package": "@modelcontextprotocol/server-github",
+        "description": "GitHub API — issues, PRs, code search, and repo management"
+      }
+    ],
+    "envVars": ["GITHUB_PERSONAL_ACCESS_TOKEN"],
+    "installHint": "GITHUB_PERSONAL_ACCESS_TOKEN=ghp_... npx -y @modelcontextprotocol/server-github"
+  },
+  {
+    "id": "time-mcp",
+    "category": "Dev Tools",
+    "name": "Time",
+    "description": "Time and timezone conversion. Useful for scheduling, log analysis, and date-aware planning agents.",
+    "mcpServers": [
+      {
+        "name": "time",
+        "package": "@modelcontextprotocol/server-time",
+        "description": "Time and timezone conversion capabilities"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-time"
+  },
+  {
+    "id": "basic-coding-mcp",
+    "name": "Basic Coding Bundle",
+    "description": "Minimum useful coding toolset: read files, inspect repo history, and look up external docs.",
+    "mcpServers": [
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "description": "Read and write files in the project directory"
+      },
+      {
+        "name": "git",
+        "package": "@modelcontextprotocol/server-git",
+        "description": "Inspect commit history, diffs, and branches"
+      },
+      {
+        "name": "fetch",
+        "package": "@modelcontextprotocol/server-fetch",
+        "description": "Fetch external URLs and documentation"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-filesystem && npx -y @modelcontextprotocol/server-git && npx -y @modelcontextprotocol/server-fetch",
+    "tooltip": "Bundle: installs Filesystem + Memory + Git MCP servers. A solid baseline for any coding agent that needs file access, history awareness, and between-session memory."
+  },
+  {
+    "id": "research-mcp",
+    "name": "Research Bundle",
+    "description": "Gather information, remember facts across steps, reason sequentially, and handle dates.",
+    "mcpServers": [
+      {
+        "name": "fetch",
+        "package": "@modelcontextprotocol/server-fetch",
+        "description": "Fetch external URLs and documentation"
+      },
+      {
+        "name": "memory",
+        "package": "@modelcontextprotocol/server-memory",
+        "description": "Persist facts across agent sessions"
+      },
+      {
+        "name": "sequential-thinking",
+        "package": "@modelcontextprotocol/server-sequential-thinking",
+        "description": "Step-by-step reasoning and plan generation"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-fetch && npx -y @modelcontextprotocol/server-memory && npx -y @modelcontextprotocol/server-sequential-thinking",
+    "tooltip": "Bundle: installs Fetch + Memory + Sequential Thinking. The ideal set for research agents that browse the web, remember findings, and reason step-by-step."
+  },
+  {
+    "id": "github-coding-mcp",
+    "name": "GitHub Coding Bundle",
+    "description": "Best for open-source work, issue handling, PR drafting, and repo-based coding workflows.",
+    "mcpServers": [
+      {
+        "name": "github",
+        "package": "@modelcontextprotocol/server-github",
+        "description": "Read and write GitHub issues, PRs, and code"
+      },
+      {
+        "name": "git",
+        "package": "@modelcontextprotocol/server-git",
+        "description": "Inspect commit history, diffs, and branches"
+      },
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "description": "Read and write files in the project directory"
+      },
+      {
+        "name": "fetch",
+        "package": "@modelcontextprotocol/server-fetch",
+        "description": "Fetch external URLs and documentation"
+      }
+    ],
+    "envVars": ["GITHUB_PERSONAL_ACCESS_TOKEN"],
+    "installHint": "GITHUB_PERSONAL_ACCESS_TOKEN=ghp_... npx -y @modelcontextprotocol/server-github",
+    "tooltip": "Bundle: installs GitHub + Git + Filesystem. For teams that want their agent to read PRs, view diffs, and edit files in one workflow."
+  },
+  {
+    "id": "documentation-mcp",
+    "name": "Documentation Bundle",
+    "description": "Inspect the repo, read external docs, and keep persistent context for documentation tasks.",
+    "mcpServers": [
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "description": "Read and write files in the project directory"
+      },
+      {
+        "name": "fetch",
+        "package": "@modelcontextprotocol/server-fetch",
+        "description": "Fetch external URLs and documentation"
+      },
+      {
+        "name": "memory",
+        "package": "@modelcontextprotocol/server-memory",
+        "description": "Persist facts across agent sessions"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-filesystem && npx -y @modelcontextprotocol/server-fetch && npx -y @modelcontextprotocol/server-memory",
+    "tooltip": "Bundle: installs Filesystem + Fetch + Memory. Gives a documentation agent everything it needs to read existing docs, fetch references, and remember context."
+  },
+  {
+    "id": "planning-mcp",
+    "name": "Planning Bundle",
+    "description": "Spec writing, planning, roadmap generation, and task breakdown with structured reasoning.",
+    "mcpServers": [
+      {
+        "name": "sequential-thinking",
+        "package": "@modelcontextprotocol/server-sequential-thinking",
+        "description": "Step-by-step reasoning and plan generation"
+      },
+      {
+        "name": "memory",
+        "package": "@modelcontextprotocol/server-memory",
+        "description": "Persist facts across agent sessions"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-sequential-thinking && npx -y @modelcontextprotocol/server-memory",
+    "tooltip": "Bundle: installs Sequential Thinking + Memory + Time. Perfect for planning agents — structured reasoning, persistent notes, and current date awareness."
+  },
+  {
+    "id": "brave-search-mcp",
+    "category": "Search & RAG",
+    "name": "Brave Search",
+    "description": "Real-time web search via the Brave Search API. Gives your agent up-to-date information beyond its training cutoff.",
+    "mcpServers": [
+      {
+        "name": "brave-search",
+        "package": "@modelcontextprotocol/server-brave-search",
+        "description": "Web search via Brave Search API"
+      }
+    ],
+    "envVars": ["BRAVE_API_KEY"],
+    "installHint": "BRAVE_API_KEY=BSA... npx -y @modelcontextprotocol/server-brave-search",
+    "tooltip": "Enables live web search. Required for research, competitor analysis, and up-to-date market data tasks."
+  },
+  {
+    "id": "puppeteer-mcp",
+    "category": "Browser & QA",
+    "name": "Puppeteer (Browser)",
+    "description": "Full browser automation: navigate pages, click elements, fill forms, and take screenshots. Essential for QA and E2E testing agents.",
+    "mcpServers": [
+      {
+        "name": "puppeteer",
+        "package": "@modelcontextprotocol/server-puppeteer",
+        "description": "Browser automation via Puppeteer"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-puppeteer",
+    "tooltip": "Gives the agent a real browser. Enables end-to-end test writing, screenshot verification, and UI smoke tests."
+  },
+  {
+    "id": "e2b-mcp",
+    "category": "Browser & QA",
+    "name": "E2B Code Interpreter",
+    "description": "Sandboxed Python & Node.js execution. The agent can run code, validate outputs, and iterate — safely isolated from your machine.",
+    "mcpServers": [
+      {
+        "name": "e2b",
+        "package": "@e2b/mcp-server",
+        "description": "Sandboxed code execution via E2B cloud"
+      }
+    ],
+    "envVars": ["E2B_API_KEY"],
+    "installHint": "E2B_API_KEY=e2b_... npx -y @e2b/mcp-server",
+    "tooltip": "Lets the agent run code in a secure sandbox, verify test results, and iterate on implementations without touching your local filesystem."
+  },
+  {
+    "id": "notion-mcp",
+    "category": "Productivity",
+    "name": "Notion",
+    "description": "Read and write Notion pages, databases, and blocks. Ideal for knowledge base agents, documentation, and content planning.",
+    "mcpServers": [
+      {
+        "name": "notion",
+        "package": "@modelcontextprotocol/server-notion",
+        "description": "Notion API — pages, databases, and blocks"
+      }
+    ],
+    "envVars": ["NOTION_API_KEY"],
+    "installHint": "NOTION_API_KEY=secret_... npx -y @modelcontextprotocol/server-notion",
+    "tooltip": "Connects the agent to your Notion workspace. Enables doc generation, knowledge base lookups, and content calendar management."
+  },
+  {
+    "id": "sentry-mcp",
+    "category": "Dev Tools",
+    "name": "Sentry",
+    "description": "Query Sentry for errors, issues, and stack traces. Gives your debugger agent real error context instead of hypotheticals.",
+    "mcpServers": [
+      {
+        "name": "sentry",
+        "package": "@modelcontextprotocol/server-sentry",
+        "description": "Sentry error tracking and issue queries"
+      }
+    ],
+    "envVars": ["SENTRY_AUTH_TOKEN", "SENTRY_ORG"],
+    "installHint": "SENTRY_AUTH_TOKEN=sntrys_... npx -y @modelcontextprotocol/server-sentry",
+    "tooltip": "Pulls live Sentry issues into the agent's context. Your debugger can see the exact stack trace before suggesting a fix."
+  },
+  {
+    "id": "slack-mcp",
+    "category": "Productivity",
+    "name": "Slack",
+    "description": "Read channels and send messages to Slack. Useful for notification agents, customer success bots, and team update workflows.",
+    "mcpServers": [
+      {
+        "name": "slack",
+        "package": "@modelcontextprotocol/server-slack",
+        "description": "Slack messaging and channel access"
+      }
+    ],
+    "envVars": ["SLACK_BOT_TOKEN", "SLACK_TEAM_ID"],
+    "installHint": "SLACK_BOT_TOKEN=xoxb-... npx -y @modelcontextprotocol/server-slack",
+    "tooltip": "Gives the agent Slack send/read access. Great for customer success agents that need to notify teams or log interactions."
+  },
+  {
+    "id": "postgres-mcp",
+    "category": "Databases",
+    "name": "PostgreSQL",
+    "description": "Read-only access to a PostgreSQL database. Lets data analysis agents query tables, inspect schemas, and explain results.",
+    "mcpServers": [
+      {
+        "name": "postgres",
+        "package": "@modelcontextprotocol/server-postgres",
+        "description": "Read-only PostgreSQL queries and schema inspection"
+      }
+    ],
+    "envVars": ["POSTGRES_CONNECTION_STRING"],
+    "installHint": "POSTGRES_CONNECTION_STRING=postgresql://... npx -y @modelcontextprotocol/server-postgres",
+    "tooltip": "Gives the agent direct read-only database access. SQL queries, schema inspection, and result explanation all in one context window."
+  },
+  {
+    "id": "security-bundle-mcp",
+    "name": "Security Review Bundle",
+    "description": "Everything a security-focussed agent needs: read source files, inspect git history, search for CVEs, and query real errors.",
+    "mcpServers": [
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "description": "Read source files for vulnerability scanning"
+      },
+      {
+        "name": "git",
+        "package": "@modelcontextprotocol/server-git",
+        "description": "Inspect commit history and blame"
+      },
+      {
+        "name": "brave-search",
+        "package": "@modelcontextprotocol/server-brave-search",
+        "description": "Search for CVEs and security advisories"
+      },
+      {
+        "name": "sentry",
+        "package": "@modelcontextprotocol/server-sentry",
+        "description": "Pull live error reports for triage"
+      }
+    ],
+    "envVars": ["BRAVE_API_KEY", "SENTRY_AUTH_TOKEN", "SENTRY_ORG"],
+    "installHint": "BRAVE_API_KEY=BSA... SENTRY_AUTH_TOKEN=sntrys_... npx -y @modelcontextprotocol/server-brave-search",
+    "tooltip": "Bundle for Security Reviewer skill: Filesystem + Git + Brave Search + Sentry. Read code, inspect history, look up CVEs, and pull live errors."
+  },
+  {
+    "id": "qa-bundle-mcp",
+    "name": "QA & Testing Bundle",
+    "description": "Automate browser tests, run code in a sandbox, and inspect the codebase. Perfect for Test Engineer agents.",
+    "mcpServers": [
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "description": "Read test files and source code"
+      },
+      {
+        "name": "git",
+        "package": "@modelcontextprotocol/server-git",
+        "description": "Inspect changed files to generate targeted tests"
+      },
+      {
+        "name": "puppeteer",
+        "package": "@modelcontextprotocol/server-puppeteer",
+        "description": "Run browser automation and E2E tests"
+      },
+      {
+        "name": "e2b",
+        "package": "@e2b/mcp-server",
+        "description": "Execute and validate test runs in a sandbox"
+      }
+    ],
+    "envVars": ["E2B_API_KEY"],
+    "installHint": "E2B_API_KEY=e2b_... npx -y @e2b/mcp-server",
+    "tooltip": "Bundle for Test Engineer skill: Filesystem + Git + Puppeteer + E2B. Read source, write tests, run them in a browser, and validate in a sandbox."
+  },
+  {
+    "id": "data-bundle-mcp",
+    "name": "Data Analysis Bundle",
+    "description": "Query a real database, run analytical Python notebooks, and read data files — all in one agent session.",
+    "mcpServers": [
+      {
+        "name": "postgres",
+        "package": "@modelcontextprotocol/server-postgres",
+        "description": "Query PostgreSQL tables and schemas"
+      },
+      {
+        "name": "e2b",
+        "package": "@e2b/mcp-server",
+        "description": "Run Python data analysis in a sandbox"
+      },
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "description": "Read CSV, JSON, and other data files"
+      }
+    ],
+    "envVars": ["POSTGRES_CONNECTION_STRING", "E2B_API_KEY"],
+    "installHint": "POSTGRES_CONNECTION_STRING=postgresql://... E2B_API_KEY=e2b_... npx -y @modelcontextprotocol/server-postgres",
+    "tooltip": "Bundle for Data Analyst skill: PostgreSQL + E2B + Filesystem. Query databases, run Python analysis, and read local data files."
+  },
+  {
+    "id": "marketing-bundle-mcp",
+    "name": "Marketing & Content Bundle",
+    "description": "Research trends with live search, draft content to Notion, and notify the team via Slack.",
+    "mcpServers": [
+      {
+        "name": "brave-search",
+        "package": "@modelcontextprotocol/server-brave-search",
+        "description": "Research trends, competitors, and keywords"
+      },
+      {
+        "name": "notion",
+        "package": "@modelcontextprotocol/server-notion",
+        "description": "Write drafts and manage content calendars"
+      },
+      {
+        "name": "slack",
+        "package": "@modelcontextprotocol/server-slack",
+        "description": "Publish content notifications to the team"
+      }
+    ],
+    "envVars": ["BRAVE_API_KEY", "NOTION_API_KEY", "SLACK_BOT_TOKEN", "SLACK_TEAM_ID"],
+    "installHint": "BRAVE_API_KEY=BSA... NOTION_API_KEY=secret_... npx -y @modelcontextprotocol/server-brave-search",
+    "tooltip": "Bundle for marketing skills: Brave Search + Notion + Slack. Research topics, draft copy, and push to the content calendar in one workflow."
+  },
+  {
+    "id": "gitlab-mcp",
+    "category": "Dev Tools",
+    "name": "GitLab",
+    "description": "Full GitLab API access: issues, merge requests, pipelines, and repo management. Requires a personal access token.",
+    "mcpServers": [
+      {
+        "name": "gitlab",
+        "package": "@modelcontextprotocol/server-gitlab",
+        "description": "GitLab API — issues, merge requests, and CI/CD pipelines"
+      }
+    ],
+    "envVars": ["GITLAB_TOKEN"],
+    "installHint": "GITLAB_TOKEN=glpat-... npx -y @modelcontextprotocol/server-gitlab",
+    "tooltip": "Gives the agent full GitLab access. Read MRs, trigger pipelines, and manage issues directly from your agent."
+  },
+  {
+    "id": "supabase-mcp",
+    "category": "Databases",
+    "name": "Supabase",
+    "description": "Query and manage Supabase projects: tables, edge functions, auth, and storage. Ideal for full-stack app agents.",
+    "mcpServers": [
+      {
+        "name": "supabase",
+        "package": "@modelcontextprotocol/server-supabase",
+        "description": "Supabase database, auth, and storage access"
+      }
+    ],
+    "envVars": ["SUPABASE_KEY"],
+    "installHint": "SUPABASE_KEY=eyJ... npx -y @modelcontextprotocol/server-supabase https://YOUR-PROJECT.supabase.co",
+    "tooltip": "Connects the agent to your Supabase project. Query rows, inspect schemas, and call edge functions — all from one context window."
+  },
+  {
+    "id": "mysql-mcp",
+    "category": "Databases",
+    "name": "MySQL",
+    "description": "Read-only MySQL database access. Lets agents run queries, inspect schemas, and explain results.",
+    "mcpServers": [
+      {
+        "name": "mysql",
+        "package": "@modelcontextprotocol/server-mysql",
+        "description": "Read-only MySQL queries and schema inspection"
+      }
+    ],
+    "envVars": ["MYSQL_CONNECTION_STRING"],
+    "installHint": "npx -y @modelcontextprotocol/server-mysql mysql://user:pass@host:3306/db",
+    "tooltip": "Gives the agent MySQL read access. Run analytical queries, inspect table schemas, and surface insights without touching your app layer."
+  },
+  {
+    "id": "mongo-mcp",
+    "category": "Databases",
+    "name": "MongoDB",
+    "description": "Query MongoDB collections, inspect documents, and run aggregation pipelines. Perfect for NoSQL-heavy projects.",
+    "mcpServers": [
+      {
+        "name": "mongo",
+        "package": "@modelcontextprotocol/server-mongo",
+        "description": "MongoDB collection queries and aggregation pipelines"
+      }
+    ],
+    "envVars": ["MONGO_CONNECTION_STRING"],
+    "installHint": "npx -y @modelcontextprotocol/server-mongo mongodb://localhost:27017/appdb",
+    "tooltip": "Gives the agent MongoDB access. Query documents, run aggregations, and inspect indexes for performance analysis."
+  },
+  {
+    "id": "redis-mcp",
+    "category": "Databases",
+    "name": "Redis",
+    "description": "Interact with Redis keys, streams, and pub/sub. Useful for cache debugging, queue inspection, and session management agents.",
+    "mcpServers": [
+      {
+        "name": "redis",
+        "package": "@modelcontextprotocol/server-redis",
+        "description": "Redis key-value, streams, and pub/sub access"
+      }
+    ],
+    "envVars": ["REDIS_URL"],
+    "installHint": "npx -y @modelcontextprotocol/server-redis redis://localhost:6379",
+    "tooltip": "Lets the agent inspect cache state, browse queue entries, and diagnose TTL issues directly in Redis."
+  },
+  {
+    "id": "firecrawl-mcp",
+    "category": "Search & RAG",
+    "name": "Firecrawl",
+    "description": "Crawl entire websites and extract clean Markdown for RAG pipelines. Much more thorough than single-page fetch.",
+    "mcpServers": [
+      {
+        "name": "firecrawl",
+        "package": "@modelcontextprotocol/server-firecrawl",
+        "description": "Full-site crawling with Markdown output for RAG"
+      }
+    ],
+    "envVars": ["FIRECRAWL_API_KEY"],
+    "installHint": "FIRECRAWL_API_KEY=fc-... npx -y @modelcontextprotocol/server-firecrawl",
+    "tooltip": "Gives the agent deep crawl access. Useful for building knowledge bases from docs sites, competitors, or wikis."
+  },
+  {
+    "id": "tavily-mcp",
+    "category": "Search & RAG",
+    "name": "Tavily Search",
+    "description": "AI-optimised web search with summarised, factual results. Higher quality than raw search for research agents.",
+    "mcpServers": [
+      {
+        "name": "tavily-search",
+        "package": "@modelcontextprotocol/server-tavily-search",
+        "description": "AI-optimised web search via Tavily API"
+      }
+    ],
+    "envVars": ["TAVILY_API_KEY"],
+    "installHint": "TAVILY_API_KEY=tvly-... npx -y @modelcontextprotocol/server-tavily-search",
+    "tooltip": "AI-first search — returns structured, factual summaries rather than raw URLs. Great for research and market analysis agents."
+  },
+  {
+    "id": "exa-mcp",
+    "category": "Search & RAG",
+    "name": "Exa Search",
+    "description": "Neural search engine that finds semantically relevant content. Excels at finding similar documents, papers, and articles.",
+    "mcpServers": [
+      {
+        "name": "exa-search",
+        "package": "@modelcontextprotocol/server-exa-search",
+        "description": "Neural web search via Exa API"
+      }
+    ],
+    "envVars": ["EXA_API_KEY"],
+    "installHint": "EXA_API_KEY=exa-... npx -y @modelcontextprotocol/server-exa-search",
+    "tooltip": "Semantic search across the web. Finds the most relevant documents by meaning rather than keyword matching."
+  },
+  {
+    "id": "deepwiki-mcp",
+    "category": "Search & RAG",
+    "name": "DeepWiki",
+    "description": "Deep Wikipedia search and article retrieval optimised for LLM usage. Great for fact-grounding and knowledge base agents.",
+    "mcpServers": [
+      {
+        "name": "deepwiki",
+        "package": "deepwiki-mcp",
+        "description": "Deep Wikipedia search and structured article retrieval"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y deepwiki-mcp",
+    "tooltip": "Gives the agent rich Wikipedia access. Retrieve full articles, cross-references, and structured data for knowledge-grounding tasks."
+  },
+  {
+    "id": "linear-mcp",
+    "category": "Productivity",
+    "name": "Linear",
+    "description": "Read and write Linear issues, projects, and cycles. Perfect for project management agents and sprint planning workflows.",
+    "mcpServers": [
+      {
+        "name": "linear",
+        "package": "@modelcontextprotocol/server-linear",
+        "description": "Linear issues, projects, and cycle management"
+      }
+    ],
+    "envVars": ["LINEAR_API_KEY"],
+    "installHint": "LINEAR_API_KEY=lin_api_... npx -y @modelcontextprotocol/server-linear",
+    "tooltip": "Gives the agent full Linear access. Create issues, update statuses, and summarise sprint progress directly from agent context."
+  },
+  {
+    "id": "zapier-mcp",
+    "category": "Productivity",
+    "name": "Zapier",
+    "description": "Trigger 7,000+ Zapier automations from your agent. Connect to any app in your workflow stack without custom integrations.",
+    "mcpServers": [
+      {
+        "name": "zapier",
+        "package": "@modelcontextprotocol/server-zapier",
+        "description": "Trigger Zapier zaps and automations"
+      }
+    ],
+    "envVars": ["ZAPIER_API_KEY"],
+    "installHint": "ZAPIER_API_KEY=zap-... npx -y @modelcontextprotocol/server-zapier",
+    "tooltip": "Unlocks 7,000+ automation targets via Zapier. Your agent can send emails, update CRMs, and trigger workflows across your entire tool stack."
+  },
+  {
+    "id": "attio-mcp",
+    "category": "CRM",
+    "name": "Attio",
+    "description": "Read and write Attio CRM records, lists, and notes. Ideal for sales and customer success agents working with modern CRMs.",
+    "mcpServers": [
+      {
+        "name": "attio",
+        "package": "@modelcontextprotocol/server-attio",
+        "description": "Attio CRM — records, lists, and notes"
+      }
+    ],
+    "envVars": ["ATTIO_API_KEY"],
+    "installHint": "ATTIO_API_KEY=attio_... npx -y @modelcontextprotocol/server-attio",
+    "tooltip": "Connects the agent to Attio. Create and update contact records, log interactions, and query pipeline data in real time."
+  },
+  {
+    "id": "salesforce-mcp",
+    "category": "CRM",
+    "name": "Salesforce",
+    "description": "Query and update Salesforce objects, opportunities, and contacts. Connects enterprise sales workflows to your agent.",
+    "mcpServers": [
+      {
+        "name": "salesforce",
+        "package": "@modelcontextprotocol/server-salesforce",
+        "description": "Salesforce CRM — objects, opportunities, and contacts"
+      }
+    ],
+    "envVars": ["SALESFORCE_TOKEN"],
+    "installHint": "SALESFORCE_TOKEN=00D... npx -y @modelcontextprotocol/server-salesforce",
+    "tooltip": "Gives the agent Salesforce access. Run SOQL queries, update opportunity stages, and pull contact history into the agent context."
+  },
+  {
+    "id": "hubspot-mcp",
+    "category": "CRM",
+    "name": "HubSpot",
+    "description": "Access HubSpot contacts, deals, and companies. Perfect for sales outreach and marketing automation agents.",
+    "mcpServers": [
+      {
+        "name": "hubspot",
+        "package": "@modelcontextprotocol/server-hubspot",
+        "description": "HubSpot CRM — contacts, deals, and company data"
+      }
+    ],
+    "envVars": ["HUBSPOT_API_KEY"],
+    "installHint": "HUBSPOT_API_KEY=hapi_... npx -y @modelcontextprotocol/server-hubspot",
+    "tooltip": "Connects the agent to HubSpot. Look up contact history, update deal stages, and log outreach activities automatically."
+  },
+  {
+    "id": "aws-mcp",
+    "category": "Cloud & Infra",
+    "name": "AWS",
+    "description": "Interact with AWS services: S3, Lambda, EC2, and CloudWatch. Essential for cloud operations and DevOps agents.",
+    "mcpServers": [
+      {
+        "name": "aws",
+        "package": "@modelcontextprotocol/server-aws",
+        "description": "AWS services — S3, Lambda, EC2, CloudWatch"
+      }
+    ],
+    "envVars": ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"],
+    "installHint": "AWS_ACCESS_KEY_ID=AKIA... AWS_SECRET_ACCESS_KEY=... npx -y @modelcontextprotocol/server-aws",
+    "tooltip": "Gives the agent AWS access. List S3 buckets, invoke Lambda functions, check CloudWatch logs, and manage EC2 instances."
+  },
+  {
+    "id": "google-cloud-mcp",
+    "category": "Cloud & Infra",
+    "name": "Google Cloud",
+    "description": "Access GCP services: Cloud Storage, BigQuery, Cloud Functions, and Pub/Sub. For GCP-based cloud operations agents.",
+    "mcpServers": [
+      {
+        "name": "google-cloud",
+        "package": "@modelcontextprotocol/server-gcloud",
+        "description": "GCP services — Cloud Storage, BigQuery, and Cloud Functions"
+      }
+    ],
+    "envVars": ["GCP_CREDENTIALS_PATH"],
+    "installHint": "GCP_CREDENTIALS_PATH=./service-account.json npx -y @modelcontextprotocol/server-gcloud",
+    "tooltip": "Connects the agent to GCP. Query BigQuery datasets, list Cloud Storage buckets, and manage Cloud Functions in one context window."
+  },
+  {
+    "id": "kubernetes-mcp",
+    "category": "Cloud & Infra",
+    "name": "Kubernetes",
+    "description": "Inspect and manage Kubernetes clusters: pods, deployments, services, and logs. Perfect for platform engineering agents.",
+    "mcpServers": [
+      {
+        "name": "kubernetes",
+        "package": "@modelcontextprotocol/server-kubernetes",
+        "description": "Kubernetes cluster inspection and pod management"
+      }
+    ],
+    "envVars": ["KUBECONFIG_PATH"],
+    "installHint": "KUBECONFIG_PATH=~/.kube/config npx -y @modelcontextprotocol/server-kubernetes",
+    "tooltip": "Gives the agent kubectl-level access. List pods, read logs, inspect deployments, and troubleshoot cluster issues from the agent."
+  },
+  {
+    "id": "figma-mcp",
+    "category": "Design",
+    "name": "Figma",
+    "description": "Access Figma designs, components, and design tokens via the Figma API. Bridges design and development workflows.",
+    "mcpServers": [
+      {
+        "name": "figma",
+        "package": "figma-developer-mcp",
+        "description": "Figma API — files, components, and design tokens"
+      }
+    ],
+    "envVars": ["FIGMA_API_KEY"],
+    "installHint": "FIGMA_API_KEY=figd_... npx -y figma-developer-mcp --figma-api-key=${FIGMA_API_KEY} --stdio",
+    "tooltip": "Connects the agent to Figma. Read component specs, extract design tokens, and generate code that matches the design exactly."
+  },
+  {
+    "id": "playwright-mcp",
+    "category": "Browser & QA",
+    "name": "Playwright (Browser)",
+    "description": "Browser automation via Playwright. Supports Chromium, Firefox, and WebKit for robust cross-browser testing.",
+    "mcpServers": [
+      {
+        "name": "playwright",
+        "package": "@modelcontextprotocol/server-playwright",
+        "description": "Browser automation via Playwright — Chromium, Firefox, WebKit"
+      }
+    ],
+    "envVars": [],
+    "installHint": "npx -y @modelcontextprotocol/server-playwright",
+    "tooltip": "Gives the agent a multi-browser testing harness. Supports Chromium, Firefox, and WebKit for cross-browser E2E test authoring."
+  },
+  {
+    "id": "composio-mcp",
+    "category": "General",
+    "name": "Composio",
+    "description": "Universal integration hub with 200+ pre-built connectors. One API key to reach GitHub, Gmail, HubSpot, Slack, and many more.",
+    "mcpServers": [
+      {
+        "name": "composio",
+        "package": "composio-core",
+        "description": "200+ pre-built integrations via Composio hub"
+      }
+    ],
+    "envVars": ["COMPOSIO_API_KEY"],
+    "installHint": "COMPOSIO_API_KEY=comp_... npx -y composio-core mcp",
+    "tooltip": "Unlocks 200+ app integrations with a single API key. The fastest way to give your agent broad connectivity across your tool stack."
+  },
+  {
+    "id": "google-workspace-mcp",
+    "name": "Google Workspace",
+    "description": "Access Gmail and Google Drive. Read emails, search files, and create documents directly from your agent.",
+    "mcpServers": [
+      {
+        "name": "gmail",
+        "package": "@modelcontextprotocol/server-gmail",
+        "description": "Gmail read/search and draft creation"
+      },
+      {
+        "name": "drive",
+        "package": "@modelcontextprotocol/server-drive",
+        "description": "Google Drive file search and content access"
+      }
+    ],
+    "envVars": ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
+    "installHint": "GOOGLE_CLIENT_ID=... GOOGLE_CLIENT_SECRET=... npx -y @modelcontextprotocol/server-gmail",
+    "tooltip": "Connects the agent to your Google Workspace. Read emails, search Drive docs, and draft replies without leaving the agent context."
+  },
+  {
+    "id": "legal-bundle-mcp",
+    "name": "Legal & Compliance Bundle",
+    "description": "Everything a legal review agent needs: structured reasoning, persistent findings, and document access.",
+    "mcpServers": [
+      {
+        "name": "sequential-thinking",
+        "package": "@modelcontextprotocol/server-sequential-thinking",
+        "description": "Step-by-step reasoning for clause-by-clause analysis"
+      },
+      {
+        "name": "notion",
+        "package": "@modelcontextprotocol/server-notion",
+        "description": "Store findings, redlines, and review summaries"
+      },
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "description": "Read contract documents from the local file system"
+      }
+    ],
+    "envVars": ["NOTION_API_KEY"],
+    "installHint": "NOTION_API_KEY=secret_... npx -y @modelcontextprotocol/server-notion",
+    "tooltip": "Bundle for Legal & Compliance Agent: Sequential Thinking + Notion + Filesystem. Analyse contracts clause by clause, log findings to Notion, and read files directly."
+  },
+  {
+    "id": "hr-bundle-mcp",
+    "name": "HR Onboarding Bundle",
+    "description": "Connect HR agents to Notion for content, Slack for messaging, and Memory for cross-session context.",
+    "mcpServers": [
+      {
+        "name": "notion",
+        "package": "@modelcontextprotocol/server-notion",
+        "description": "Store welcome packs, FAQs, and 30-60-90 plans"
+      },
+      {
+        "name": "slack",
+        "package": "@modelcontextprotocol/server-slack",
+        "description": "Send welcome messages and schedule onboarding check-ins"
+      },
+      {
+        "name": "memory",
+        "package": "@modelcontextprotocol/server-memory",
+        "description": "Remember new hire context across onboarding sessions"
+      }
+    ],
+    "envVars": ["NOTION_API_KEY", "SLACK_BOT_TOKEN", "SLACK_TEAM_ID"],
+    "installHint": "NOTION_API_KEY=secret_... SLACK_BOT_TOKEN=xoxb-... npx -y @modelcontextprotocol/server-notion",
+    "tooltip": "Bundle for HR Onboarding Agent: Notion + Slack + Memory. Draft welcome packets to Notion, send onboarding messages via Slack, and keep context across sessions."
+  },
+  {
+    "id": "sales-crm-bundle-mcp",
+    "name": "Sales & CRM Bundle",
+    "description": "Give sales agents real-time search, CRM write-back, and content drafting in a single bundle.",
+    "mcpServers": [
+      {
+        "name": "hubspot",
+        "package": "@modelcontextprotocol/server-hubspot",
+        "description": "Update CRM records, log calls, and track deal stages"
+      },
+      {
+        "name": "brave-search",
+        "package": "@modelcontextprotocol/server-brave-search",
+        "description": "Research prospects and competitors in real time"
+      },
+      {
+        "name": "notion",
+        "package": "@modelcontextprotocol/server-notion",
+        "description": "Draft sequences, battle cards, and outreach content"
+      }
+    ],
+    "envVars": ["HUBSPOT_API_KEY", "BRAVE_API_KEY", "NOTION_API_KEY"],
+    "installHint": "HUBSPOT_API_KEY=hapi_... BRAVE_API_KEY=BSA... npx -y @modelcontextprotocol/server-hubspot",
+    "tooltip": "Bundle for Sales Outreach Agent: HubSpot + Brave Search + Notion. Research prospects, draft personalised outreach, and log everything back to CRM."
+  },
+  {
+    "id": "design-bundle-mcp",
+    "name": "Design & UX Bundle",
+    "description": "Connect UX and design agents to Figma specs, live web references, and Notion for documentation.",
+    "mcpServers": [
+      {
+        "name": "figma",
+        "package": "figma-developer-mcp",
+        "description": "Access design files, components, and token values"
+      },
+      {
+        "name": "fetch",
+        "package": "@modelcontextprotocol/server-fetch",
+        "description": "Fetch design references, style guides, and live examples"
+      },
+      {
+        "name": "notion",
+        "package": "@modelcontextprotocol/server-notion",
+        "description": "Store research findings, personas, and UX reports"
+      }
+    ],
+    "envVars": ["FIGMA_API_KEY", "NOTION_API_KEY"],
+    "installHint": "FIGMA_API_KEY=figd_... NOTION_API_KEY=secret_... npx -y figma-developer-mcp --figma-api-key=${FIGMA_API_KEY} --stdio",
+    "tooltip": "Bundle for Design and UX Researcher skills: Figma + Fetch + Notion. Read design specs, fetch references, and write up research reports."
+  },
+  {
+    "id": "devops-cloud-bundle-mcp",
+    "name": "DevOps & Cloud Bundle",
+    "description": "Full cloud operations toolkit: AWS infrastructure, Kubernetes cluster management, and GitHub for code context.",
+    "mcpServers": [
+      {
+        "name": "aws",
+        "package": "@modelcontextprotocol/server-aws",
+        "description": "Manage AWS resources: S3, Lambda, EC2, CloudWatch"
+      },
+      {
+        "name": "kubernetes",
+        "package": "@modelcontextprotocol/server-kubernetes",
+        "description": "Inspect pods, deployments, and cluster health"
+      },
+      {
+        "name": "github",
+        "package": "@modelcontextprotocol/server-github",
+        "description": "Read PRs, trigger workflows, and inspect CI results"
+      }
+    ],
+    "envVars": [
+      "AWS_ACCESS_KEY_ID",
+      "AWS_SECRET_ACCESS_KEY",
+      "GITHUB_PERSONAL_ACCESS_TOKEN",
+      "KUBECONFIG_PATH"
+    ],
+    "installHint": "AWS_ACCESS_KEY_ID=AKIA... AWS_SECRET_ACCESS_KEY=... npx -y @modelcontextprotocol/server-aws",
+    "tooltip": "Bundle for cloud operations: AWS + Kubernetes + GitHub. Manage infrastructure, debug cluster issues, and trace problems back to the causal commit."
+  }
+]

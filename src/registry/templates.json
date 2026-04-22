@@ -1,0 +1,474 @@
+[
+  {
+    "id": "nextjs-ai-app",
+    "name": "Next.js AI App",
+    "description": "Full-stack Next.js app wired with AI chat, streaming responses, and environment scaffolding.",
+    "emoji": "⚡",
+    "stack": "Next.js, TypeScript, Tailwind, OpenAI",
+    "audience": "developer",
+    "tags": ["ai", "typescript", "web"],
+    "whyItMatters": "Sets up the AI chat plumbing from day one — streaming, API keys, and token handling — so you write features instead of boilerplate.",
+    "impact": "Generates: AGENTS.md, .github/copilot-instructions.md, mcp.json, install.sh, .env.example with OpenAI keys, and a SYSTEM_PROMPT.md tuned for web app context.",
+    "generatedFiles": [
+      "AGENTS.md",
+      ".github/copilot-instructions.md",
+      "mcp.json",
+      "install.sh",
+      ".env.example",
+      "SYSTEM_PROMPT.md"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Project Name",
+        "description": "Your app's name, used in docs and prompts.",
+        "defaultValue": "my-ai-app",
+        "required": true
+      },
+      {
+        "key": "openAIModel",
+        "label": "Default Model",
+        "description": "Which OpenAI model to default to.",
+        "defaultValue": "gpt-4o",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "python-agent",
+    "name": "Python AI Agent",
+    "description": "Autonomous Python agent with tool-calling, memory hooks, and a CLI entry point.",
+    "emoji": "🐍",
+    "stack": "Python, LangChain / AutoGen, OpenAI",
+    "audience": "developer",
+    "tags": ["ai", "python", "cli"],
+    "whyItMatters": "Gives your Python agent a structured persona, tool manifest, and safety guidelines before you write a single line of logic.",
+    "impact": "Generates: AGENTS.md, CLAUDE.md, mcp.json, install.sh, .env.example, and a SYSTEM_PROMPT.md with Python-agent defaults.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "mcp.json",
+      "install.sh",
+      ".env.example",
+      "SYSTEM_PROMPT.md"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Project Name",
+        "description": "Name of your Python agent project.",
+        "defaultValue": "my-python-agent",
+        "required": true
+      },
+      {
+        "key": "entryPoint",
+        "label": "Entry Point",
+        "description": "Main file name (e.g. main.py).",
+        "defaultValue": "main.py",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "cli-starter",
+    "name": "CLI Tool Starter",
+    "description": "Scaffolds a developer CLI tool with AI-driven help text generation and automated release scripting.",
+    "emoji": "🔧",
+    "stack": "Node.js / Python, Commander / Click",
+    "audience": "developer",
+    "tags": ["cli", "typescript", "python"],
+    "whyItMatters": "Copilot without CLI context guesses at your flag names. This template makes it follow your actual command structure from the first suggestion.",
+    "impact": "Generates: AGENTS.md, .cursor/rules, mcp.json, install.sh, and a SYSTEM_PROMPT.md describing CLI context and flag conventions.",
+    "generatedFiles": ["AGENTS.md", ".cursor/rules", "mcp.json", "install.sh", "SYSTEM_PROMPT.md"],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "CLI Name",
+        "description": "The command name users will type.",
+        "defaultValue": "my-cli",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "rag-app",
+    "name": "RAG Application",
+    "description": "Retrieval-Augmented Generation app — document ingestion, vector search, and grounded Q&A.",
+    "emoji": "📚",
+    "stack": "Python, LlamaIndex / LangChain, Pinecone / ChromaDB",
+    "audience": "developer",
+    "tags": ["ai", "rag", "python"],
+    "whyItMatters": "Configures your agent to cite sources, stay grounded, and refuse hallucinations — critical for any document-based AI product.",
+    "impact": "Generates: AGENTS.md with retrieval guidelines, CLAUDE.md, mcp.json with memory server, install.sh, and .env.example for vector DB credentials.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "mcp.json",
+      "install.sh",
+      ".env.example",
+      "SYSTEM_PROMPT.md"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Project Name",
+        "description": "Name of your RAG service.",
+        "defaultValue": "my-rag-app",
+        "required": true
+      },
+      {
+        "key": "vectorStore",
+        "label": "Vector Store",
+        "description": "Which vector DB you are using.",
+        "defaultValue": "ChromaDB",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "copilot-coding-assistant",
+    "name": "Copilot Coding Assistant",
+    "description": "Tuned configuration for GitHub Copilot — code style rules, review checklists, and workspace instructions.",
+    "emoji": "🤖",
+    "stack": "GitHub Copilot, Any Language",
+    "audience": "developer",
+    "tags": ["ai", "copilot"],
+    "whyItMatters": "Copilot without instructions guesses at your team's style. This template makes it follow your actual conventions from the first suggestion.",
+    "impact": "Generates: .github/copilot-instructions.md with opinionated style rules, AGENTS.md, and a SYSTEM_PROMPT.md seeded with your project's coding philosophy.",
+    "generatedFiles": [".github/copilot-instructions.md", "AGENTS.md", "SYSTEM_PROMPT.md"],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Project Name",
+        "description": "Your repository or workspace name.",
+        "defaultValue": "my-project",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "mcp-research-agent",
+    "name": "MCP Research Agent",
+    "description": "Multi-tool research agent that browses the web, reads files, and synthesises findings.",
+    "emoji": "🔬",
+    "stack": "MCP, OpenAI, Filesystem + Fetch servers",
+    "audience": "researcher",
+    "tags": ["ai", "mcp", "rag"],
+    "whyItMatters": "Connects multiple MCP tools into a single agent that can gather info from any source — web, local files, memory — without switching contexts.",
+    "impact": "Generates: mcp.json with fetch + filesystem + memory servers, AGENTS.md with research persona, CLAUDE.md, install.sh, and SYSTEM_PROMPT.md.",
+    "generatedFiles": ["mcp.json", "AGENTS.md", "CLAUDE.md", "install.sh", "SYSTEM_PROMPT.md"],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Project Name",
+        "description": "Name for your research agent.",
+        "defaultValue": "my-research-agent",
+        "required": true
+      },
+      {
+        "key": "researchDomain",
+        "label": "Research Domain",
+        "description": "The subject area this agent specialises in (e.g. biotech, finance).",
+        "defaultValue": "general",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "design-system-assistant",
+    "name": "Design System Assistant",
+    "description": "AI companion for designers — documents component specs, generates design tokens, and writes copy for UI states.",
+    "emoji": "🎨",
+    "stack": "Figma, Storybook, Markdown",
+    "audience": "designer",
+    "tags": ["design", "ai", "docs"],
+    "whyItMatters": "Design decisions made in Figma are often lost in handoff. This agent captures intent, documents tokens, and drafts UI copy — bridging design and dev.",
+    "impact": "Generates: AGENTS.md with design-focused persona, SYSTEM_PROMPT.md instructing the agent on design tokens and component language, and a STYLE_GUIDE.md template.",
+    "generatedFiles": ["AGENTS.md", "SYSTEM_PROMPT.md", "STYLE_GUIDE.md"],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Design System Name",
+        "description": "Name of your design system or product.",
+        "defaultValue": "my-design-system",
+        "required": true
+      },
+      {
+        "key": "brandColors",
+        "label": "Primary Brand Color",
+        "description": "Your brand's primary hex color (e.g. #6366F1).",
+        "defaultValue": "#6366F1",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "qa-test-automation",
+    "name": "QA & Test Automation Agent",
+    "description": "Generates test plans, writes bug reports in structured format, and suggests regression scenarios from changelogs.",
+    "emoji": "🧪",
+    "stack": "Playwright / Cypress, Jest, Markdown",
+    "audience": "qa",
+    "tags": ["qa", "testing", "ai"],
+    "whyItMatters": "QA gets an AI that speaks your bug-report format, understands your test taxonomy, and can draft regression suites from a list of changed files.",
+    "impact": "Generates: AGENTS.md with QA-engineer persona, SYSTEM_PROMPT.md tuned for test case generation, BUG_REPORT_TEMPLATE.md, and TEST_PLAN_TEMPLATE.md.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "SYSTEM_PROMPT.md",
+      "BUG_REPORT_TEMPLATE.md",
+      "TEST_PLAN_TEMPLATE.md"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Project / App Name",
+        "description": "The product being tested.",
+        "defaultValue": "my-app",
+        "required": true
+      },
+      {
+        "key": "testFramework",
+        "label": "Test Framework",
+        "description": "Primary testing tool (e.g. Playwright, Cypress, Jest).",
+        "defaultValue": "Playwright",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "product-manager-assistant",
+    "name": "Product Manager Assistant",
+    "description": "Writes PRDs, turns meeting notes into action items, and drafts stakeholder briefs — no code required.",
+    "emoji": "📋",
+    "stack": "Markdown, Notion-compatible",
+    "audience": "business",
+    "tags": ["prd", "planning", "ai", "no-code"],
+    "whyItMatters": "PMs spend hours formatting specs. This agent knows your product, your stakeholders, and can turn rough notes into polished PRD sections instantly.",
+    "impact": "Generates: AGENTS.md with PM persona, SYSTEM_PROMPT.md for PRD and meeting-note context, PRD_TEMPLATE.md, and STAKEHOLDER_BRIEF_TEMPLATE.md.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "SYSTEM_PROMPT.md",
+      "PRD_TEMPLATE.md",
+      "STAKEHOLDER_BRIEF_TEMPLATE.md"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Product Name",
+        "description": "Name of your product or initiative.",
+        "defaultValue": "my-product",
+        "required": true
+      },
+      {
+        "key": "targetUser",
+        "label": "Target User",
+        "description": "One-line description of your primary user (e.g. 'SMB finance managers').",
+        "defaultValue": "end users",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "marketing-content-agent",
+    "name": "Marketing Content Agent",
+    "description": "Generates on-brand copy, social posts, email sequences, and content calendar plans using your brand voice.",
+    "emoji": "📣",
+    "stack": "Markdown, No-Code",
+    "audience": "business",
+    "tags": ["marketing", "copywriting", "ai", "no-code"],
+    "whyItMatters": "Brand voice is hard to scale. This agent encodes your tone and audience so every AI output sounds like you, not generic ChatGPT.",
+    "impact": "Generates: AGENTS.md with content strategist persona, SYSTEM_PROMPT.md encoding brand voice and audience, BRAND_VOICE.md guide, and CONTENT_CALENDAR_TEMPLATE.md.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "SYSTEM_PROMPT.md",
+      "BRAND_VOICE.md",
+      "CONTENT_CALENDAR_TEMPLATE.md"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Brand / Product Name",
+        "description": "The brand this agent writes for.",
+        "defaultValue": "my-brand",
+        "required": true
+      },
+      {
+        "key": "brandTone",
+        "label": "Brand Tone",
+        "description": "One or two adjectives describing your voice (e.g. 'friendly, expert').",
+        "defaultValue": "friendly, expert",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "data-analyst-assistant",
+    "name": "Data Analyst Assistant",
+    "description": "Helps analysts write SQL, interpret query results, draft data narratives, and document data dictionaries.",
+    "emoji": "📊",
+    "stack": "SQL, Python, dbt, Markdown",
+    "audience": "data",
+    "tags": ["data", "sql", "python", "ai"],
+    "whyItMatters": "Data analysts switch between tools constantly. This agent understands your warehouse schema and can explain query results in plain language for stakeholders.",
+    "impact": "Generates: AGENTS.md with data-analyst persona, SYSTEM_PROMPT.md primed for SQL and data narrative generation, DATA_DICTIONARY_TEMPLATE.md, and install.sh.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "SYSTEM_PROMPT.md",
+      "DATA_DICTIONARY_TEMPLATE.md",
+      "install.sh"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Project / Dataset Name",
+        "description": "Name of your analytics project or primary dataset.",
+        "defaultValue": "my-analytics",
+        "required": true
+      },
+      {
+        "key": "warehouse",
+        "label": "Data Warehouse",
+        "description": "Your primary database or warehouse (e.g. BigQuery, Snowflake, Postgres).",
+        "defaultValue": "Postgres",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "devops-platform-agent",
+    "name": "DevOps Platform Agent",
+    "description": "CI/CD incident triage, runbook generation, and infrastructure cost commentary — for platform and SRE teams.",
+    "emoji": "🚀",
+    "stack": "GitHub Actions, Terraform, Kubernetes, Bash",
+    "audience": "devops",
+    "tags": ["devops", "infra", "ci", "ai"],
+    "whyItMatters": "On-call engineers need answers fast. This agent knows your infra stack and can draft runbooks, explain alerts, and spot misconfigurations automatically.",
+    "impact": "Generates: AGENTS.md with SRE/DevOps persona, SYSTEM_PROMPT.md tuned for incident context, RUNBOOK_TEMPLATE.md, mcp.json, and install.sh.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "SYSTEM_PROMPT.md",
+      "RUNBOOK_TEMPLATE.md",
+      "mcp.json",
+      "install.sh"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Service / Platform Name",
+        "description": "Name of your service or platform.",
+        "defaultValue": "my-platform",
+        "required": true
+      },
+      {
+        "key": "cloudProvider",
+        "label": "Cloud Provider",
+        "description": "Your primary cloud (e.g. AWS, GCP, Azure).",
+        "defaultValue": "AWS",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "legal-compliance-agent",
+    "name": "Legal & Compliance Agent",
+    "emoji": "⚖️",
+    "description": "AI assistant for drafting policies, reviewing contracts, and surfacing compliance risks — with audit-ready outputs.",
+    "stack": "OpenAI Agents SDK, Python",
+    "audience": "business",
+    "tags": ["legal", "compliance", "risk", "ai"],
+    "whyItMatters": "Legal teams spend hours reviewing routine documents. This agent can draft NDAs, check policy gaps, and flag risky clauses in seconds.",
+    "impact": "Generates: AGENTS.md with legal-review persona, CONTRACT_REVIEW.md template, COMPLIANCE_CHECKLIST.md, mcp.json.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "CONTRACT_REVIEW.md",
+      "COMPLIANCE_CHECKLIST.md",
+      "mcp.json",
+      "setup.sh"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Agent / Project Name",
+        "description": "Name of your legal AI agent.",
+        "defaultValue": "legal-compliance-agent",
+        "required": true
+      },
+      {
+        "key": "jurisdiction",
+        "label": "Primary Jurisdiction",
+        "description": "e.g. US (Delaware), EU (GDPR), UK",
+        "defaultValue": "US",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "hr-onboarding-agent",
+    "name": "HR Onboarding Agent",
+    "emoji": "🤝",
+    "description": "Automates new-hire onboarding: generates welcome packets, FAQs, 30-60-90 day plans, and policy summaries.",
+    "stack": "OpenAI Agents SDK, Python",
+    "audience": "business",
+    "tags": ["hr", "onboarding", "people", "ai"],
+    "whyItMatters": "A smooth onboarding experience increases retention. This agent tailors welcome materials to role and team, saving HR hours per hire.",
+    "impact": "Generates: AGENTS.md with HR-persona, WELCOME_PACKET.md, FAQ.md, ONBOARDING_PLAN.md.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "WELCOME_PACKET.md",
+      "FAQ.md",
+      "ONBOARDING_PLAN.md",
+      "mcp.json",
+      "setup.sh"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Agent / Project Name",
+        "description": "Name of your HR onboarding agent.",
+        "defaultValue": "hr-onboarding-agent",
+        "required": true
+      },
+      {
+        "key": "companyName",
+        "label": "Company Name",
+        "description": "Your organisation's name.",
+        "defaultValue": "Acme Corp",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "sales-outreach-agent",
+    "name": "Sales Outreach Agent",
+    "emoji": "📞",
+    "description": "Personalises cold outreach at scale — research prospects, draft emails, and generate follow-up sequences that convert.",
+    "stack": "OpenAI Agents SDK, Python, Brave Search MCP",
+    "audience": "business",
+    "tags": ["sales", "outreach", "copywriting", "ai"],
+    "whyItMatters": "Generic cold emails get ignored. This agent researches each prospect and crafts personalised messages that feel human.",
+    "impact": "Generates: AGENTS.md with sales-copywriter persona, OUTREACH_TEMPLATE.md, FOLLOW_UP_SEQUENCE.md, mcp.json with Brave Search.",
+    "generatedFiles": [
+      "AGENTS.md",
+      "OUTREACH_TEMPLATE.md",
+      "FOLLOW_UP_SEQUENCE.md",
+      "mcp.json",
+      "setup.sh"
+    ],
+    "variables": [
+      {
+        "key": "projectName",
+        "label": "Agent / Project Name",
+        "description": "Name of your sales outreach agent.",
+        "defaultValue": "sales-outreach-agent",
+        "required": true
+      },
+      {
+        "key": "product",
+        "label": "Product / Service",
+        "description": "What you are selling.",
+        "defaultValue": "My SaaS",
+        "required": false
+      }
+    ]
+  }
+]

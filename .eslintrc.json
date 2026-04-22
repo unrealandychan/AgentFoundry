@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json.schemastore.org/eslintrc",
+  "root": true,
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      }
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "import", "unicorn", "sonarjs"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:unicorn/recommended",
+    "plugin:sonarjs/recommended"
+  ],
+  "rules": {
+    // ── Meaningful names ──────────────────────────────────────────
+    // Allow single-char identifiers common in React/TS: event handlers (e),
+    // iterators, grade constants (A-F), map/filter callbacks, etc.
+    "id-length": [
+      "warn",
+      {
+        "min": 2,
+        "exceptions": [
+          "_",
+          "i",
+          "j",
+          "k",
+          "x",
+          "y",
+          "e",
+          "r",
+          "s",
+          "c",
+          "t",
+          "v",
+          "f",
+          "a",
+          "q",
+          "l",
+          "m",
+          "n",
+          "p",
+          "u",
+          "A",
+          "B",
+          "C",
+          "D",
+          "F"
+        ]
+      }
+    ],
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        "selector": "variable",
+        "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "function",
+        "format": ["camelCase", "PascalCase"],
+        "leadingUnderscore": "allow"
+      },
+      { "selector": "class", "format": ["PascalCase"] },
+      { "selector": "interface", "format": ["PascalCase"] },
+      { "selector": "typeAlias", "format": ["PascalCase"] },
+      { "selector": "enum", "format": ["PascalCase"] },
+      { "selector": "enumMember", "format": ["UPPER_CASE"] }
+    ],
+
+    // ── Single responsibility / complexity ────────────────────────
+    // React UI components are inherently long and complex; use per-file overrides.
+    "max-lines-per-function": "off",
+    "max-params": ["warn", { "max": 6 }],
+    "complexity": ["warn", 30],
+    "max-depth": ["warn", 6],
+
+    // ── No magic numbers ─────────────────────────────────────────
+    // Ignore common HTTP status codes, app thresholds, fractions, and
+    // well-known numeric literals so we don't pollute logs.
+    "@typescript-eslint/no-magic-numbers": [
+      "warn",
+      {
+        "ignore": [
+          -2, -1, 0, 1, 2, 3, 4, 5, 10, 16, 20, 30, 36, 50, 80, 85, 100, 128, 150, 200, 400, 403,
+          404, 409, 429, 500, 501, 600, 1024, 1500, 4000, 8000, 40000, 0.25, 0.35, 0.55, 0.6, 0.75,
+          0.9
+        ],
+        "ignoreEnums": true,
+        "ignoreReadonlyClassProperties": true,
+        "ignoreArrayIndexes": true
+      }
+    ],
+
+    // ── DDD — no `any`, use domain types ─────────────────────────
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unsafe-assignment": "error",
+    "@typescript-eslint/no-unsafe-call": "error",
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "@typescript-eslint/no-unsafe-return": "error",
+
+    // ── DDD — enforce import boundaries ──────────────────────────
+    "import/no-cycle": ["error", { "maxDepth": 3 }],
+    "import/no-named-as-default": "off",
+    "import/no-restricted-paths": [
+      "warn",
+      {
+        "zones": [
+          {
+            "target": "./src/domain",
+            "from": "./src/infrastructure",
+            "message": "Domain must not import from infrastructure (DDD: dependency inversion)"
+          },
+          {
+            "target": "./src/domain",
+            "from": "./src/application",
+            "message": "Domain must not import from application layer"
+          }
+        ]
+      }
+    ],
+
+    // ── Duplication (SonarJS) ─────────────────────────────────────
+    // Tailwind utility strings legitimately repeat; raise threshold.
+    "sonarjs/no-duplicate-string": ["warn", { "threshold": 8 }],
+    "sonarjs/cognitive-complexity": ["warn", 50],
+
+    // ── Unicorn (readability) ─────────────────────────────────────
+    "unicorn/prevent-abbreviations": [
+      "warn",
+      {
+        "replacements": {
+          "req": { "request": true },
+          "ctx": { "context": true },
+          "res": false,
+          "e": false,
+          "dir": false,
+          "dirPath": false,
+          "sessionDir": false,
+          "resolvedDir": false
+        }
+      }
+    ],
+    "unicorn/no-array-for-each": "warn",
+    "unicorn/no-nested-ternary": "error",
+    "unicorn/prefer-ternary": "warn",
+
+    // ── Error handling ────────────────────────────────────────────
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/promise-function-async": "error",
+    "no-console": "warn",
+
+    // ── null is idiomatic in TS+React+MongoDB (useState, findOne, etc.) ──
+    "unicorn/no-null": "off",
+
+    // ── Allow async interface stubs (e.g. stubs that throw) ──────────
+    "@typescript-eslint/require-await": "off",
+
+    // ── Allow _-prefixed unused params (interface stubs, event handlers) ──
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-magic-numbers": "off",
+        "max-lines-per-function": "off"
+      }
+    },
+    {
+      "files": ["src/components/wizard/step-test-agent.tsx"],
+      "rules": {
+        "complexity": ["warn", 50]
+      }
+    }
+  ]
+}
