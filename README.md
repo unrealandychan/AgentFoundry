@@ -1,5 +1,7 @@
 # AgentFoundry
 
+![AgentFoundry](./assets/logo.png)
+
 > **Compose your AI project starter from skills, tools, and templates — test it live, then download in one click.**
 
 AgentFoundry is a web-based scaffold composer for AI engineering projects. Think of it as **Spring Initializr meets Spec Kit for AI**: pick a base template, layer in curated skill packs (including importing directly from public GitHub repos), configure MCP server integrations, preview the generated file tree, test your agent live in-browser via the OpenAI SDK, then download a ready-to-run ZIP.
