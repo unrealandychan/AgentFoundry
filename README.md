@@ -1,3 +1,16 @@
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=160&section=header&text=AgentFoundry&fontSize=38&fontColor=ffffff&fontAlignY=38&desc=Compose+your+AI+project+starter+from+skills%2C+tools+%26+templates&descAlignY=58&descSize=14" alt="Header"/>
+
+[![Stars](https://img.shields.io/github/stars/unrealandychan/AgentFoundry?style=for-the-badge&logo=github&color=f78166&logoColor=white&labelColor=0d1117)](https://github.com/unrealandychan/AgentFoundry/stargazers)
+[![Forks](https://img.shields.io/github/forks/unrealandychan/AgentFoundry?style=for-the-badge&logo=github&color=79c0ff&logoColor=white&labelColor=0d1117)](https://github.com/unrealandychan/AgentFoundry/network/members)
+[![Language](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&style=for-the-badge&logoColor=white&labelColor=0d1117)](https://github.com/unrealandychan/AgentFoundry)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-AgentFoundry-ff6b6b?style=for-the-badge&logo=vercel&logoColor=white&labelColor=0d1117)](https://github.com/unrealandychan/AgentFoundry)
+
+</div>
+
+---
+
 # AgentFoundry
 
 ![AgentFoundry](./assets/logo.png)
@@ -227,7 +240,7 @@ S3_PREFIX=skills/                  # optional, default "skills/"
 
 # AWS credentials (pick one method):
 AWS_ACCESS_KEY_ID=...
-AWS_SECRET_ACCESS_KEY=...
+AWS_SECRET_ACCESS_KEY=***
 # — or — use ~/.aws/credentials, EC2 instance role, ECS task role, etc.
 ```
 
