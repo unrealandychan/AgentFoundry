@@ -6,10 +6,13 @@ import { WizardLayout, TOTAL_STEPS } from "@/components/wizard/wizard-layout";
 import { FlowChooser } from "@/components/flow-chooser";
 import { SkillDownloadFlow } from "@/components/skill-download-flow";
 import { SkillBuilderFlow } from "@/components/skill-builder-flow";
+import {
+  saveWizardState,
+  loadWizardState,
+  clearWizardState,
+} from "@/lib/wizard-persistence";
 
 type AppMode = "choose" | "build" | "skill-download" | "skill-builder";
-
-const STORAGE_KEY = "agentfoundry_wizard_v1";
 
 const initialJob: Partial<GenerationJob> = {
   skillIds: [],
@@ -23,35 +26,31 @@ const initialJob: Partial<GenerationJob> = {
 const initialState: WizardState = { step: 1, job: initialJob };
 
 export default function HomePage() {
-  const [mode, setMode] = useState<AppMode>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return "choose";
-      const parsed = JSON.parse(raw) as { mode?: AppMode };
-      return parsed.mode === "build" ? "build" : "choose";
-    } catch {
-      return "choose";
-    }
-  });
-  const [state, setState] = useState<WizardState>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return initialState;
-      const parsed = JSON.parse(raw) as { state?: WizardState };
-      return parsed.state ?? initialState;
-    } catch {
-      return initialState;
-    }
-  });
+  const [mode, setMode] = useState<AppMode>("choose");
+  const [state, setState] = useState<WizardState>(initialState);
 
-  // Persist to localStorage whenever mode or wizard state changes
+  // On mount: restore persisted wizard state
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ mode, state }));
-    } catch {
-      /* storage unavailable — ignore */
+    const saved = loadWizardState();
+    if (saved) {
+      setMode("build");
+      setState((prev) => ({ ...prev, ...saved }));
+    }
+  }, []);
+
+  // Persist wizard state whenever it changes
+  useEffect(() => {
+    if (mode === "build") {
+      saveWizardState(state);
     }
   }, [mode, state]);
+
+  // Clear saved state when the wizard reaches the final Download step
+  useEffect(() => {
+    if (mode === "build" && state.step === TOTAL_STEPS) {
+      clearWizardState();
+    }
+  }, [mode, state.step]);
 
   const updateJob = useCallback((partial: Partial<GenerationJob>) => {
     setState((previous) => ({
@@ -75,13 +74,8 @@ export default function HomePage() {
   }, []);
 
   function goHome() {
+    clearWizardState();
     setMode("choose");
-    // Clear persisted state so the next build starts fresh
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignore */
-    }
     setState(initialState);
   }
 
