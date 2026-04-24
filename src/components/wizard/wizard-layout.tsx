@@ -44,12 +44,12 @@ function StepBadge({ index, current }: { index: number; current: number }) {
     : isDone
       ? "bg-indigo-100 text-indigo-700"
       : "bg-gray-100 text-gray-400";
-  return <div className={`${base} ${variant}`}>{step}</div>;
+  return <div className={`${base} ${variant}`} data-testid={`wizard-step-badge-${step}`}>{step}</div>;
 }
 
 function StepIndicator({ current }: { current: number }) {
   return (
-    <nav className="flex items-center gap-1 overflow-x-auto pb-1">
+    <nav className="flex items-center gap-1 overflow-x-auto pb-1" data-testid="wizard-step-indicator">
       {STEP_LABELS.map((label, index) => (
         <div key={label} className="flex items-center gap-1">
           <div className="flex flex-col items-center gap-1">
@@ -114,6 +114,7 @@ export function WizardLayout({
               onClick={onHome}
               className="flex items-center gap-3 transition hover:opacity-75"
               title="Back to home"
+              data-testid="wizard-home-button"
             >
               <div className="size-8 rounded-lg bg-indigo-600" />
               <span className="text-lg font-bold text-slate-900">AgentFoundry</span>

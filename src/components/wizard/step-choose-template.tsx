@@ -72,6 +72,7 @@ function TemplateCard({
     <button
       type="button"
       onClick={onSelect}
+      data-testid={`template-card-${template.id}`}
       className={`group relative flex w-full flex-col items-start rounded-xl border-2 p-5 text-left transition-all hover:shadow-md ${
         selected
           ? "border-indigo-500 bg-indigo-50 shadow-sm"
@@ -125,8 +126,9 @@ function TemplateCard({
         ))}
       </div>
 
-      {/* Preview link */}
+// Preview link
       <div
+        data-testid={`template-preview-${template.id}`}
         onClick={(e) => {
           e.stopPropagation();
           onPreview();
@@ -213,6 +215,7 @@ function TemplatePreviewModal({
           <button
             type="button"
             onClick={onClose}
+            data-testid="template-preview-close"
             className="rounded-full p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
           >
             ✕
@@ -296,6 +299,7 @@ function CustomTemplateForm({
               type="text"
               maxLength={2}
               value={draft.emoji}
+              data-testid="custom-template-emoji"
               onChange={(e) => setDraft({ ...draft, emoji: e.target.value })}
               className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-center text-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
@@ -308,6 +312,7 @@ function CustomTemplateForm({
               type="text"
               placeholder="e.g. Slack Bot Agent"
               value={draft.name}
+              data-testid="custom-template-name"
               onChange={(e) => setDraft({ ...draft, name: e.target.value })}
               className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
@@ -320,6 +325,7 @@ function CustomTemplateForm({
           <textarea
             rows={2}
             placeholder="What is this template for?"
+            data-testid="custom-template-description"
             value={draft.description}
             onChange={(e) => setDraft({ ...draft, description: e.target.value })}
             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -333,6 +339,7 @@ function CustomTemplateForm({
             <input
               type="text"
               placeholder="e.g. Node.js, Slack SDK"
+              data-testid="custom-template-stack"
               value={draft.stack}
               onChange={(e) => setDraft({ ...draft, stack: e.target.value })}
               className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -342,6 +349,7 @@ function CustomTemplateForm({
             <label className="mb-1 block text-xs font-medium text-slate-600">Audience</label>
             <select
               value={draft.audience}
+              data-testid="custom-template-audience"
               onChange={(e) =>
                 setDraft({
                   ...draft,
@@ -367,6 +375,7 @@ function CustomTemplateForm({
           <input
             type="text"
             placeholder="e.g. slack, bot, ai"
+            data-testid="custom-template-tags"
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -383,6 +392,7 @@ function CustomTemplateForm({
           <button
             type="button"
             onClick={onCancel}
+            data-testid="custom-template-cancel"
             className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
           >
             Cancel
@@ -390,6 +400,7 @@ function CustomTemplateForm({
           <button
             type="button"
             onClick={handleSave}
+            data-testid="custom-template-save"
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
           >
             Add Template
@@ -445,6 +456,7 @@ export function StepChooseTemplate({ job, onUpdateJob, onNext }: StepProperties)
             key={tab.value}
             type="button"
             onClick={() => setAudienceFilter(tab.value)}
+            data-testid={`template-audience-tab-${tab.value}`}
             className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all ${
               audienceFilter === tab.value
                 ? "border-indigo-600 bg-indigo-600 text-white shadow-sm"
@@ -499,6 +511,7 @@ export function StepChooseTemplate({ job, onUpdateJob, onNext }: StepProperties)
           type="button"
           onClick={onNext}
           disabled={!job.templateId}
+          data-testid="step-next-button"
           className="rounded-lg bg-indigo-600 px-6 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Next: Add Skills →

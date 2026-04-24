@@ -40,6 +40,7 @@ function FileTree({
           key={file.path}
           type="button"
           onClick={() => onSelect(file.path)}
+          data-testid={`preview-file-${file.path.replace(/[^a-zA-Z0-9]/g, "-")}`}
           className={`rounded px-3 py-1.5 text-left font-mono text-sm transition ${
             selected === file.path
               ? "bg-indigo-100 text-indigo-800"
@@ -150,6 +151,7 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
         <button
           type="button"
           onClick={onBack}
+          data-testid="step-back-button"
           className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
         >
           ← Back
@@ -158,6 +160,7 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
           <button
             type="button"
             onClick={() => void downloadZip()}
+            data-testid="preview-download-zip-button"
             disabled={downloading || !job.templateId}
             className="flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-5 py-2.5 font-medium text-indigo-700 transition hover:bg-indigo-100 disabled:opacity-40"
           >
@@ -166,6 +169,7 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
           <button
             type="button"
             onClick={onNext}
+            data-testid="step-next-button"
             className="rounded-lg bg-indigo-600 px-6 py-2.5 font-medium text-white transition hover:bg-indigo-700"
           >
             Next: Test Agent →

@@ -742,6 +742,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
           <span className="font-medium text-slate-600">Model</span>
           <select
             value={model}
+            data-testid="model-selector"
             onChange={(e) => setModel(e.target.value)}
             className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
           >
@@ -1086,6 +1087,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
               <div className="flex gap-2 border-t border-gray-200 p-3">
                 <input
                   type="text"
+                  data-testid="chat-input"
                   value={input}
                   placeholder="Send a message…"
                   onChange={(event) => setInput(event.target.value)}
@@ -1097,6 +1099,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 <button
                   type="button"
                   onClick={() => void send()}
+                  data-testid="chat-send-button"
                   disabled={!input.trim() || loading || agentDefs.length === 0}
                   className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-40"
                 >
@@ -1113,6 +1116,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
         <button
           type="button"
           onClick={onBack}
+          data-testid="step-back-button"
           className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
         >
           ← Back
@@ -1120,6 +1124,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
         <button
           type="button"
           onClick={onNext}
+          data-testid="step-next-button"
           className="rounded-lg bg-indigo-600 px-6 py-2.5 font-medium text-white transition hover:bg-indigo-700"
         >
           Looks good — Download →
