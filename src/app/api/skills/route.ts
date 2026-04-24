@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getSkillStore } from "@/lib/skill-store";
 import { SkillManifestSchema } from "@/lib/schemas";
+import { checkApiKey } from "@/lib/auth";
 
 /** GET /api/skills — list all skills */
 export async function GET() {
@@ -16,6 +17,11 @@ export async function GET() {
 
 /** POST /api/skills — create a new skill */
 export async function POST(request: NextRequest) {
+  const auth = checkApiKey(request);
+  if (!auth.authorized) {
+    return Response.json({ error: "Unauthorized", message: auth.reason }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();

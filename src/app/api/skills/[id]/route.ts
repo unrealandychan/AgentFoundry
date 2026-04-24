@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getSkillStore } from "@/lib/skill-store";
 import { SkillManifestSchema } from "@/lib/schemas";
+import { checkApiKey } from "@/lib/auth";
 
 interface RouteContext {
   params: { id: string };
@@ -22,6 +23,11 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
 
 /** PUT /api/skills/:id — full or partial update */
 export async function PUT(request: NextRequest, { params }: RouteContext) {
+  const auth = checkApiKey(request);
+  if (!auth.authorized) {
+    return Response.json({ error: "Unauthorized", message: auth.reason }, { status: 401 });
+  }
+
   const { id } = params;
 
   let body: unknown;
@@ -52,6 +58,11 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
 
 /** DELETE /api/skills/:id */
 export async function DELETE(_request: NextRequest, { params }: RouteContext) {
+  const auth = checkApiKey(_request);
+  if (!auth.authorized) {
+    return Response.json({ error: "Unauthorized", message: auth.reason }, { status: 401 });
+  }
+
   const { id } = params;
   try {
     const store = getSkillStore();

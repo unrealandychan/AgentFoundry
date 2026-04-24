@@ -8,6 +8,7 @@ import type { AgentInputItem } from "@openai/agents";
 const RECOMMENDED_PROMPT_PREFIX = `# System context
 You are part of a multi-agent system called the Agents SDK, designed to make agent coordination and execution easy. Agents uses two primary abstractions: **Agents** and **Handoffs**. An agent encompasses instructions and tools and can hand off a conversation to another agent when appropriate. Handoffs are achieved by calling a handoff function, generally named \`transfer_to_<agent_name>\`. Transfers between agents are handled seamlessly in the background; do not mention or draw attention to these transfers in your conversation with the user.`;
 import { TestAgentRequestSchema } from "@/lib/schemas";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -98,18 +99,31 @@ function buildHistory(
 // ── Route handler ─────────────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const rateLimit = checkRateLimit(ip);
+  const rateLimitHeaders = {
+    "X-RateLimit-Remaining": String(rateLimit.remaining),
+    "X-RateLimit-Reset": String(rateLimit.resetAt),
+  };
+  if (!rateLimit.allowed) {
+    return Response.json(
+      { error: "Rate limit exceeded", retryAfter: Math.ceil((rateLimit.resetAt - Date.now()) / 1000) },
+      { status: 429, headers: rateLimitHeaders },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return Response.json({ error: "Invalid JSON body" }, { status: 400 });
+    return Response.json({ error: "Invalid JSON body" }, { status: 400, headers: rateLimitHeaders });
   }
 
   const parsed = TestAgentRequestSchema.safeParse(body);
   if (!parsed.success) {
     return Response.json(
       { error: parsed.error.issues[0]?.message ?? "Invalid input" },
-      { status: 400 },
+      { status: 400, headers: rateLimitHeaders },
     );
   }
 
@@ -117,7 +131,7 @@ export async function POST(request: NextRequest) {
   if (!apiKey) {
     return Response.json(
       { error: "OPENAI_API_KEY is not configured on this server. Add it to .env.local." },
-      { status: 503 },
+      { status: 503, headers: rateLimitHeaders },
     );
   }
 
@@ -389,7 +403,7 @@ export async function POST(request: NextRequest) {
     });
 
     return new Response(readable, {
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
+      headers: { "Content-Type": "text/plain; charset=utf-8", ...rateLimitHeaders },
     });
   }
 
@@ -507,7 +521,7 @@ export async function POST(request: NextRequest) {
       },
     });
     return new Response(reflectReadable, {
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
+      headers: { "Content-Type": "text/plain; charset=utf-8", ...rateLimitHeaders },
     });
   }
 
@@ -579,7 +593,7 @@ export async function POST(request: NextRequest) {
   });
 
   return new Response(readable, {
-    headers: { "Content-Type": "text/plain; charset=utf-8" },
+    headers: { "Content-Type": "text/plain; charset=utf-8", ...rateLimitHeaders },
   });
 }
 
