@@ -457,6 +457,7 @@ function SandboxInner() {
       const next = all[0] ?? null;
       setActiveId(next?.id ?? null);
       setActiveSession(next);
+      router.replace(next ? `/sandbox?session=${next.id}` : "/sandbox");
     }
   }
 
