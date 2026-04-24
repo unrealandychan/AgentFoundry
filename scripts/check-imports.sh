@@ -16,6 +16,9 @@ CHECKED=0
 # Collect unique bare package specifiers (strip sub-paths, skip relative imports)
 IMPORTS=$(
   grep -rh --include="*.ts" --include="*.tsx" \
+    --exclude="*.test.ts" --exclude="*.test.tsx" \
+    --exclude="*.spec.ts" --exclude="*.spec.tsx" \
+    --exclude-dir="__tests__" \
     -oE 'from "[^".]([^"]*)"' "$SRC_DIR" 2>/dev/null \
   | sed 's/from "//;s/"//' \
   | grep -v '^\.' \
