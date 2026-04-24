@@ -79,6 +79,26 @@ export interface WizardState {
   job: Partial<GenerationJob>;
 }
 
+// ── Skill Sandbox ─────────────────────────────────────────────────────────────
+
+export interface SandboxMessage {
+  role: "user" | "assistant";
+  content: string;
+  /** ISO timestamp when message was created */
+  createdAt: string;
+}
+
+export interface SandboxSession {
+  id: string;
+  name: string;
+  skillId?: string;
+  /** The persona injected as system prompt */
+  personaText: string;
+  messages: SandboxMessage[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ComposedFile {
   path: string;
   content: string;

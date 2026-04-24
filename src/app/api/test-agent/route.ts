@@ -69,6 +69,7 @@ async function coordinatorCheck(
   const result = await run(
     coordinatorAgent,
     `Agent: ${agentName}\nUser message: ${userMessage}\n\nDraft response:\n${draftResponse}`,
+    // maxTurns:1 is intentional here — coordinator makes a single pass judgment.
     { maxTurns: 1 },
   );
   const content = (result.finalOutput as string | undefined)?.trim() ?? "";
@@ -141,8 +142,9 @@ export async function POST(request: NextRequest) {
   // Use Chat Completions API (universally supported by proxies). The SDK defaults to
   // the newer Responses API (/v1/responses) which many proxies don't implement.
   setOpenAIAPI("chat_completions");
-  // Disable tracing — it always targets api.openai.com regardless of baseURL, causing
-  // 401s when using a proxy key. Safe to disable globally.
+  // Disable tracing globally — it always targets api.openai.com regardless of baseURL,
+  // causing 401s when using a proxy key. Per-run tracingDisabled is not supported in
+  // @openai/agents 0.8.3, so the global call is the correct approach here.
   setTracingDisabled(true);
 
   const {
@@ -178,32 +180,11 @@ export async function POST(request: NextRequest) {
 
   // ── Collaborate mode — each agent speaks in turn ──────────────────────────
   if (collaborate && sdkAgents.length > 1) {
-    // Use a lightweight routing agent to determine discussion order.
-    let orderedAgents = sdkAgents;
-    try {
-      const agentList = sdkAgents.map((a, i) => `${i}: ${a.name}`).join("\n");
-      const routerAgent = new Agent({
-        name: "Router",
-        instructions: `You are a discussion orchestrator. Order ALL relevant specialists for the user message. Reply with ONLY a comma-separated list of their numeric indices in the order they should speak — no other text.\nSpecialists:\n${agentList}`,
-        model: activeModel,
-      });
-      const routeResult = await run(
-        routerAgent,
-        `Order specialists for: ${userMessage}`,
-        { maxTurns: 1 },
-      );
-      const raw = (routeResult.finalOutput as string | undefined)?.trim() ?? "";
-      const indices = raw
-        .split(",")
-        .map((s) => parseInt(s.trim(), 10))
-        .filter((n) => !isNaN(n) && n >= 0 && n < sdkAgents.length);
-      const resolved = indices
-        .map((i) => sdkAgents[i])
-        .filter((a): a is Agent => a !== undefined);
-      if (resolved.length >= 2) orderedAgents = resolved;
-    } catch {
-      /* fall back to all agents in original order */
-    }
+    // Use original agent order — no extra LLM router call needed.
+    // The SDK's native handoff mechanism (used in single-agent mode below) already
+    // handles intelligent routing. In collaborate mode we want ALL agents to speak,
+    // so we simply iterate in the defined order.
+    const orderedAgents = sdkAgents;
 
     const ROUNDS = rounds ?? 2;
     const enc = new TextEncoder();
@@ -253,10 +234,11 @@ export async function POST(request: NextRequest) {
 
               let fullText = "";
               try {
-                // Use SDK streaming for this agent's turn.
                 const agentStream = await run(turnAgent, conversationInput, {
                   stream: true,
-                  maxTurns: 1,
+                  // maxTurns:5 allows multi-step tool use within each agent's turn.
+                  // Previously hardcoded to 1 which cut off agents mid-reasoning.
+                  maxTurns: 5,
                 });
 
                 for await (const event of agentStream) {
@@ -307,7 +289,8 @@ export async function POST(request: NextRequest) {
 
                     const revStream = await run(revisedAgent, conversationInput, {
                       stream: true,
-                      maxTurns: 1,
+                      // maxTurns:5 allows multi-step reasoning during revision.
+                      maxTurns: 5,
                     });
                     for await (const event of revStream) {
                       if (
@@ -492,9 +475,19 @@ export async function POST(request: NextRequest) {
               model: activeModel,
             });
 
-            const revStream = await run(revisedAgent, conversationInput, {
+            // Use result.history from the draft run so the revised agent has full context
+            // of what was already said — avoids reconstructing history manually.
+            const revInput: AgentInputItem[] = [
+              ...((draftResult.history ?? []) as AgentInputItem[]),
+              {
+                role: "user",
+                content: `Please revise your answer. Coordinator feedback:\n${coordinatorFeedback}`,
+              },
+            ];
+
+            const revStream = await run(revisedAgent, revInput, {
               stream: true,
-              maxTurns: 1,
+              maxTurns: 5,
             });
             for await (const event of revStream) {
               if (
