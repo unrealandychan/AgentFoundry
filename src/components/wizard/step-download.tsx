@@ -58,6 +58,7 @@ function AgentsSdkSnippet({ projectName }: { projectName: string }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        data-testid="sdk-snippet-toggle"
         className="flex w-full items-center justify-between text-left"
       >
         <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600">
@@ -78,6 +79,7 @@ function AgentsSdkSnippet({ projectName }: { projectName: string }) {
                 key={l}
                 type="button"
                 onClick={() => setLang(l)}
+                data-testid={`sdk-lang-${l}`}
                 className={`rounded-md px-3 py-1 text-xs font-medium transition ${
                   lang === l
                     ? "bg-indigo-600 text-white"
@@ -136,6 +138,7 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        data-testid="gist-export-toggle"
         className="flex w-full items-center justify-between text-left"
       >
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -161,6 +164,7 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
             <input
               type="password"
               placeholder="ghp_…"
+              data-testid="gist-token-input"
               value={token}
               onChange={(e) => setToken(e.target.value)}
               className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -168,6 +172,7 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
             <button
               type="button"
               onClick={() => void createGist()}
+              data-testid="gist-create-button"
               disabled={loading || !token.trim() || !job.templateId}
               className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-40"
             >
@@ -311,6 +316,7 @@ export function StepDownload({ job, onBack }: StepProperties) {
         <button
           type="button"
           onClick={onBack}
+          data-testid="step-back-button"
           className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
         >
           ← Back
@@ -318,6 +324,7 @@ export function StepDownload({ job, onBack }: StepProperties) {
         <button
           type="button"
           onClick={() => void downloadZip()}
+          data-testid="download-zip-button"
           disabled={downloading}
           className="flex items-center gap-2 rounded-lg bg-indigo-600 px-8 py-2.5 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
         >

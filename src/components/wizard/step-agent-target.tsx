@@ -103,6 +103,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
               key={agent.id}
               type="button"
               onClick={() => onUpdateJob({ agentTarget: agent.id })}
+              data-testid={`agent-target-card-${agent.id}`}
               className={`group relative flex flex-col rounded-xl border-2 p-5 text-left transition-all hover:shadow-md ${
                 isSelected
                   ? "border-indigo-500 bg-indigo-50 shadow-sm"
@@ -151,6 +152,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
         <button
           type="button"
           onClick={onBack}
+          data-testid="step-back-button"
           className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
         >
           ← Back
@@ -158,6 +160,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
         <button
           type="button"
           onClick={onNext}
+          data-testid="step-next-button"
           className="rounded-lg bg-indigo-600 px-6 py-2.5 font-medium text-white transition hover:bg-indigo-700"
         >
           Next: Customize →

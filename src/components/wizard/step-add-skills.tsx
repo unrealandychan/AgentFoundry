@@ -233,6 +233,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
       <button
         type="button"
         onClick={() => setOpen(true)}
+        data-testid="create-skill-open-button"
         className="flex w-full items-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-white px-4 py-3 text-sm font-medium text-slate-500 transition hover:border-indigo-400 hover:text-indigo-600"
       >
         <span className="text-lg leading-none">+</span>
@@ -264,6 +265,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
           </label>
           <input
             type="text"
+            data-testid="custom-skill-title"
             value={title}
             placeholder="e.g. Podcast Script Writer"
             onChange={(event) => setTitle(event.target.value)}
@@ -274,6 +276,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
           <label className="mb-1 block text-xs font-medium text-slate-700">Short description</label>
           <input
             type="text"
+            data-testid="custom-skill-description"
             value={description}
             placeholder="One-line summary shown on the skill card"
             onChange={(event) => setDescription(event.target.value)}
@@ -285,6 +288,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
             Instructions / Persona <span className="text-red-500">*</span>
           </label>
           <textarea
+            data-testid="custom-skill-persona"
             value={persona}
             placeholder={`You are an expert podcast script writer.\nWrite engaging, conversational scripts…`}
             rows={5}
@@ -301,6 +305,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
           </label>
           <input
             type="text"
+            data-testid="custom-skill-tags"
             value={tagsRaw}
             placeholder="e.g. writing, audio, marketing"
             onChange={(event) => setTagsRaw(event.target.value)}
@@ -328,6 +333,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
           <button
             type="button"
             onClick={() => void handleSave()}
+            data-testid="custom-skill-save"
             disabled={saving || !title.trim() || !persona.trim()}
             className="rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-40"
           >
@@ -356,6 +362,7 @@ function SkillCard({
     <button
       type="button"
       onClick={onToggle}
+      data-testid={`skill-card-${skill.id}`}
       className={`group flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
         selected
           ? "border-indigo-500 bg-indigo-50"
@@ -596,6 +603,7 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
         <button
           type="button"
           onClick={onBack}
+          data-testid="skills-back-button"
           className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
         >
           ← Back
@@ -603,6 +611,7 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
         <button
           type="button"
           onClick={onNext}
+          data-testid="step-next-button"
           className="rounded-lg bg-indigo-600 px-6 py-2.5 font-medium text-white transition hover:bg-indigo-700"
         >
           Next: Integrations →

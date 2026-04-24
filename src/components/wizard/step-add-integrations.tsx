@@ -315,6 +315,7 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
         <button
           type="button"
           onClick={onBack}
+          data-testid="step-back-button"
           className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
         >
           ← Back
@@ -322,6 +323,7 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
         <button
           type="button"
           onClick={onNext}
+          data-testid="step-next-button"
           className="rounded-lg bg-indigo-600 px-6 py-2.5 font-medium text-white transition hover:bg-indigo-700"
         >
           Next: Agent Target →
