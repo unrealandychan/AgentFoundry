@@ -21,49 +21,8 @@
 
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import matter from "gray-matter";
 import type { SkillManifest } from "@/types";
-
-// ── YAML frontmatter parser (no external dependency) ──────────────────────────
-
-interface Frontmatter {
-  name?: string;
-  title?: string;
-  description?: string;
-  tags?: string | string[];
-  compatibility?: string | string[];
-  tooltip?: string;
-}
-
-function parseFrontmatter(content: string): { fm: Frontmatter; body: string } {
-  if (!content.startsWith("---")) return { fm: {}, body: content };
-  const end = content.indexOf("\n---", 3);
-  if (end === -1) return { fm: {}, body: content };
-
-  const raw = content.slice(4, end); // strip opening ---\n
-  const body = content.slice(end + 4); // strip \n---
-
-  const fm: Frontmatter = {};
-  // Parse simple scalar and flow-sequence fields only.
-  // Multi-line nested blocks (like openclaw metadata) are skipped safely.
-  for (const line of raw.split("\n")) {
-    const scalar = /^(\w[\w-]*):\s+"?([^\n"#]+)"?\s*$/.exec(line);
-    if (scalar) {
-      const [, key, value] = scalar;
-      (fm as Record<string, string>)[key] = value.trim().replaceAll(/^["']|["']$/g, "");
-      continue;
-    }
-    // Flow sequence: tags: [a, b, c]
-    const flow = /^(\w[\w-]*):\s+\[([^\]]*)]/.exec(line);
-    if (flow) {
-      const [, key, items] = flow;
-      (fm as Record<string, string[]>)[key] = items
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean);
-    }
-  }
-  return { fm, body };
-}
 
 /** Extract the full instruction body from the skill markdown (everything after the # Title heading). */
 function extractPersonaText(body: string): string {
@@ -90,10 +49,17 @@ const SKILLS_DIR = path.join(process.cwd(), "skills");
  * Returns null if required fields (name/title/description) are missing.
  */
 export function parseSkillContent(id: string, content: string): SkillManifest | null {
-  const { fm, body } = parseFrontmatter(content);
-  const skillId = fm.name ?? id;
-  const title = fm.title ?? "";
-  const description = fm.description ?? "";
+  let parsed;
+  try {
+    parsed = matter(content);
+  } catch {
+    return null;
+  }
+
+  const { data: fm, content: body } = parsed;
+  const skillId = (fm["name"] as string | undefined) ?? id;
+  const title = (fm["title"] as string | undefined) ?? "";
+  const description = (fm["description"] as string | undefined) ?? "";
 
   if (!skillId || !title || !description) return null;
 
@@ -102,9 +68,9 @@ export function parseSkillContent(id: string, content: string): SkillManifest | 
     title,
     description,
     personaText: extractPersonaText(body),
-    tags: toArray(fm.tags),
-    compatibility: toArray(fm.compatibility),
-    tooltip: fm.tooltip,
+    tags: toArray(fm["tags"] as string | string[] | undefined),
+    compatibility: toArray(fm["compatibility"] as string | string[] | undefined),
+    tooltip: fm["tooltip"] as string | undefined,
   };
 }
 
