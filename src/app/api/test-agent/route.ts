@@ -8,7 +8,8 @@ import type { AgentInputItem } from "@openai/agents";
 const RECOMMENDED_PROMPT_PREFIX = `# System context
 You are part of a multi-agent system called the Agents SDK, designed to make agent coordination and execution easy. Agents uses two primary abstractions: **Agents** and **Handoffs**. An agent encompasses instructions and tools and can hand off a conversation to another agent when appropriate. Handoffs are achieved by calling a handoff function, generally named \`transfer_to_<agent_name>\`. Transfers between agents are handled seamlessly in the background; do not mention or draw attention to these transfers in your conversation with the user.`;
 import { TestAgentRequestSchema } from "@/lib/schemas";
-
+import { checkRateLimit } from "@/lib/rate-limit";
+import { scheduleWorkspaceCleanup } from "@/lib/workspace-cleanup";
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 async function buildWorkspaceContext(sessionId: string | undefined): Promise<string> {
@@ -588,5 +589,8 @@ export async function POST(request: NextRequest) {
   return new Response(readable, {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
   });
+
+  // Fire-and-forget: clean up /tmp workspace dirs older than 1 hour
+  scheduleWorkspaceCleanup();
 }
 
