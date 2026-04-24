@@ -359,11 +359,9 @@ function SkillCard({
   highlighted?: boolean;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onToggle}
+    <div
       data-testid={`skill-card-${skill.id}`}
-      className={`group flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
+      className={`group relative flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
         selected
           ? "border-indigo-500 bg-indigo-50"
           : highlighted
@@ -371,28 +369,49 @@ function SkillCard({
             : "border-gray-200 bg-white hover:border-indigo-300"
       }`}
     >
-      <div
-        className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
-          selected ? "border-indigo-600 bg-indigo-600" : "border-gray-300 bg-white"
-        }`}
+      {/* Checkbox toggle — takes up most of the card */}
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex flex-1 items-start gap-3 text-left"
+        aria-label={`${selected ? "Deselect" : "Select"} ${skill.title}`}
       >
-        {selected && <span className="text-xs text-white">✓</span>}
-      </div>
-      <div>
-        <div className="flex items-start gap-1">
-          <p className="font-semibold text-slate-900">{skill.title}</p>
-          {skill.tooltip && <Tooltip title="What this skill adds" body={skill.tooltip} />}
+        <div
+          className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
+            selected ? "border-indigo-600 bg-indigo-600" : "border-gray-300 bg-white"
+          }`}
+        >
+          {selected && <span className="text-xs text-white">✓</span>}
         </div>
-        <p className="mt-0.5 text-sm text-slate-500">{skill.description}</p>
-        <div className="mt-2 flex flex-wrap gap-1">
-          {skill.tags.map((tag) => (
-            <span key={tag} className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">
-              {tag}
-            </span>
-          ))}
+        <div>
+          <div className="flex items-start gap-1">
+            <p className="font-semibold text-slate-900">{skill.title}</p>
+            {skill.tooltip && <Tooltip title="What this skill adds" body={skill.tooltip} />}
+          </div>
+          <p className="mt-0.5 text-sm text-slate-500">{skill.description}</p>
+          <div className="mt-2 flex flex-wrap gap-1">
+            {skill.tags.map((tag) => (
+              <span key={tag} className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
-    </button>
+      </button>
+
+      {/* ▶ Test button — appears on hover */}
+      <a
+        href={`/sandbox?skill=${skill.id}`}
+        target="_blank"
+        rel="noreferrer"
+        data-testid={`skill-test-${skill.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="absolute right-3 top-3 hidden rounded-lg border border-indigo-200 bg-white px-2 py-1 text-xs font-medium text-indigo-600 shadow-sm transition hover:bg-indigo-50 group-hover:flex"
+        title="Open in Skill Sandbox"
+      >
+        ▶ Test
+      </a>
+    </div>
   );
 }
 
