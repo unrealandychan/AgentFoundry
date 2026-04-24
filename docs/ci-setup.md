@@ -110,7 +110,7 @@ jobs:
 
 | Job | Trigger | Purpose |
 |-----|---------|---------|
-| `test` | push/PR | Run 51 Vitest unit tests, upload coverage artifact |
+| `test` | push/PR | Run unit tests, upload coverage artifact |
 | `typecheck` | push/PR | `tsc --noEmit` — catch type errors without building |
 | `lint` | push/PR | ESLint with TypeScript + Unicorn + SonarJS rules |
 | `build` | push/PR | `next build` — needs `test` + `typecheck` to pass first |
