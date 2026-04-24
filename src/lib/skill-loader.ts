@@ -49,8 +49,14 @@ const SKILLS_DIR = path.join(process.cwd(), "skills");
  * Returns null if required fields (name/title/description) are missing.
  */
 export function parseSkillContent(id: string, content: string): SkillManifest | null {
-  const { data: fm, content: body } = matter(content);
+  let parsed;
+  try {
+    parsed = matter(content);
+  } catch {
+    return null;
+  }
 
+  const { data: fm, content: body } = parsed;
   const skillId = (fm["name"] as string | undefined) ?? id;
   const title = (fm["title"] as string | undefined) ?? "";
   const description = (fm["description"] as string | undefined) ?? "";
