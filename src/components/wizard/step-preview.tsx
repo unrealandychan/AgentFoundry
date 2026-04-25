@@ -43,8 +43,8 @@ function FileTree({
           data-testid={`preview-file-${file.path.replaceAll(/[^\dA-Za-z]/g, "-")}`}
           className={`rounded px-3 py-1.5 text-left font-mono text-sm transition ${
             selected === file.path
-              ? "bg-indigo-100 dark:bg-indigo-900 text-indigo-800"
-              : "text-slate-600 hover:bg-gray-100 dark:bg-gray-800"
+              ? "bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200"
+              : "text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-gray-800"
           }`}
         >
           {file.path}
@@ -162,7 +162,7 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
             onClick={() => void downloadZip()}
             data-testid="preview-download-zip-button"
             disabled={downloading || !job.templateId}
-            className="flex items-center gap-2 rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 px-5 py-2.5 font-medium text-indigo-700 dark:text-indigo-300 transition hover:bg-indigo-100 dark:bg-indigo-900 disabled:opacity-40"
+            className="flex items-center gap-2 rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900 px-5 py-2.5 font-medium text-indigo-700 dark:text-indigo-300 transition hover:bg-indigo-100 dark:hover:bg-indigo-800 disabled:opacity-40"
           >
             {downloading ? "Generating…" : "⬇ Download ZIP"}
           </button>

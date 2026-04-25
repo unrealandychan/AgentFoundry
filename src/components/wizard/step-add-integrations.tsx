@@ -94,7 +94,7 @@ function McpCard({
       type="button"
       onClick={onToggle}
       className={`flex w-full flex-col rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
-        selected ? "border-teal-500 bg-teal-50" : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-teal-300"
+        selected ? "border-teal-500 bg-teal-50 dark:bg-teal-950 dark:border-teal-400" : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-teal-300"
       }`}
     >
       <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ function McpCard({
         {integration.mcpServers.map((server) => (
           <span
             key={server.name}
-            className="rounded bg-teal-100 px-1.5 py-0.5 text-xs text-teal-700"
+            className="rounded bg-teal-100 dark:bg-teal-900 px-1.5 py-0.5 text-xs text-teal-700 dark:text-teal-300"
           >
             {server.name}
           </span>
@@ -246,7 +246,7 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
                 className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                   categoryFilter === cat
                     ? "bg-teal-600 text-white"
-                    : "bg-gray-100 dark:bg-gray-800 text-slate-600 hover:bg-teal-100 hover:text-teal-700"
+                    : "bg-gray-100 dark:bg-gray-800 text-slate-600 dark:text-slate-300 hover:bg-teal-100 dark:hover:bg-teal-900 hover:text-teal-700 dark:hover:text-teal-300"
                 }`}
               >
                 {cat}

@@ -111,7 +111,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
               }`}
             >
               {isSelected && (
-                <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">
+                <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-indigo-600 dark:bg-indigo-400 text-xs text-white dark:text-gray-900 font-bold">
                   ✓
                 </span>
               )}
@@ -138,7 +138,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
               </div>
 
               {/* Generated file badge */}
-              <code className="mb-2 w-fit rounded bg-slate-100 dark:bg-gray-700 px-2 py-0.5 text-[11px] text-slate-600">
+              <code className="mb-2 w-fit rounded bg-slate-100 dark:bg-gray-700 px-2 py-0.5 text-[11px] text-slate-600 dark:text-slate-300">
                 {agent.generatedFile}
               </code>
 

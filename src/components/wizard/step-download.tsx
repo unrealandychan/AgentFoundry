@@ -252,7 +252,7 @@ export function StepDownload({ job, onBack }: StepProperties) {
       </p>
 
       <div className="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
-        <h3 className="mb-4 font-semibold text-slate-800">Package Summary</h3>
+        <h3 className="mb-4 font-semibold text-slate-800 dark:text-slate-100">Package Summary</h3>
         <div className="flex flex-col gap-2">
           <SummaryRow label="Template" value={template.name} />
           <SummaryRow label="Project" value={job.projectName ?? "—"} />
@@ -278,7 +278,7 @@ export function StepDownload({ job, onBack }: StepProperties) {
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
           Included Files
         </p>
-        <div className="grid grid-cols-2 gap-1 font-mono text-xs text-slate-600 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-1 font-mono text-xs text-slate-600 dark:text-slate-300 sm:grid-cols-3">
           {[
             "README.md",
             "AGENTS.md",
@@ -298,13 +298,13 @@ export function StepDownload({ job, onBack }: StepProperties) {
       <AgentsSdkSnippet projectName={job.projectName ?? "my-agent"} />
 
       {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="mb-4 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-4 py-3 text-sm text-red-700 dark:text-red-300">
           {error}
         </div>
       )}
 
       {done && (
-        <div className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+        <div className="mb-4 rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 px-4 py-3 text-sm text-green-700 dark:text-green-300">
           ✓ Downloaded successfully! Check your downloads folder.
         </div>
       )}

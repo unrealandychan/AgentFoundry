@@ -577,7 +577,7 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
               ⭐ Recommended for {selectedTemplate?.name ?? "this template"}
             </p>
             <span className="text-xs text-slate-400 dark:text-slate-500">Best match based on your template</span>
-            <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700">
+            <span className="ml-auto rounded-full bg-amber-100 dark:bg-amber-900 px-2 py-0.5 text-xs text-amber-700 dark:text-amber-300">
               {recommendedSkills.length}
             </span>
           </div>

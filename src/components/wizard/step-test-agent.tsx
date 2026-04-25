@@ -72,11 +72,11 @@ function estimateCost(model: string, charsIn: number, charsOut: number): string 
 // Stable palette — agent i gets color i % 6
 const AGENT_COLORS = [
   "bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800",
-  "bg-teal-100 text-teal-700 border-teal-200",
-  "bg-amber-100 text-amber-700 border-amber-200",
-  "bg-rose-100 text-rose-700 border-rose-200",
-  "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border-emerald-200",
-  "bg-purple-100 text-purple-700 border-purple-200",
+  "bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800",
+  "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
+  "bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800",
+  "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
+  "bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800",
 ];
 
 function agentColor(index: number): string {
@@ -138,7 +138,7 @@ function inlineMarkdown(text: string): React.ReactNode[] {
       parts.push(
         <code
           key={key++}
-          className="rounded bg-gray-200 dark:bg-gray-700 px-1 py-0.5 text-[0.8em] font-mono text-slate-800"
+          className="rounded bg-gray-200 dark:bg-gray-700 px-1 py-0.5 text-[0.8em] font-mono text-slate-800 dark:text-slate-100"
         >
           {token.slice(1, -1)}
         </code>,
@@ -225,7 +225,7 @@ function renderMarkdown(content: string): React.ReactNode {
       nodes.push(
         <blockquote
           key={blockKey++}
-          className="my-1 border-l-4 border-indigo-300 pl-3 text-slate-600 italic"
+          className="my-1 border-l-4 border-indigo-300 dark:border-indigo-700 pl-3 text-slate-600 dark:text-slate-300 italic"
         >
           {quoteLines.map((ql, qi) => (
             <Fragment key={qi}>
@@ -261,7 +261,7 @@ function renderMarkdown(content: string): React.ReactNode {
             <thead>
               <tr className="border-b border-gray-300">
                 {headers.map((header, hi) => (
-                  <th key={hi} className="py-1 pr-4 font-semibold text-slate-800">
+                  <th key={hi} className="py-1 pr-4 font-semibold text-slate-800 dark:text-slate-100">
                     {inlineMarkdown(header)}
                   </th>
                 ))}
@@ -337,7 +337,7 @@ function renderMarkdown(content: string): React.ReactNode {
 
     // Regular paragraph line
     nodes.push(
-      <p key={blockKey++} className="my-1 text-slate-800">
+      <p key={blockKey++} className="my-1 text-slate-800 dark:text-slate-100">
         {inlineMarkdown(line)}
       </p>,
     );
@@ -739,7 +739,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
 
         {/* Model selector */}
         <label className="flex items-center gap-2 text-sm">
-          <span className="font-medium text-slate-600">Model</span>
+          <span className="font-medium text-slate-600 dark:text-slate-300">Model</span>
           <select
             value={model}
             data-testid="model-selector"
@@ -855,7 +855,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                   </span>
                 ))}
                 {reflective && (
-                  <span className="rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+                  <span className="rounded-full border border-amber-300 dark:border-amber-700 bg-amber-100 dark:bg-amber-900 px-3 py-1 text-xs font-medium text-amber-800 dark:text-amber-200">
                     🔄 Coordinator
                   </span>
                 )}
@@ -882,7 +882,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 💰 Est. Cost
               </p>
-              <p className="font-mono text-sm font-semibold text-slate-800">
+              <p className="font-mono text-sm font-semibold text-slate-800 dark:text-slate-100">
                 {estimateCost(model, totalCharsIn, totalCharsOut)}
               </p>
               <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
@@ -907,7 +907,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 workspaceFiles.map((name) => (
                   <span
                     key={name}
-                    className="rounded-full border border-slate-200 dark:border-gray-700 bg-slate-100 dark:bg-gray-700 px-2 py-0.5 font-mono text-xs text-slate-600"
+                    className="rounded-full border border-slate-200 dark:border-gray-700 bg-slate-100 dark:bg-gray-700 px-2 py-0.5 font-mono text-xs text-slate-600 dark:text-slate-300"
                   >
                     {name}
                   </span>
@@ -940,7 +940,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 </>
               )}
             </label>
-            {uploadError && <p className="mt-2 text-xs text-red-600">{uploadError}</p>}
+            {uploadError && <p className="mt-2 text-xs text-red-600 dark:text-red-300">{uploadError}</p>}
           </div>
         </div>
 
@@ -1010,7 +1010,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
               )}
               {summary && (
                 <div className="flex flex-col gap-3">
-                  <pre className="whitespace-pre-wrap rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-5 py-4 font-sans text-sm leading-relaxed text-slate-800">
+                  <pre className="whitespace-pre-wrap rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-5 py-4 font-sans text-sm leading-relaxed text-slate-800 dark:text-slate-100">
                     {summary}
                   </pre>
                   <div className="flex items-center gap-3">
@@ -1018,7 +1018,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                       type="button"
                       onClick={() => void generateSummary()}
                       disabled={summarizing}
-                      className="rounded-md border border-gray-200 dark:border-gray-700 px-3 py-1.5 text-xs text-slate-600 transition hover:bg-slate-50 dark:bg-gray-900 disabled:opacity-40"
+                      className="rounded-md border border-gray-200 dark:border-gray-700 px-3 py-1.5 text-xs text-slate-600 dark:text-slate-300 transition hover:bg-slate-50 dark:bg-gray-900 disabled:opacity-40"
                     >
                       ↺ Regenerate
                     </button>
@@ -1066,7 +1066,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                     <div className="rounded-2xl bg-gray-100 dark:bg-gray-800 px-4 py-2.5 text-sm text-slate-400 dark:text-slate-500">
                       {thinkingAgent ? (
                         <span>
-                          <span className="font-medium text-slate-600">{thinkingAgent}</span> is
+                          <span className="font-medium text-slate-600 dark:text-slate-300">{thinkingAgent}</span> is
                           thinking…
                         </span>
                       ) : (

@@ -28,27 +28,27 @@ const AUDIENCE_TABS: { label: string; value: TemplateAudience | "all" }[] = [
 // ─── Tag colour map ───────────────────────────────────────────────────────────
 
 const TAG_COLORS: Record<string, string> = {
-  ai: "bg-purple-100 text-purple-700",
+  ai: "bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300",
   typescript: "bg-blue-100 text-blue-700",
   python: "bg-yellow-100 text-yellow-700",
-  web: "bg-green-100 text-green-700",
+  web: "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300",
   cli: "bg-orange-100 text-orange-700",
   rag: "bg-pink-100 text-pink-700",
-  mcp: "bg-teal-100 text-teal-700",
-  design: "bg-rose-100 text-rose-700",
+  mcp: "bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300",
+  design: "bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300",
   qa: "bg-lime-100 text-lime-700",
   testing: "bg-lime-100 text-lime-700",
   prd: "bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300",
   planning: "bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300",
-  marketing: "bg-amber-100 text-amber-700",
-  copywriting: "bg-amber-100 text-amber-700",
+  marketing: "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300",
+  copywriting: "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300",
   data: "bg-cyan-100 text-cyan-700",
   sql: "bg-cyan-100 text-cyan-700",
-  devops: "bg-red-100 text-red-700",
-  infra: "bg-red-100 text-red-700",
+  devops: "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300",
+  infra: "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300",
   "no-code": "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300",
   docs: "bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-slate-300",
-  default: "bg-gray-100 dark:bg-gray-800 text-gray-600",
+  default: "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300",
 };
 
 function tagColor(tag: string): string {
@@ -108,7 +108,7 @@ function TemplateCard({
             </div>
           )}
           {"custom" in template && (template as TemplateManifest & { custom?: boolean }).custom && (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+            <span className="rounded-full bg-amber-100 dark:bg-amber-900 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
               Custom
             </span>
           )}
@@ -289,12 +289,12 @@ function CustomTemplateForm({
 
   return (
     <div className="rounded-xl border-2 border-dashed border-indigo-300 dark:border-indigo-700 bg-indigo-50/40 dark:bg-indigo-950/40 p-6">
-      <h3 className="mb-4 text-base font-semibold text-slate-800">✨ Create a Custom Template</h3>
+      <h3 className="mb-4 text-base font-semibold text-slate-800 dark:text-slate-100">✨ Create a Custom Template</h3>
       <div className="space-y-4">
         {/* Name + emoji row */}
         <div className="flex gap-3">
           <div className="w-20">
-            <label className="mb-1 block text-xs font-medium text-slate-600">Emoji</label>
+            <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">Emoji</label>
             <input
               type="text"
               maxLength={2}
@@ -305,7 +305,7 @@ function CustomTemplateForm({
             />
           </div>
           <div className="flex-1">
-            <label className="mb-1 block text-xs font-medium text-slate-600">
+            <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">
               Template Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -321,7 +321,7 @@ function CustomTemplateForm({
 
         {/* Description */}
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Description</label>
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">Description</label>
           <textarea
             rows={2}
             placeholder="What is this template for?"
@@ -335,7 +335,7 @@ function CustomTemplateForm({
         {/* Stack + Audience row */}
         <div className="flex gap-3">
           <div className="flex-1">
-            <label className="mb-1 block text-xs font-medium text-slate-600">Stack / Tech</label>
+            <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">Stack / Tech</label>
             <input
               type="text"
               placeholder="e.g. Node.js, Slack SDK"
@@ -346,7 +346,7 @@ function CustomTemplateForm({
             />
           </div>
           <div className="w-36">
-            <label className="mb-1 block text-xs font-medium text-slate-600">Audience</label>
+            <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">Audience</label>
             <select
               value={draft.audience}
               data-testid="custom-template-audience"
@@ -369,7 +369,7 @@ function CustomTemplateForm({
 
         {/* Tags */}
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-300">
             Tags <span className="font-normal text-slate-400 dark:text-slate-500">(comma-separated)</span>
           </label>
           <input
@@ -393,7 +393,7 @@ function CustomTemplateForm({
             type="button"
             onClick={onCancel}
             data-testid="custom-template-cancel"
-            className="rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 dark:bg-gray-900"
+            className="rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-gray-800"
           >
             Cancel
           </button>
