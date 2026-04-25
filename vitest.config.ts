@@ -11,10 +11,6 @@ export default defineConfig({
   test: {
     environment: "node",
     globals: true,
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
     include: ["src/**/*.test.ts", "src/**/*.spec.ts"],
     coverage: {
       provider: "v8",
@@ -31,7 +27,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
 });
