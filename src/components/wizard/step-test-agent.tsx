@@ -355,7 +355,7 @@ function ChatBubble({ message, agentIndex }: { message: ChatMessage; agentIndex:
       {!isUser && message.agentName && (
         <span
           className={`mb-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${
-            isCoordinator ? "bg-amber-100 text-amber-800 border-amber-300" : agentColor(agentIndex)
+            isCoordinator ? "bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-700" : agentColor(agentIndex)
           }`}
         >
           {message.agentName}
@@ -366,8 +366,8 @@ function ChatBubble({ message, agentIndex }: { message: ChatMessage; agentIndex:
           isUser
             ? "bg-indigo-600 text-white"
             : (isCoordinator
-              ? "bg-amber-50 border border-amber-200 text-amber-900"
-              : "bg-gray-100 dark:bg-gray-800 text-slate-800")
+              ? "bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-700 text-amber-900 dark:text-amber-200"
+              : "bg-gray-100 dark:bg-gray-800 text-slate-800 dark:text-slate-100")
         }`}
       >
         {isUser ? (
@@ -713,7 +713,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
       </p>
 
       {/* ── Limitations disclaimer ─────────────────────────────────────────── */}
-      <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800">
+      <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 px-4 py-3 text-xs text-amber-800 dark:text-amber-200">
         <span className="mt-0.5 shrink-0 text-base leading-none">⚠️</span>
         <div>
           <span className="font-semibold">Preview mode — behaviour only.</span> This sandbox tests
@@ -731,7 +731,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
         <span className="flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-300">
           <span>🔒</span>
           <span>
-            Server-side key via <code className="rounded bg-emerald-50 px-1">OPENAI_API_KEY</code>
+            Server-side key via <code className="rounded bg-emerald-50 dark:bg-emerald-950 px-1">OPENAI_API_KEY</code>
           </span>
         </span>
 
@@ -777,7 +777,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
               onClick={() => setCollaborate((v) => !v)}
               className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition ${
                 collaborate
-                  ? "border-violet-300 bg-violet-50 text-violet-700 dark:text-violet-300"
+                  ? "border-violet-300 dark:border-violet-600 bg-violet-50 dark:bg-violet-950 text-violet-700 dark:text-violet-300"
                   : "border-gray-200 dark:border-gray-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-gray-900"
               }`}
             >
@@ -793,7 +793,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 <select
                   value={rounds}
                   onChange={(e) => setRounds(Number(e.target.value))}
-                  className="rounded-md border border-violet-200 bg-violet-50 px-1.5 py-1 text-xs text-violet-800 outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-300"
+                  className="rounded-md border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-950 px-1.5 py-1 text-xs text-violet-800 dark:text-violet-300 outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-300"
                 >
                   {[1, 2, 3, 4, 5].map((n) => (
                     <option key={n} value={n}>
@@ -814,7 +814,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
             onClick={() => setReflective((v) => !v)}
             className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition ${
               reflective
-                ? "border-amber-300 bg-amber-50 text-amber-700"
+                ? "border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300"
                 : "border-gray-200 dark:border-gray-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-gray-900"
             }`}
           >
@@ -1033,7 +1033,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 </div>
               )}
               {summaryError && !summary && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
                   {summaryError}
                 </div>
               )}
@@ -1076,7 +1076,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                   </div>
                 )}
                 {error && (
-                  <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
                     {error}
                   </div>
                 )}

@@ -105,7 +105,7 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
 
   if (!template) {
     return (
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-800">
+      <div className="rounded-xl border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 p-6 text-amber-800 dark:text-amber-200">
         Please go back and choose a template first.
       </div>
     );
@@ -137,12 +137,12 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
       </div>
 
       {downloadError && (
-        <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">
+        <div className="mb-3 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-4 py-2.5 text-sm text-red-700 dark:text-red-300">
           {downloadError}
         </div>
       )}
       {downloadDone && (
-        <div className="mb-3 rounded-lg border border-green-200 bg-green-50 px-4 py-2.5 text-sm text-green-700">
+        <div className="mb-3 rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 px-4 py-2.5 text-sm text-green-700 dark:text-green-300">
           ✓ Downloaded! Check your downloads folder.
         </div>
       )}

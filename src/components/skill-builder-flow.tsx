@@ -92,7 +92,7 @@ async function readNdjsonStream(response: Response, onLine: (data: NdjsonLine) =
 
 const GRADE_PILL: Record<string, string> = {
   A: "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border border-emerald-200",
-  B: "bg-emerald-50 text-emerald-600 border border-emerald-200",
+  B: "bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800",
   C: "bg-amber-100 text-amber-700 border border-amber-200",
   D: "bg-orange-100 text-orange-700 border border-orange-200",
   F: "bg-red-100 text-red-700 border border-red-200",
@@ -313,7 +313,7 @@ function GenerateForm({ onGenerated }: GenerateFormProperties) {
   }
 
   return (
-    <div className="inline-flex flex-wrap items-end gap-2 rounded-xl border border-violet-200 bg-violet-50 p-3">
+    <div className="inline-flex flex-wrap items-end gap-2 rounded-xl border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950 p-3">
       <div className="flex flex-col gap-1">
         <label className="text-[11px] font-semibold uppercase tracking-wide text-violet-600">
           Skill name

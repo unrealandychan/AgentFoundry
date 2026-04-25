@@ -243,7 +243,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
   }
 
   return (
-    <div className="rounded-xl border-2 border-indigo-300 bg-indigo-50 p-5">
+    <div className="rounded-xl border-2 border-indigo-300 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-950 p-5">
       <div className="mb-4 flex items-center justify-between">
         <p className="font-semibold text-slate-900 dark:text-white">✏️ Create Custom Skill</p>
         <button
@@ -314,7 +314,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
         </div>
 
         {error && (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
             {error}
           </p>
         )}
@@ -363,9 +363,9 @@ function SkillCard({
       data-testid={`skill-card-${skill.id}`}
       className={`group relative flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
         selected
-          ? "border-indigo-500 bg-indigo-50"
+          ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950 dark:border-indigo-400"
           : (highlighted
-            ? "border-amber-300 bg-amber-50 hover:border-indigo-300"
+            ? "border-amber-300 bg-amber-50 dark:bg-amber-950 dark:border-amber-500 hover:border-indigo-300"
             : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-indigo-300")
       }`}
     >

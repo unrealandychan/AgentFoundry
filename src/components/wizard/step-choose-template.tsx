@@ -288,7 +288,7 @@ function CustomTemplateForm({
   }
 
   return (
-    <div className="rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50/40 p-6">
+    <div className="rounded-xl border-2 border-dashed border-indigo-300 dark:border-indigo-700 bg-indigo-50/40 dark:bg-indigo-950/40 p-6">
       <h3 className="mb-4 text-base font-semibold text-slate-800">✨ Create a Custom Template</h3>
       <div className="space-y-4">
         {/* Name + emoji row */}

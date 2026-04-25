@@ -54,7 +54,7 @@ function AgentsSdkSnippet({ projectName }: { projectName: string }) {
   const [open, setOpen] = useState(false);
   const code = lang === "python" ? PYTHON_SNIPPET(projectName) : TS_SNIPPET(projectName);
   return (
-    <div className="mb-6 rounded-xl border border-indigo-100 dark:border-gray-800 bg-indigo-50/40 p-4">
+    <div className="mb-6 rounded-xl border border-indigo-100 dark:border-indigo-900 bg-indigo-50/40 dark:bg-indigo-950/40 p-4">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -180,12 +180,12 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
             </button>
           </div>
           {gistError && (
-            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
               {gistError}
             </p>
           )}
           {gistUrl && (
-            <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+            <p className="rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 px-3 py-2 text-sm text-green-700 dark:text-green-300">
               ✓ Gist created:{" "}
               <a href={gistUrl} target="_blank" rel="noopener noreferrer" className="underline">
                 {gistUrl}
@@ -238,7 +238,7 @@ export function StepDownload({ job, onBack }: StepProperties) {
 
   if (!template) {
     return (
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-800">
+      <div className="rounded-xl border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 p-6 text-amber-800 dark:text-amber-200">
         Please go back and choose a template first.
       </div>
     );

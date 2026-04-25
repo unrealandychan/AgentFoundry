@@ -89,7 +89,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
       <p className="mb-2 text-slate-500 dark:text-slate-400">
         This determines which config file gets generated. Pick the AI coding tool you plan to use.
       </p>
-      <div className="mb-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      <div className="mb-5 rounded-lg border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
         <strong>Why this matters:</strong> Each platform reads a different file to load your
         agent&apos;s persona, rules, and MCP servers. Choosing the wrong platform means your config
         is never read — and your agent runs without context.
@@ -106,7 +106,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
               data-testid={`agent-target-card-${agent.id}`}
               className={`group relative flex flex-col rounded-xl border-2 p-5 text-left transition-all hover:shadow-md ${
                 isSelected
-                  ? "border-indigo-500 bg-indigo-50 shadow-sm"
+                  ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950 dark:border-indigo-400 shadow-sm"
                   : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-indigo-300"
               }`}
             >
