@@ -89,7 +89,7 @@ export function updateLastMessage(
 
   const msgs = [...all[idx].messages];
   if (msgs.length === 0) return null;
-  msgs[msgs.length - 1] = { ...msgs[msgs.length - 1], content };
+  msgs[msgs.length - 1] = { ...msgs.at(-1)!, content };
 
   const updated: SandboxSession = {
     ...all[idx],

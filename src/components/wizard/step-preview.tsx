@@ -40,7 +40,7 @@ function FileTree({
           key={file.path}
           type="button"
           onClick={() => onSelect(file.path)}
-          data-testid={`preview-file-${file.path.replace(/[^a-zA-Z0-9]/g, "-")}`}
+          data-testid={`preview-file-${file.path.replaceAll(/[^\dA-Za-z]/g, "-")}`}
           className={`rounded px-3 py-1.5 text-left font-mono text-sm transition ${
             selected === file.path
               ? "bg-indigo-100 text-indigo-800"
@@ -84,8 +84,8 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
       anchor.click();
       URL.revokeObjectURL(url);
       setDownloadDone(true);
-    } catch (err) {
-      setDownloadError(err instanceof Error ? err.message : "Download failed");
+    } catch (error) {
+      setDownloadError(error instanceof Error ? error.message : "Download failed");
     } finally {
       setDownloading(false);
     }

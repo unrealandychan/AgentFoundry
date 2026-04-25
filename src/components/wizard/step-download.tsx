@@ -126,8 +126,8 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
       const data = (await response.json()) as { url?: string; error?: string };
       if (!response.ok) throw new Error(data.error ?? "Gist creation failed");
       setGistUrl(data.url ?? null);
-    } catch (err) {
-      setGistError(err instanceof Error ? err.message : "Unknown error");
+    } catch (error) {
+      setGistError(error instanceof Error ? error.message : "Unknown error");
     } finally {
       setLoading(false);
     }

@@ -52,8 +52,8 @@ export async function cleanupExpiredWorkspaces(
           await fs.rm(dirPath, { recursive: true, force: true });
           removed.push(entry);
         }
-      } catch (err) {
-        errors.push(`${entry}: ${String(err)}`);
+      } catch (error) {
+        errors.push(`${entry}: ${String(error)}`);
       }
     })
   );

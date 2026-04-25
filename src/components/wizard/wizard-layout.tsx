@@ -41,9 +41,9 @@ function StepBadge({ index, current }: { index: number; current: number }) {
     "flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold";
   const variant = isActive
     ? "bg-indigo-600 text-white"
-    : isDone
+    : (isDone
       ? "bg-indigo-100 text-indigo-700"
-      : "bg-gray-100 text-gray-400";
+      : "bg-gray-100 text-gray-400");
   return <div className={`${base} ${variant}`} data-testid={`wizard-step-badge-${step}`}>{step}</div>;
 }
 

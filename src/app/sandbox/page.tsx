@@ -242,8 +242,10 @@ function ChatPanel({ session, onMessagesChange }: ChatPanelProps) {
       let buffer = "";
       let assembled = "";
 
-      while (true) {
+      let streamDone = false;
+      while (!streamDone) {
         const { done, value } = await reader.read();
+        streamDone = done;
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
 
@@ -398,7 +400,6 @@ function SandboxInner() {
       setActiveId(all[0].id);
       setActiveSession(all[0]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleNewFromSkill(skillId: string, personaText: string, skillTitle: string) {

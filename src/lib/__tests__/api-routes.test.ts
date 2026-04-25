@@ -460,9 +460,11 @@ describe("POST /api/gist", () => {
       templateId: "nextjs-ai-app",
       projectName: "my-project",
       skillIds: [],
+      extraSkills: [],
       integrationIds: [],
-      agentTarget: "openai-agents",
-      workspaceContext: "",
+      agentTarget: "github-copilot",
+      scriptType: "sh",
+      variables: {},
     },
     githubToken: "ghp_testtoken123456",
   };

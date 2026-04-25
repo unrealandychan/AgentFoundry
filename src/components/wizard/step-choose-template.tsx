@@ -172,7 +172,7 @@ function TemplatePreviewModal({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ templateId: template.id }),
     })
-      .then((r) => r.json())
+      .then(async (r) => r.json())
       .then((data: { content?: string; error?: string }) => {
         setContent(data.content ?? data.error ?? "Could not load preview.");
       })

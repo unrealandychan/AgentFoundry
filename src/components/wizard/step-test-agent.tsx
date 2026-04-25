@@ -54,9 +54,9 @@ const MODELS = [
 // Approximate pricing per 1 M tokens (input / output) — used only for rough estimates
 const MODEL_PRICING: Record<string, { inputPer1M: number; outputPer1M: number }> = {
   "gpt-4o-mini": { inputPer1M: 0.15, outputPer1M: 0.6 },
-  "gpt-4o": { inputPer1M: 2.5, outputPer1M: 10.0 },
-  "gpt-4.1": { inputPer1M: 2.0, outputPer1M: 8.0 },
-  "gpt-5.4": { inputPer1M: 10.0, outputPer1M: 30.0 },
+  "gpt-4o": { inputPer1M: 2.5, outputPer1M: 10 },
+  "gpt-4.1": { inputPer1M: 2, outputPer1M: 8 },
+  "gpt-5.4": { inputPer1M: 10, outputPer1M: 30 },
 };
 
 function estimateCost(model: string, charsIn: number, charsOut: number): string {
@@ -365,9 +365,9 @@ function ChatBubble({ message, agentIndex }: { message: ChatMessage; agentIndex:
         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
           isUser
             ? "bg-indigo-600 text-white"
-            : isCoordinator
+            : (isCoordinator
               ? "bg-amber-50 border border-amber-200 text-amber-900"
-              : "bg-gray-100 text-slate-800"
+              : "bg-gray-100 text-slate-800")
         }`}
       >
         {isUser ? (
@@ -540,7 +540,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
     if (!input.trim() || loading || agentDefs.length === 0) return;
     const userMessage: ChatMessage = { role: "user", content: input.trim() };
     // Capture history BEFORE adding the new user message
-    const priorMessages = messages.slice();
+    const priorMessages = [...messages];
     setMessages((previous) => [...previous, userMessage]);
     setInput("");
     setLoading(true);
@@ -704,9 +704,9 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
         Chat live with your composed agent{isMultiAgent ? "s" : ""} before downloading.
         {isMultiAgent && collaborate
           ? ` Agents debate in ${rounds} round${rounds > 1 ? "s" : ""} — each reads the full transcript and builds on, challenges, or extends what was said.`
-          : isMultiAgent
+          : (isMultiAgent
             ? " An orchestrator routes each message to the best specialist."
-            : ""}
+            : "")}
         {reflective
           ? " A Coordinator reviews each draft and requests iteration if the reasoning is too shallow."
           : ""}
@@ -1051,11 +1051,11 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                   const agentIndex =
                     message.agentName === "🔄 Coordinator"
                       ? -1
-                      : message.agentName === undefined
+                      : (message.agentName === undefined
                         ? 0
                         : (agentIndexMap.get(
                             agentDefs.find((agent) => agent.name === message.agentName)?.id ?? "",
-                          ) ?? 0);
+                          ) ?? 0));
                   return (
                     // biome-ignore lint/suspicious/noArrayIndexKey: stable list
                     <ChatBubble key={index} message={message} agentIndex={agentIndex} />

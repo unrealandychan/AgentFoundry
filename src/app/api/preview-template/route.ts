@@ -31,9 +31,11 @@ export async function POST(request: Request): Promise<NextResponse> {
     templateId,
     projectName: template.name,
     skillIds: [],
+    extraSkills: [],
     integrationIds: [],
-    agentTarget: "openai-agents" as const,
-    workspaceContext: "",
+    agentTarget: "generic" as const,
+    scriptType: "sh" as const,
+    variables: {},
   };
 
   const pkg = compose(job);

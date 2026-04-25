@@ -39,9 +39,9 @@ async function coordinatorCheck(
     `Agent: ${agentName}\nUser message: ${userMessage}\n\nDraft response:\n${draftResponse}`,
     { maxTurns: 1 },
   );
-  const content = (result.finalOutput as string | undefined)?.trim() ?? "";
+  const content = result.finalOutput?.trim() ?? "";
   if (content.toUpperCase().startsWith("APPROVED")) return { approved: true, feedback: "" };
-  const feedback = content.replace(/^REVISE:\s*/i, "").trim();
+  const feedback = content.replace(/^revise:\s*/i, "").trim();
   return {
     approved: false,
     feedback:
@@ -83,13 +83,12 @@ export function streamSolo(
         for await (const event of agentStream) {
           if (event.type === "agent_updated_stream_event") {
             const updatedAgent = event.agent;
-            const isTriageHandoff = updatedAgent.name === "Triage";
-            if (!isTriageHandoff) {
-              const agentId = updatedAgent.name.toLowerCase().replace(/\s+/g, "-");
-              if (!headerEmitted) {
-                controller.enqueue(encodeHeader({ id: agentId, name: updatedAgent.name }));
-              } else {
+            if (updatedAgent.name !== "Triage") {
+              const agentId = updatedAgent.name.toLowerCase().replaceAll(/\s+/g, "-");
+              if (headerEmitted) {
                 controller.enqueue(encodeTransitionHeader({ id: agentId, name: updatedAgent.name }));
+              } else {
+                controller.enqueue(encodeHeader({ id: agentId, name: updatedAgent.name }));
               }
               headerEmitted = true;
             }
@@ -97,7 +96,7 @@ export function streamSolo(
 
           if (isTextDelta(event)) {
             if (!headerEmitted) {
-              const firstAgent = agentDefs[0]!;
+              const firstAgent = agentDefs[0];
               controller.enqueue(encodeHeader({ id: firstAgent.id, name: firstAgent.name }));
               headerEmitted = true;
             }
@@ -134,10 +133,10 @@ export function streamReflect(
       const enc = new TextEncoder();
       try {
         const draftResult = await run(entryAgent, conversationInput, { maxTurns: 5 });
-        const draftText = (draftResult.finalOutput as string | undefined) ?? "";
+        const draftText = draftResult.finalOutput ?? "";
 
         const activeAgentName = draftResult.lastAgent?.name ?? agentDefs[0]?.name ?? "Agent";
-        const activeAgentId = activeAgentName.toLowerCase().replace(/\s+/g, "-");
+        const activeAgentId = activeAgentName.toLowerCase().replaceAll(/\s+/g, "-");
 
         let coordinatorFeedback = "";
         try {
@@ -207,11 +206,11 @@ export function streamCollaborate(
           model: activeModel,
         });
         const routeResult = await run(routerAgent, `Order specialists for: ${userMessage}`, { maxTurns: 1 });
-        const raw = (routeResult.finalOutput as string | undefined)?.trim() ?? "";
+        const raw = routeResult.finalOutput?.trim() ?? "";
         const indices = raw
           .split(",")
-          .map((s) => parseInt(s.trim(), 10))
-          .filter((n) => !isNaN(n) && n >= 0 && n < sdkAgents.length);
+          .map((s) => Number.parseInt(s.trim(), 10))
+          .filter((n) => !Number.isNaN(n) && n >= 0 && n < sdkAgents.length);
         const resolved = indices.map((i) => sdkAgents[i]).filter((a): a is Agent => a !== undefined);
         if (resolved.length >= 2) orderedAgents = resolved;
       } catch {
@@ -234,9 +233,9 @@ export function streamCollaborate(
               const isNewRound = previousThisRound.length === 0;
               const roundNote =
                 rounds > 1
-                  ? isNewRound
+                  ? (isNewRound
                     ? `\n\n**Round ${round} of ${rounds}**: You have read everyone's Round ${round - 1} views. Now dig deeper — challenge assumptions, propose concrete solutions, or synthesise what's been said into actionable conclusions.`
-                    : `\n\n**Round ${round} of ${rounds}, your turn**: Build on what ${previousThisRound.at(-1)?.name} said and advance the discussion.`
+                    : `\n\n**Round ${round} of ${rounds}, your turn**: Build on what ${previousThisRound.at(-1)?.name} said and advance the discussion.`)
                   : "";
               collaborationContext =
                 `\n\n---\n## Discussion so far\n${allTranscript}\n\n` +
@@ -255,7 +254,7 @@ export function streamCollaborate(
             });
 
             controller.enqueue(
-              encodeHeader({ id: agent.name.toLowerCase().replace(/\s+/g, "-"), name: agent.name }),
+              encodeHeader({ id: agent.name.toLowerCase().replaceAll(/\s+/g, "-"), name: agent.name }),
             );
 
             let fullText = "";
@@ -294,7 +293,7 @@ export function streamCollaborate(
                     model: activeModel,
                   });
                   controller.enqueue(
-                    encodeTransitionHeader({ id: agent.name.toLowerCase().replace(/\s+/g, "-"), name: agent.name }),
+                    encodeTransitionHeader({ id: agent.name.toLowerCase().replaceAll(/\s+/g, "-"), name: agent.name }),
                   );
 
                   const revStream = await run(revisedAgent, conversationInput, { stream: true, maxTurns: 1 });

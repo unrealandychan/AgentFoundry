@@ -33,7 +33,7 @@ function Field({
           value={value}
           placeholder={placeholder}
           rows={4}
-          data-testid={`customize-field-${label.toLowerCase().replace(/\s+/g, "-")}`}
+          data-testid={`customize-field-${label.toLowerCase().replaceAll(/\s+/g, "-")}`}
           onChange={(event) => onChange(event.target.value)}
           className={base}
         />
@@ -42,7 +42,7 @@ function Field({
 type="text"
         value={value}
         placeholder={placeholder}
-        data-testid={`customize-field-${label.toLowerCase().replace(/\s+/g, "-")}`}
+        data-testid={`customize-field-${label.toLowerCase().replaceAll(/\s+/g, "-")}`}
         onChange={(event) => onChange(event.target.value)}
           className={base}
         />

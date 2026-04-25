@@ -364,9 +364,9 @@ function SkillCard({
       className={`group relative flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
         selected
           ? "border-indigo-500 bg-indigo-50"
-          : highlighted
+          : (highlighted
             ? "border-amber-300 bg-amber-50 hover:border-indigo-300"
-            : "border-gray-200 bg-white hover:border-indigo-300"
+            : "border-gray-200 bg-white hover:border-indigo-300")
       }`}
     >
       {/* Checkbox toggle — takes up most of the card */}

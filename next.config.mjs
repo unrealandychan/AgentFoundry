@@ -1,3 +1,6 @@
+import { config } from "dotenv";
+config({ path: ".env", override: false });
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
