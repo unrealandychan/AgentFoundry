@@ -1,15 +1,16 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import type { NextRequest } from "next/server";
-import { Agent, handoff, run, setDefaultModelProvider, setOpenAIAPI, setTracingDisabled, OpenAIProvider } from "@openai/agents";
-import type { AgentInputItem } from "@openai/agents";
-// Defined inline — @openai/agents-core is a transitive dep nested inside @openai/agents
-// and is not resolvable as a top-level import.
-const RECOMMENDED_PROMPT_PREFIX = `# System context
-You are part of a multi-agent system called the Agents SDK, designed to make agent coordination and execution easy. Agents uses two primary abstractions: **Agents** and **Handoffs**. An agent encompasses instructions and tools and can hand off a conversation to another agent when appropriate. Handoffs are achieved by calling a handoff function, generally named \`transfer_to_<agent_name>\`. Transfers between agents are handled seamlessly in the background; do not mention or draw attention to these transfers in your conversation with the user.`;
+import { setDefaultModelProvider, setOpenAIAPI, setTracingDisabled, OpenAIProvider } from "@openai/agents";
 import { TestAgentRequestSchema } from "@/lib/schemas";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { scheduleWorkspaceCleanup } from "@/lib/workspace-cleanup";
+import { buildWorkspaceContext } from "@/lib/agent-runner/workspace";
+import { buildHistory } from "@/lib/agent-runner/history";
+import { createAgents } from "@/lib/agent-runner/agents";
+import { streamSolo, streamReflect, streamCollaborate } from "@/lib/agent-runner/stream";
+
+export async function POST(request: NextRequest) {
+  // checkRateLimit imported for future use (reserved hook)
+  void checkRateLimit;
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -148,32 +149,16 @@ export async function POST(request: NextRequest) {
   // @openai/agents 0.8.3, so the global call is the correct approach here.
   setTracingDisabled(true);
 
-  const {
-    agents,
-    message: userMessage,
-    history,
-    model,
-    sessionId,
-    collaborate,
-    reflective,
-    rounds,
-  } = parsed.data;
+  const { agents, message: userMessage, history, model, sessionId, collaborate, reflective, rounds } =
+    parsed.data;
 
   const workspaceContext = await buildWorkspaceContext(sessionId);
   const activeModel = model ?? "gpt-4o-mini";
 
-  // Build Agent objects from the request definitions.
-  const sdkAgents = agents.map(
-    (a) =>
-      new Agent({
-        name: a.name,
-        instructions: `${RECOMMENDED_PROMPT_PREFIX}${a.instructions}${workspaceContext}`,
-        model: activeModel,
-      }),
-  );
+  const { sdkAgents, entryAgent } = createAgents(agents, activeModel, workspaceContext);
 
-  // Build OpenAI-compatible conversation input (history + new user turn).
   const historyItems = buildHistory(history ?? []);
+  const conversationInput = [...historyItems, { role: "user" as const, content: userMessage }];
   const conversationInput: AgentInputItem[] = [
     ...historyItems,
     { role: "user", content: userMessage },
@@ -266,28 +251,24 @@ export async function POST(request: NextRequest) {
                 controller.enqueue(enc.encode(`[Error: ${message}]`));
               }
 
-              // ── Coordinator reflection pass ─────────────────────────────
-              if (reflective && fullText) {
-                try {
-                  const { approved, feedback } = await coordinatorCheck(
-                    agent.name,
-                    userMessage,
-                    fullText,
-                  );
-                  if (!approved && feedback) {
-                    controller.enqueue(encodeTransitionHeader(COORDINATOR_AGENT_META));
-                    controller.enqueue(enc.encode(`**Reflection needed:** ${feedback}`));
-                    fullText = "";
+  scheduleWorkspaceCleanup();
 
-                    const revisedAgent = new Agent({
-                      name: agent.name,
-                      instructions:
-                        `${RECOMMENDED_PROMPT_PREFIX}${agent.instructions}${collaborationContext}` +
-                        `\n\n---\n## Revision Required\nAddress these specific points before finalising:\n${feedback}\n\nShow your reasoning explicitly.`,
-                      model: activeModel,
-                    });
-                    controller.enqueue(encodeTransitionHeader({ id: agent.name.toLowerCase().replace(/\s+/g, "-"), name: agent.name }));
+  let readable: ReadableStream;
 
+  if (collaborate && sdkAgents.length > 1) {
+    readable = streamCollaborate(
+      sdkAgents,
+      agents,
+      conversationInput,
+      userMessage,
+      activeModel,
+      reflective ?? false,
+      rounds ?? 2,
+    );
+  } else if (reflective) {
+    readable = streamReflect(entryAgent, agents, conversationInput, userMessage, activeModel, workspaceContext);
+  } else {
+    readable = streamSolo(entryAgent, agents, conversationInput);
                     const revStream = await run(revisedAgent, conversationInput, {
                       stream: true,
                       // maxTurns:5 allows multi-step reasoning during revision.
@@ -526,73 +507,6 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // ── Plain streaming — SDK Agent with optional handoff routing ─────────────
-  const readable = new ReadableStream({
-    async start(controller) {
-      const enc = new TextEncoder();
-      let headerEmitted = false;
-
-      try {
-        const agentStream = await run(entryAgent, conversationInput, {
-          stream: true,
-          maxTurns: 5,
-        });
-
-        for await (const event of agentStream) {
-          // When the active agent changes (handoff occurred), emit the header.
-          if (event.type === "agent_updated_stream_event") {
-            const updatedAgent = event.agent;
-            const isTriageHandoff = updatedAgent.name === "Triage";
-            if (!isTriageHandoff) {
-              const agentId = updatedAgent.name.toLowerCase().replace(/\s+/g, "-");
-              if (!headerEmitted) {
-                controller.enqueue(encodeHeader({ id: agentId, name: updatedAgent.name }));
-              } else {
-                controller.enqueue(encodeTransitionHeader({ id: agentId, name: updatedAgent.name }));
-              }
-              headerEmitted = true;
-            }
-          }
-
-          // Stream text deltas from the model.
-          if (
-            event.type === "raw_model_stream_event" &&
-            "data" in event &&
-            event.data &&
-            typeof event.data === "object" &&
-            "type" in event.data &&
-            event.data.type === "output_text_delta" &&
-            "delta" in event.data &&
-            typeof event.data.delta === "string"
-          ) {
-            // Ensure header is emitted before any text (e.g., single-agent case).
-            if (!headerEmitted) {
-              const firstAgent = agents[0]!;
-              controller.enqueue(
-                encodeHeader({
-                  id: firstAgent.id,
-                  name: firstAgent.name,
-                }),
-              );
-              headerEmitted = true;
-            }
-            controller.enqueue(enc.encode(event.data.delta));
-          }
-        }
-
-        await agentStream.completed;
-        controller.close();
-      } catch (error) {
-        const code = (error as NodeJS.ErrnoException).code;
-        if (code === "ERR_STREAM_PREMATURE_CLOSE" || code === "ERR_STREAM_DESTROYED") {
-          try { controller.close(); } catch { /* already closed */ }
-        } else {
-          controller.error(error);
-        }
-      }
-    },
-  });
-
   return new Response(readable, {
     headers: { "Content-Type": "text/plain; charset=utf-8", ...rateLimitHeaders },
   });
@@ -600,4 +514,3 @@ export async function POST(request: NextRequest) {
   // Fire-and-forget: clean up /tmp workspace dirs older than 1 hour
   scheduleWorkspaceCleanup();
 }
-

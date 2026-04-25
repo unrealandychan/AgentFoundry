@@ -1,4 +1,10 @@
 import { defineConfig } from "vitest/config";
+import tsconfigPaths from "vite-tsconfig-paths";
+
+export default defineConfig({
+  plugins: [tsconfigPaths()],
+  test: {
+    environment: "jsdom",
 import path from "path";
 
 export default defineConfig({
@@ -6,10 +12,6 @@ export default defineConfig({
     environment: "node",
     globals: false,
     globals: true,
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
     include: ["src/**/*.test.ts", "src/**/*.spec.ts"],
     coverage: {
       provider: "v8",
@@ -22,6 +24,11 @@ export default defineConfig({
         "src/lib/**/*.test.ts",
         "src/lib/**/*.spec.ts",
       ],
+    },
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
   },
 });
