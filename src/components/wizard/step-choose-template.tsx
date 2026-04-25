@@ -38,17 +38,17 @@ const TAG_COLORS: Record<string, string> = {
   design: "bg-rose-100 text-rose-700",
   qa: "bg-lime-100 text-lime-700",
   testing: "bg-lime-100 text-lime-700",
-  prd: "bg-violet-100 text-violet-700",
-  planning: "bg-violet-100 text-violet-700",
+  prd: "bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300",
+  planning: "bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300",
   marketing: "bg-amber-100 text-amber-700",
   copywriting: "bg-amber-100 text-amber-700",
   data: "bg-cyan-100 text-cyan-700",
   sql: "bg-cyan-100 text-cyan-700",
   devops: "bg-red-100 text-red-700",
   infra: "bg-red-100 text-red-700",
-  "no-code": "bg-emerald-100 text-emerald-700",
-  docs: "bg-slate-100 text-slate-700",
-  default: "bg-gray-100 text-gray-600",
+  "no-code": "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300",
+  docs: "bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-slate-300",
+  default: "bg-gray-100 dark:bg-gray-800 text-gray-600",
 };
 
 function tagColor(tag: string): string {
@@ -76,7 +76,7 @@ function TemplateCard({
       className={`group relative flex w-full flex-col items-start rounded-xl border-2 p-5 text-left transition-all hover:shadow-md ${
         selected
           ? "border-indigo-500 bg-indigo-50 shadow-sm"
-          : "border-gray-200 bg-white hover:border-indigo-300"
+          : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-indigo-300"
       }`}
     >
       {selected && (
@@ -91,7 +91,7 @@ function TemplateCard({
           {template.emoji ?? "📦"}
         </span>
         <div className="flex flex-1 flex-wrap items-center gap-1">
-          <p className="font-semibold text-slate-900">{template.name}</p>
+          <p className="font-semibold text-slate-900 dark:text-white">{template.name}</p>
           {/* Info icon inline with name */}
           {(template.whyItMatters || template.impact) && (
             <div
@@ -115,7 +115,7 @@ function TemplateCard({
         </div>
       </div>
 
-      <p className="mb-3 text-sm text-slate-500">{template.description}</p>
+      <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">{template.description}</p>
 
       {/* Tags */}
       <div className="mb-3 flex flex-wrap gap-1">
@@ -142,7 +142,7 @@ function TemplateCard({
         role="none"
         className="mt-auto"
       >
-        <span className="text-[11px] font-medium text-indigo-500 underline underline-offset-2 hover:text-indigo-700">
+        <span className="text-[11px] font-medium text-indigo-500 underline underline-offset-2 hover:text-indigo-700 dark:text-indigo-300">
           👁 Preview AGENTS.md
         </span>
       </div>
@@ -200,15 +200,15 @@ function TemplatePreviewModal({
       aria-modal="true"
     >
       <div
-        className="relative flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+        className="relative flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
         role="none"
       >
-        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 px-6 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Preview</p>
-            <h3 className="font-semibold text-slate-900">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Preview</p>
+            <h3 className="font-semibold text-slate-900 dark:text-white">
               {template.emoji} {template.name} — AGENTS.md
             </h3>
           </div>
@@ -216,16 +216,16 @@ function TemplatePreviewModal({
             type="button"
             onClick={onClose}
             data-testid="template-preview-close"
-            className="rounded-full p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-full p-1.5 text-slate-400 dark:text-slate-500 transition hover:bg-slate-100 dark:bg-gray-700 hover:text-slate-700 dark:text-slate-300"
           >
             ✕
           </button>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto p-6">
           {loading ? (
-            <p className="text-sm text-slate-400">Loading preview…</p>
+            <p className="text-sm text-slate-400 dark:text-slate-500">Loading preview…</p>
           ) : (
-            <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-slate-700">
+            <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-slate-700 dark:text-slate-300">
               {content}
             </pre>
           )}
@@ -301,7 +301,7 @@ function CustomTemplateForm({
               value={draft.emoji}
               data-testid="custom-template-emoji"
               onChange={(e) => setDraft({ ...draft, emoji: e.target.value })}
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-center text-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-center text-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
           </div>
           <div className="flex-1">
@@ -314,7 +314,7 @@ function CustomTemplateForm({
               value={draft.name}
               data-testid="custom-template-name"
               onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
           </div>
         </div>
@@ -328,7 +328,7 @@ function CustomTemplateForm({
             data-testid="custom-template-description"
             value={draft.description}
             onChange={(e) => setDraft({ ...draft, description: e.target.value })}
-            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="w-full rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
         </div>
 
@@ -342,7 +342,7 @@ function CustomTemplateForm({
               data-testid="custom-template-stack"
               value={draft.stack}
               onChange={(e) => setDraft({ ...draft, stack: e.target.value })}
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
           </div>
           <div className="w-36">
@@ -356,7 +356,7 @@ function CustomTemplateForm({
                   audience: e.target.value as TemplateAudience,
                 })
               }
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             >
               {AUDIENCE_OPTIONS.map((a) => (
                 <option key={a} value={a}>
@@ -370,7 +370,7 @@ function CustomTemplateForm({
         {/* Tags */}
         <div>
           <label className="mb-1 block text-xs font-medium text-slate-600">
-            Tags <span className="font-normal text-slate-400">(comma-separated)</span>
+            Tags <span className="font-normal text-slate-400 dark:text-slate-500">(comma-separated)</span>
           </label>
           <input
             type="text"
@@ -378,7 +378,7 @@ function CustomTemplateForm({
             data-testid="custom-template-tags"
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="w-full rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
         </div>
 
@@ -393,7 +393,7 @@ function CustomTemplateForm({
             type="button"
             onClick={onCancel}
             data-testid="custom-template-cancel"
-            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+            className="rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 dark:bg-gray-900"
           >
             Cancel
           </button>
@@ -443,8 +443,8 @@ export function StepChooseTemplate({ job, onUpdateJob, onNext }: StepProperties)
       {previewTemplate && (
         <TemplatePreviewModal template={previewTemplate} onClose={() => setPreviewTemplate(null)} />
       )}
-      <h2 className="mb-1 text-2xl font-bold text-slate-900">Choose a Starter Template</h2>
-      <p className="mb-6 text-slate-500">
+      <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white">Choose a Starter Template</h2>
+      <p className="mb-6 text-slate-500 dark:text-slate-400">
         Pick the base for your AI agent. Templates are tailored per role — you can also create a
         custom one.
       </p>
@@ -460,7 +460,7 @@ export function StepChooseTemplate({ job, onUpdateJob, onNext }: StepProperties)
             className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all ${
               audienceFilter === tab.value
                 ? "border-indigo-600 bg-indigo-600 text-white shadow-sm"
-                : "border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-700"
+                : "border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 dark:text-indigo-300"
             }`}
           >
             {tab.label}
@@ -485,7 +485,7 @@ export function StepChooseTemplate({ job, onUpdateJob, onNext }: StepProperties)
           <button
             type="button"
             onClick={() => setShowCustomForm(true)}
-            className="flex min-h-[140px] w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-white p-5 text-slate-400 transition hover:border-indigo-400 hover:text-indigo-500"
+            className="flex min-h-[140px] w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-white dark:bg-gray-900 p-5 text-slate-400 dark:text-slate-500 transition hover:border-indigo-400 hover:text-indigo-500"
           >
             <span className="text-3xl">＋</span>
             <span className="text-sm font-medium">Custom Template</span>
@@ -501,7 +501,7 @@ export function StepChooseTemplate({ job, onUpdateJob, onNext }: StepProperties)
       )}
 
       {filtered.length === 0 && !showCustomForm && (
-        <p className="py-10 text-center text-sm text-slate-400">
+        <p className="py-10 text-center text-sm text-slate-400 dark:text-slate-500">
           No templates for this audience yet. Create a custom one above!
         </p>
       )}

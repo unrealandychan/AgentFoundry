@@ -24,10 +24,10 @@ function Field({
   onChange: (value: string) => void;
 }) {
   const base =
-    "w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400";
+    "w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400";
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-slate-700">{label}</label>
+      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">{label}</label>
       {multiline ? (
         <textarea
           value={value}
@@ -63,10 +63,10 @@ export function StepCustomize({ job, onUpdateJob, onNext, onBack }: StepProperti
 
   return (
     <div>
-      <h2 className="mb-1 text-2xl font-bold text-slate-900">Customize</h2>
-      <p className="mb-6 text-slate-500">Set your project name and configure template variables.</p>
+      <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white">Customize</h2>
+      <p className="mb-6 text-slate-500 dark:text-slate-400">Set your project name and configure template variables.</p>
 
-      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+      <div className="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
         <h3 className="mb-4 font-semibold text-slate-800">Project</h3>
         <Field
           label="Project Name"
@@ -77,7 +77,7 @@ export function StepCustomize({ job, onUpdateJob, onNext, onBack }: StepProperti
       </div>
 
       {(template?.variables ?? []).length > 0 && (
-        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+        <div className="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
           <h3 className="mb-4 font-semibold text-slate-800">Template Variables</h3>
           <div className="flex flex-col gap-4">
             {template?.variables.map((variable) => (
@@ -94,14 +94,14 @@ export function StepCustomize({ job, onUpdateJob, onNext, onBack }: StepProperti
       )}
 
       {selectedSkills.length > 0 && (
-        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+        <div className="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
           <h3 className="mb-4 font-semibold text-slate-800">Selected Skills</h3>
           <ul className="space-y-2">
             {selectedSkills.map((skill) => (
               <li key={skill.id} className="flex items-start gap-2 text-sm">
                 <span className="mt-0.5 size-1.5 shrink-0 rounded-full bg-indigo-500" />
                 <span className="font-medium text-slate-800">{skill.title}</span>
-                <span className="text-slate-500">— {skill.description}</span>
+                <span className="text-slate-500 dark:text-slate-400">— {skill.description}</span>
               </li>
             ))}
           </ul>
@@ -113,7 +113,7 @@ export function StepCustomize({ job, onUpdateJob, onNext, onBack }: StepProperti
           type="button"
           onClick={onBack}
           data-testid="step-back-button"
-          className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
+          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2.5 font-medium text-slate-700 dark:text-slate-300 transition hover:bg-gray-50 dark:bg-gray-800"
         >
           ← Back
         </button>

@@ -94,7 +94,7 @@ function McpCard({
       type="button"
       onClick={onToggle}
       className={`flex w-full flex-col rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
-        selected ? "border-teal-500 bg-teal-50" : "border-gray-200 bg-white hover:border-teal-300"
+        selected ? "border-teal-500 bg-teal-50" : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-teal-300"
       }`}
     >
       <div className="flex items-center gap-2">
@@ -105,7 +105,7 @@ function McpCard({
         >
           {selected && <span className="text-[10px] text-white">✓</span>}
         </div>
-        <p className="font-semibold text-slate-900">{integration.name}</p>
+        <p className="font-semibold text-slate-900 dark:text-white">{integration.name}</p>
         {integration.tooltip && (
           <div
             onClick={(e) => e.stopPropagation()}
@@ -116,7 +116,7 @@ function McpCard({
           </div>
         )}
       </div>
-      <p className="mt-1.5 text-sm text-slate-500">{integration.description}</p>
+      <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">{integration.description}</p>
       <div className="mt-2 flex flex-wrap gap-1">
         {integration.mcpServers.map((server) => (
           <span
@@ -181,27 +181,27 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
 
   return (
     <div>
-      <h2 className="mb-1 text-2xl font-bold text-slate-900">Add MCP Integrations</h2>
-      <p className="mb-4 text-slate-500">
-        Select MCP servers to embed in <code className="rounded bg-gray-100 px-1">mcp.json</code>.
+      <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white">Add MCP Integrations</h2>
+      <p className="mb-4 text-slate-500 dark:text-slate-400">
+        Select MCP servers to embed in <code className="rounded bg-gray-100 dark:bg-gray-800 px-1">mcp.json</code>.
         Install hints are shown for fast bootstrapping. You can skip this step.
       </p>
 
       {/* Search bar */}
       <div className="relative mb-6">
-        <span className="absolute inset-y-0 left-3 flex items-center text-slate-400">🔍</span>
+        <span className="absolute inset-y-0 left-3 flex items-center text-slate-400 dark:text-slate-500">🔍</span>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search integrations…"
-          className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400"
+          className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 py-2 pl-9 pr-4 text-sm outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400"
         />
         {query && (
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="absolute inset-y-0 right-3 flex items-center text-slate-400 hover:text-slate-600"
+            className="absolute inset-y-0 right-3 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600"
           >
             ✕
           </button>
@@ -214,8 +214,8 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
           {/* Skill-based recommendations */}
           {recommendedIntegrations.length > 0 && (
             <div className="mb-8">
-              <h3 className="mb-1 font-semibold text-slate-700">⭐ Recommended for your skills</h3>
-              <p className="mb-3 text-xs text-slate-400">
+              <h3 className="mb-1 font-semibold text-slate-700 dark:text-slate-300">⭐ Recommended for your skills</h3>
+              <p className="mb-3 text-xs text-slate-400 dark:text-slate-500">
                 Based on the skills you selected — these MCPs unlock the most value for your agent.
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -231,10 +231,10 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
             </div>
           )}
 
-          <h3 className="mb-3 font-semibold text-slate-700">Individual MCP Servers</h3>
-          <p className="mb-3 text-xs text-slate-400">
+          <h3 className="mb-3 font-semibold text-slate-700 dark:text-slate-300">Individual MCP Servers</h3>
+          <p className="mb-3 text-xs text-slate-400 dark:text-slate-500">
             Official reference servers from modelcontextprotocol.io — install with a single{" "}
-            <code className="rounded bg-gray-100 px-1">npx</code> command.
+            <code className="rounded bg-gray-100 dark:bg-gray-800 px-1">npx</code> command.
           </p>
           {/* Category filter tabs */}
           <div className="mb-4 flex flex-wrap gap-1.5">
@@ -246,7 +246,7 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
                 className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                   categoryFilter === cat
                     ? "bg-teal-600 text-white"
-                    : "bg-gray-100 text-slate-600 hover:bg-teal-100 hover:text-teal-700"
+                    : "bg-gray-100 dark:bg-gray-800 text-slate-600 hover:bg-teal-100 hover:text-teal-700"
                 }`}
               >
                 {cat}
@@ -255,7 +255,7 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
           </div>
           <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filteredIndividual.length === 0 ? (
-              <p className="col-span-3 py-6 text-center text-sm text-slate-400">
+              <p className="col-span-3 py-6 text-center text-sm text-slate-400 dark:text-slate-500">
                 No servers in this category.
               </p>
             ) : (
@@ -270,8 +270,8 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
             )}
           </div>
 
-          <h3 className="mb-3 font-semibold text-slate-700">Curated Bundles</h3>
-          <p className="mb-3 text-xs text-slate-400">
+          <h3 className="mb-3 font-semibold text-slate-700 dark:text-slate-300">Curated Bundles</h3>
+          <p className="mb-3 text-xs text-slate-400 dark:text-slate-500">
             Pre-selected combinations for common agent workflows.
           </p>
           <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -288,12 +288,12 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
       ) : (
         <div>
           {filtered.length === 0 ? (
-            <p className="py-8 text-center text-sm text-slate-400">
+            <p className="py-8 text-center text-sm text-slate-400 dark:text-slate-500">
               No integrations match &ldquo;{query}&rdquo;
             </p>
           ) : (
             <>
-              <p className="mb-3 text-xs text-slate-400">
+              <p className="mb-3 text-xs text-slate-400 dark:text-slate-500">
                 {filtered.length} result{filtered.length === 1 ? "" : "s"}
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -316,7 +316,7 @@ export function StepAddIntegrations({ job, onUpdateJob, onNext, onBack }: StepPr
           type="button"
           onClick={onBack}
           data-testid="step-back-button"
-          className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
+          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2.5 font-medium text-slate-700 dark:text-slate-300 transition hover:bg-gray-50 dark:bg-gray-800"
         >
           ← Back
         </button>

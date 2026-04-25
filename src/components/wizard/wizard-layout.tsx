@@ -10,6 +10,7 @@ import { StepCustomize } from "@/components/wizard/step-customize";
 import { StepPreview } from "@/components/wizard/step-preview";
 import { StepTestAgent } from "@/components/wizard/step-test-agent";
 import { StepDownload } from "@/components/wizard/step-download";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const STEP_LABELS = [
   "Template",
@@ -42,8 +43,8 @@ function StepBadge({ index, current }: { index: number; current: number }) {
   const variant = isActive
     ? "bg-indigo-600 text-white"
     : (isDone
-      ? "bg-indigo-100 text-indigo-700"
-      : "bg-gray-100 text-gray-400");
+      ? "bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300"
+      : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500");
   return <div className={`${base} ${variant}`} data-testid={`wizard-step-badge-${step}`}>{step}</div>;
 }
 
@@ -55,13 +56,13 @@ function StepIndicator({ current }: { current: number }) {
           <div className="flex flex-col items-center gap-1">
             <StepBadge index={index} current={current} />
             <span
-              className={`hidden text-xs sm:block ${index + 1 === current ? "font-semibold text-indigo-600" : "text-gray-400"}`}
+              className={`hidden text-xs sm:block ${index + 1 === current ? "font-semibold text-indigo-600 dark:text-indigo-400" : "text-gray-400 dark:text-gray-500"}`}
             >
               {label}
             </span>
           </div>
           {index < STEP_LABELS.length - 1 && (
-            <div className="mb-4 h-px w-6 shrink-0 bg-gray-200 sm:w-10" />
+            <div className="mb-4 h-px w-6 shrink-0 bg-gray-200 dark:bg-gray-700 sm:w-10" />
           )}
         </div>
       ))}
@@ -105,8 +106,8 @@ export function WizardLayout({
   }, [state.step]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
-      <header className="border-b border-indigo-100 bg-white/80 px-6 py-4 backdrop-blur">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-950 dark:to-gray-900">
+      <header className="border-b border-indigo-100 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 px-6 py-4 backdrop-blur">
         <div className="mx-auto max-w-5xl">
           <div className="mb-4 flex items-center gap-3">
             <button
@@ -117,14 +118,15 @@ export function WizardLayout({
               data-testid="wizard-home-button"
             >
               <div className="size-8 rounded-lg bg-indigo-600" />
-              <span className="text-lg font-bold text-slate-900">AgentFoundry</span>
+              <span className="text-lg font-bold text-slate-900 dark:text-white">AgentFoundry</span>
             </button>
             <span
-              className="ml-auto text-xs text-slate-400 hover:text-slate-600 cursor-pointer transition"
+              className="ml-auto text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 cursor-pointer transition"
               onClick={onHome}
             >
               ← Home
             </span>
+            <ThemeToggle />
           </div>
           <StepIndicator current={state.step} />
         </div>

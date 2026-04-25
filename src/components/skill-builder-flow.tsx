@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { lintSkill } from "@/lib/skill-linter";
 import type { LintResult } from "@/lib/skill-linter";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface SkillBuilderFlowProperties {
   onBack: () => void;
@@ -90,7 +91,7 @@ async function readNdjsonStream(response: Response, onLine: (data: NdjsonLine) =
 // ── Iteration track ───────────────────────────────────────────────────────────
 
 const GRADE_PILL: Record<string, string> = {
-  A: "bg-emerald-100 text-emerald-700 border border-emerald-200",
+  A: "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border border-emerald-200",
   B: "bg-emerald-50 text-emerald-600 border border-emerald-200",
   C: "bg-amber-100 text-amber-700 border border-amber-200",
   D: "bg-orange-100 text-orange-700 border border-orange-200",
@@ -163,8 +164,8 @@ function ScoreRing({ score, max }: { score: number; max: number }) {
 }
 
 const GRADE_STYLES: Record<string, string> = {
-  A: "bg-emerald-100 text-emerald-700",
-  B: "bg-indigo-100 text-indigo-700",
+  A: "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300",
+  B: "bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300",
   C: "bg-amber-100 text-amber-700",
   D: "bg-orange-100 text-orange-700",
   F: "bg-red-100 text-red-700",
@@ -174,10 +175,10 @@ const GRADE_STYLES: Record<string, string> = {
 
 function ScorePanel({ result }: { result: LintResult }) {
   return (
-    <aside className="flex w-72 shrink-0 flex-col gap-4 border-l border-slate-200 bg-white p-5">
+    <aside className="flex w-72 shrink-0 flex-col gap-4 border-l border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
       <div className="text-center">
         <ScoreRing score={result.score} max={result.maxScore} />
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
           {result.score} / {result.maxScore} pts
         </p>
         <span
@@ -187,7 +188,7 @@ function ScorePanel({ result }: { result: LintResult }) {
         </span>
       </div>
 
-      <hr className="border-slate-100" />
+      <hr className="border-slate-100 dark:border-gray-700" />
 
       <ul className="flex flex-col gap-2">
         {result.checks.map((check) => (
@@ -199,12 +200,12 @@ function ScorePanel({ result }: { result: LintResult }) {
             </span>
             <div className="min-w-0 flex-1">
               <p
-                className={`text-xs font-medium leading-snug ${check.passed ? "text-slate-700" : "text-slate-400"}`}
+                className={`text-xs font-medium leading-snug ${check.passed ? "text-slate-700 dark:text-slate-300" : "text-slate-400 dark:text-slate-500"}`}
               >
                 {check.label}
               </p>
               {!check.passed && (
-                <p className="mt-0.5 text-[11px] leading-snug text-slate-400">{check.hint}</p>
+                <p className="mt-0.5 text-[11px] leading-snug text-slate-400 dark:text-slate-500">{check.hint}</p>
               )}
             </div>
             <span className="shrink-0 text-[11px] text-slate-300">+{check.points}</span>
@@ -304,7 +305,7 @@ function GenerateForm({ onGenerated }: GenerateFormProperties) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 rounded-lg border border-violet-300 bg-violet-50 px-3 py-1.5 text-sm font-medium text-violet-700 transition-colors hover:bg-violet-100"
+        className="flex items-center gap-1.5 rounded-lg border border-violet-300 bg-violet-50 px-3 py-1.5 text-sm font-medium text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-100 dark:bg-violet-900"
       >
         ✨ Generate with AI
       </button>
@@ -323,7 +324,7 @@ function GenerateForm({ onGenerated }: GenerateFormProperties) {
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. code-reviewer"
           disabled={loading}
-          className="w-44 rounded-md border border-violet-200 bg-white px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-violet-400 disabled:opacity-60"
+          className="w-44 rounded-md border border-violet-200 bg-white dark:bg-gray-900 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-violet-400 disabled:opacity-60"
         />
       </div>
 
@@ -337,7 +338,7 @@ function GenerateForm({ onGenerated }: GenerateFormProperties) {
           onChange={(e) => setPurpose(e.target.value)}
           placeholder="e.g. Review code for bugs and suggest improvements"
           disabled={loading}
-          className="w-56 rounded-md border border-violet-200 bg-white px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-violet-400 disabled:opacity-60"
+          className="w-56 rounded-md border border-violet-200 bg-white dark:bg-gray-900 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-violet-400 disabled:opacity-60"
           onKeyDown={(e) => e.key === "Enter" && void handleGenerate()}
         />
       </div>
@@ -354,7 +355,7 @@ function GenerateForm({ onGenerated }: GenerateFormProperties) {
         type="button"
         onClick={reset}
         disabled={loading}
-        className="rounded-lg px-2 py-1.5 text-sm text-slate-400 hover:text-slate-600 disabled:opacity-40"
+        className="rounded-lg px-2 py-1.5 text-sm text-slate-400 dark:text-slate-500 hover:text-slate-600 disabled:opacity-40"
       >
         ✕
       </button>
@@ -450,23 +451,24 @@ export function SkillBuilderFlow({ onBack }: SkillBuilderFlowProperties) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 to-violet-50">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 to-violet-50 dark:from-gray-950 dark:to-gray-900">
       {/* Header */}
-      <header className="flex items-center gap-4 border-b border-violet-100 bg-white/80 px-6 py-4 backdrop-blur">
+      <header className="flex items-center gap-4 border-b border-violet-100 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 px-6 py-4 backdrop-blur">
         <button
           type="button"
           onClick={onBack}
-          className="text-sm text-slate-500 transition-colors hover:text-slate-800"
+          className="text-sm text-slate-500 dark:text-slate-400 transition-colors hover:text-slate-800"
         >
           ← Home
         </button>
-        <div className="h-4 w-px bg-slate-200" />
+        <div className="h-4 w-px bg-slate-200 dark:bg-gray-700" />
         <div className="flex items-center gap-2">
           <span className="text-lg">🔨</span>
-          <span className="font-bold text-slate-900">Skill Builder</span>
+          <span className="font-bold text-slate-900 dark:text-white">Skill Builder</span>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
           <GenerateForm onGenerated={setContent} />
+          <ThemeToggle />
         </div>
       </header>
 
@@ -483,7 +485,7 @@ export function SkillBuilderFlow({ onBack }: SkillBuilderFlowProperties) {
           />
 
           {/* Editor footer */}
-          <div className="flex flex-col gap-2 border-t border-slate-200 bg-white/80 px-6 py-3 backdrop-blur">
+          <div className="flex flex-col gap-2 border-t border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900/80 px-6 py-3 backdrop-blur">
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -503,14 +505,14 @@ export function SkillBuilderFlow({ onBack }: SkillBuilderFlowProperties) {
               <button
                 type="button"
                 onClick={handleDownload}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors hover:border-slate-300 hover:bg-slate-50 dark:bg-gray-900"
               >
                 ⬇ Download SKILL.md
               </button>
 
               {completeError && <p className="text-xs text-red-500">{completeError}</p>}
 
-              <span className="ml-auto text-xs text-slate-400">
+              <span className="ml-auto text-xs text-slate-400 dark:text-slate-500">
                 {content.trim().split(/\s+/).filter(Boolean).length} words
               </span>
             </div>

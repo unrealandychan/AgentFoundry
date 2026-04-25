@@ -58,7 +58,7 @@ export function Tooltip({ title, body, className = "", placement = "top" }: Tool
             setOpen((v) => !v);
           }
         }}
-        className="ml-1.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full border border-indigo-300 bg-indigo-50 text-[10px] font-bold text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1"
+        className="ml-1.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full border border-indigo-300 bg-indigo-50 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1"
       >
         ⓘ
       </span>
@@ -66,21 +66,21 @@ export function Tooltip({ title, body, className = "", placement = "top" }: Tool
       {open && (
         <div
           role="tooltip"
-          className={`absolute left-1/2 z-50 w-72 -translate-x-1/2 rounded-xl border border-slate-200 bg-white p-4 shadow-xl ${
+          className={`absolute left-1/2 z-50 w-72 -translate-x-1/2 rounded-xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 shadow-xl ${
             placement === "bottom" ? "top-full mt-2" : "bottom-full mb-2"
           }`}
         >
           {/* Arrow */}
           <div
-            className={`absolute left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-slate-200 bg-white ${
+            className={`absolute left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 ${
               placement === "bottom" ? "-top-1.5 border-l border-t" : "-bottom-2 border-b border-r"
             }`}
           />
 
-          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-indigo-600">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">
             {title}
           </p>
-          <p className="text-sm leading-relaxed text-slate-700">{body}</p>
+          <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{body}</p>
         </div>
       )}
     </div>
