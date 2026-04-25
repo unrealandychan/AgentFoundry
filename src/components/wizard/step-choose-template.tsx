@@ -75,12 +75,12 @@ function TemplateCard({
       data-testid={`template-card-${template.id}`}
       className={`group relative flex w-full flex-col items-start rounded-xl border-2 p-5 text-left transition-all hover:shadow-md ${
         selected
-          ? "border-indigo-500 bg-indigo-50 shadow-sm"
+          ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950 dark:border-indigo-400 shadow-sm"
           : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-indigo-300"
       }`}
     >
       {selected && (
-        <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">
+        <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-indigo-600 dark:bg-indigo-400 text-xs text-white dark:text-gray-900 font-bold">
           ✓
         </span>
       )}

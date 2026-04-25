@@ -100,7 +100,7 @@ function McpCard({
       <div className="flex items-center gap-2">
         <div
           className={`flex size-4 shrink-0 items-center justify-center rounded border-2 ${
-            selected ? "border-teal-600 bg-teal-600" : "border-gray-300"
+            selected ? "border-teal-600 bg-teal-600 dark:border-teal-400 dark:bg-teal-400" : "border-gray-300"
           }`}
         >
           {selected && <span className="text-[10px] text-white">✓</span>}

@@ -378,7 +378,7 @@ function SkillCard({
       >
         <div
           className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
-            selected ? "border-indigo-600 bg-indigo-600" : "border-gray-300 bg-white dark:bg-gray-900"
+            selected ? "border-indigo-600 bg-indigo-600 dark:border-indigo-400 dark:bg-indigo-400" : "border-gray-300 bg-white dark:bg-gray-900"
           }`}
         >
           {selected && <span className="text-xs text-white">✓</span>}

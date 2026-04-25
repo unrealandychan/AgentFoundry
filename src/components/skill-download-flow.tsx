@@ -70,13 +70,13 @@ function SkillCard({
       onClick={onToggle}
       className={`group flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
         selected
-          ? "border-emerald-500 bg-emerald-50"
+          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950 dark:border-emerald-400"
           : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-emerald-300"
       }`}
     >
       <div
         className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
-          selected ? "border-emerald-600 bg-emerald-600" : "border-gray-300 bg-white dark:bg-gray-900"
+          selected ? "border-emerald-600 bg-emerald-600 dark:border-emerald-400 dark:bg-emerald-400" : "border-gray-300 bg-white dark:bg-gray-900"
         }`}
       >
         {selected && <span className="text-xs text-white">✓</span>}
