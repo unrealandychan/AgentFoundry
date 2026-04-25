@@ -510,4 +510,7 @@ export async function POST(request: NextRequest) {
   return new Response(readable, {
     headers: { "Content-Type": "text/plain; charset=utf-8", ...rateLimitHeaders },
   });
+
+  // Fire-and-forget: clean up /tmp workspace dirs older than 1 hour
+  scheduleWorkspaceCleanup();
 }
