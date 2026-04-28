@@ -40,11 +40,11 @@ function FileTree({
           key={file.path}
           type="button"
           onClick={() => onSelect(file.path)}
-          data-testid={`preview-file-${file.path.replace(/[^a-zA-Z0-9]/g, "-")}`}
+          data-testid={`preview-file-${file.path.replaceAll(/[^\dA-Za-z]/g, "-")}`}
           className={`rounded px-3 py-1.5 text-left font-mono text-sm transition ${
             selected === file.path
-              ? "bg-indigo-100 text-indigo-800"
-              : "text-slate-600 hover:bg-gray-100"
+              ? "bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200"
+              : "text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-gray-800"
           }`}
         >
           {file.path}
@@ -84,8 +84,8 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
       anchor.click();
       URL.revokeObjectURL(url);
       setDownloadDone(true);
-    } catch (err) {
-      setDownloadError(err instanceof Error ? err.message : "Download failed");
+    } catch (error) {
+      setDownloadError(error instanceof Error ? error.message : "Download failed");
     } finally {
       setDownloading(false);
     }
@@ -105,7 +105,7 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
 
   if (!template) {
     return (
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-800">
+      <div className="rounded-xl border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 p-6 text-amber-800 dark:text-amber-200">
         Please go back and choose a template first.
       </div>
     );
@@ -113,13 +113,13 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
 
   return (
     <div>
-      <h2 className="mb-1 text-2xl font-bold text-slate-900">Preview</h2>
-      <p className="mb-6 text-slate-500">
+      <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white">Preview</h2>
+      <p className="mb-6 text-slate-500 dark:text-slate-400">
         Review the files that will be included in your downloaded package.
       </p>
-      <div className="mb-6 flex gap-4 rounded-xl border border-gray-200 bg-white overflow-hidden">
-        <div className="w-56 shrink-0 border-r border-gray-100 p-3">
-          <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+      <div className="mb-6 flex gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden">
+        <div className="w-56 shrink-0 border-r border-gray-100 dark:border-gray-700 p-3">
+          <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
             Files
           </p>
           <FileTree files={files} selected={activeFile?.path ?? ""} onSelect={setSelectedPath} />
@@ -127,8 +127,8 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
         <div className="min-w-0 flex-1 p-4">
           {activeFile && (
             <>
-              <p className="mb-2 font-mono text-xs text-slate-400">{activeFile.path}</p>
-              <pre className="overflow-auto whitespace-pre-wrap text-xs text-slate-700 leading-relaxed">
+              <p className="mb-2 font-mono text-xs text-slate-400 dark:text-slate-500">{activeFile.path}</p>
+              <pre className="overflow-auto whitespace-pre-wrap text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                 {activeFile.content}
               </pre>
             </>
@@ -137,12 +137,12 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
       </div>
 
       {downloadError && (
-        <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">
+        <div className="mb-3 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-4 py-2.5 text-sm text-red-700 dark:text-red-300">
           {downloadError}
         </div>
       )}
       {downloadDone && (
-        <div className="mb-3 rounded-lg border border-green-200 bg-green-50 px-4 py-2.5 text-sm text-green-700">
+        <div className="mb-3 rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 px-4 py-2.5 text-sm text-green-700 dark:text-green-300">
           ✓ Downloaded! Check your downloads folder.
         </div>
       )}
@@ -152,7 +152,7 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
           type="button"
           onClick={onBack}
           data-testid="step-back-button"
-          className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
+          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2.5 font-medium text-slate-700 dark:text-slate-300 transition hover:bg-gray-50 dark:bg-gray-800"
         >
           ← Back
         </button>
@@ -162,7 +162,7 @@ export function StepPreview({ job, onNext, onBack }: StepProperties) {
             onClick={() => void downloadZip()}
             data-testid="preview-download-zip-button"
             disabled={downloading || !job.templateId}
-            className="flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-5 py-2.5 font-medium text-indigo-700 transition hover:bg-indigo-100 disabled:opacity-40"
+            className="flex items-center gap-2 rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900 px-5 py-2.5 font-medium text-indigo-700 dark:text-indigo-300 transition hover:bg-indigo-100 dark:hover:bg-indigo-800 disabled:opacity-40"
           >
             {downloading ? "Generating…" : "⬇ Download ZIP"}
           </button>

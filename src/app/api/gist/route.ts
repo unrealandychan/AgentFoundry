@@ -2,23 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import JSZip from "jszip";
 import { compose } from "@/lib/composer";
-import type { GenerationJob } from "@/types";
-
-const JobSchema = z.object({
-  templateId: z.string().min(1).max(200),
-  projectName: z.string().min(1).max(200),
-  skillIds: z.array(z.string()).default([]),
-  integrationIds: z.array(z.string()).default([]),
-  agentTarget: z
-    .enum(["openai-agents", "cursor", "claude", "windsurf", "vscode"])
-    .default("openai-agents"),
-  workspaceContext: z.string().max(4000).optional().default(""),
-});
+import { GenerationJobSchema } from "@/lib/schemas";
 
 const RequestSchema = z.object({
-  job: JobSchema,
-  // githubToken is optional — omitting it triggers a ZIP download fallback
-  githubToken: z.string().min(1).max(500).optional(),
+  job: GenerationJobSchema,
+  githubToken: z.string().min(1).max(500),
 });
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -38,7 +26,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   const { job, githubToken } = parsed.data;
-  const pkg = compose(job as GenerationJob);
+  const pkg = compose(job);
 
   // ── Fallback: no token → return a ZIP blob ────────────────────────────────
   if (!githubToken) {
@@ -90,7 +78,6 @@ export async function POST(request: Request): Promise<NextResponse> {
   });
 
   if (!response.ok) {
-    const text = await response.text();
     // Don't forward raw GitHub error text verbatim; just map status codes
     if (response.status === 401) {
       return NextResponse.json({ error: "GitHub token is invalid or expired." }, { status: 401 });

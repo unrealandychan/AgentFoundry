@@ -85,11 +85,11 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
 
   return (
     <div>
-      <h2 className="mb-1 text-2xl font-bold text-slate-900">Choose Your Agent Platform</h2>
-      <p className="mb-2 text-slate-500">
+      <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white">Choose Your Agent Platform</h2>
+      <p className="mb-2 text-slate-500 dark:text-slate-400">
         This determines which config file gets generated. Pick the AI coding tool you plan to use.
       </p>
-      <div className="mb-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      <div className="mb-5 rounded-lg border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
         <strong>Why this matters:</strong> Each platform reads a different file to load your
         agent&apos;s persona, rules, and MCP servers. Choosing the wrong platform means your config
         is never read — and your agent runs without context.
@@ -106,12 +106,12 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
               data-testid={`agent-target-card-${agent.id}`}
               className={`group relative flex flex-col rounded-xl border-2 p-5 text-left transition-all hover:shadow-md ${
                 isSelected
-                  ? "border-indigo-500 bg-indigo-50 shadow-sm"
-                  : "border-gray-200 bg-white hover:border-indigo-300"
+                  ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950 dark:border-indigo-400 shadow-sm"
+                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-indigo-300"
               }`}
             >
               {isSelected && (
-                <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">
+                <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-indigo-600 dark:bg-indigo-400 text-xs text-white dark:text-gray-900 font-bold">
                   ✓
                 </span>
               )}
@@ -122,7 +122,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
                   {agent.emoji}
                 </span>
                 <div className="flex items-center gap-1">
-                  <p className="font-semibold text-slate-900">{agent.label}</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">{agent.label}</p>
                   <div
                     onClick={(e) => e.stopPropagation()}
                     onKeyDown={(e) => e.stopPropagation()}
@@ -138,11 +138,11 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
               </div>
 
               {/* Generated file badge */}
-              <code className="mb-2 w-fit rounded bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600">
+              <code className="mb-2 w-fit rounded bg-slate-100 dark:bg-gray-700 px-2 py-0.5 text-[11px] text-slate-600 dark:text-slate-300">
                 {agent.generatedFile}
               </code>
 
-              <p className="text-sm leading-snug text-slate-500">{agent.description}</p>
+              <p className="text-sm leading-snug text-slate-500 dark:text-slate-400">{agent.description}</p>
             </button>
           );
         })}
@@ -153,7 +153,7 @@ export function StepAgentTarget({ job, onUpdateJob, onNext, onBack }: StepProper
           type="button"
           onClick={onBack}
           data-testid="step-back-button"
-          className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
+          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2.5 font-medium text-slate-700 dark:text-slate-300 transition hover:bg-gray-50 dark:bg-gray-800"
         >
           ← Back
         </button>

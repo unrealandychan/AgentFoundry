@@ -54,9 +54,9 @@ const MODELS = [
 // Approximate pricing per 1 M tokens (input / output) — used only for rough estimates
 const MODEL_PRICING: Record<string, { inputPer1M: number; outputPer1M: number }> = {
   "gpt-4o-mini": { inputPer1M: 0.15, outputPer1M: 0.6 },
-  "gpt-4o": { inputPer1M: 2.5, outputPer1M: 10.0 },
-  "gpt-4.1": { inputPer1M: 2.0, outputPer1M: 8.0 },
-  "gpt-5.4": { inputPer1M: 10.0, outputPer1M: 30.0 },
+  "gpt-4o": { inputPer1M: 2.5, outputPer1M: 10 },
+  "gpt-4.1": { inputPer1M: 2, outputPer1M: 8 },
+  "gpt-5.4": { inputPer1M: 10, outputPer1M: 30 },
 };
 
 function estimateCost(model: string, charsIn: number, charsOut: number): string {
@@ -71,12 +71,12 @@ function estimateCost(model: string, charsIn: number, charsOut: number): string 
 
 // Stable palette — agent i gets color i % 6
 const AGENT_COLORS = [
-  "bg-indigo-100 text-indigo-700 border-indigo-200",
-  "bg-teal-100 text-teal-700 border-teal-200",
-  "bg-amber-100 text-amber-700 border-amber-200",
-  "bg-rose-100 text-rose-700 border-rose-200",
-  "bg-emerald-100 text-emerald-700 border-emerald-200",
-  "bg-purple-100 text-purple-700 border-purple-200",
+  "bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800",
+  "bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800",
+  "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
+  "bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800",
+  "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
+  "bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800",
 ];
 
 function agentColor(index: number): string {
@@ -86,8 +86,8 @@ function agentColor(index: number): string {
 // ── Tab helpers ───────────────────────────────────────────────────────────────
 
 function buildTabClass(active: boolean, colorClass: string | undefined): string {
-  if (!active) return "border-transparent text-slate-500 hover:text-slate-700";
-  return colorClass ? `border-current ${colorClass}` : "border-indigo-600 text-indigo-700";
+  if (!active) return "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300";
+  return colorClass ? `border-current ${colorClass}` : "border-indigo-600 text-indigo-700 dark:text-indigo-300";
 }
 
 function TabPill({
@@ -138,7 +138,7 @@ function inlineMarkdown(text: string): React.ReactNode[] {
       parts.push(
         <code
           key={key++}
-          className="rounded bg-gray-200 px-1 py-0.5 text-[0.8em] font-mono text-slate-800"
+          className="rounded bg-gray-200 dark:bg-gray-700 px-1 py-0.5 text-[0.8em] font-mono text-slate-800 dark:text-slate-100"
         >
           {token.slice(1, -1)}
         </code>,
@@ -189,7 +189,7 @@ function renderMarkdown(content: string): React.ReactNode {
     const h1 = /^# (.+)/.exec(line);
     if (h3) {
       nodes.push(
-        <h3 key={blockKey++} className="mb-1 mt-3 text-sm font-semibold text-slate-900">
+        <h3 key={blockKey++} className="mb-1 mt-3 text-sm font-semibold text-slate-900 dark:text-white">
           {inlineMarkdown(h3[1])}
         </h3>,
       );
@@ -198,7 +198,7 @@ function renderMarkdown(content: string): React.ReactNode {
     }
     if (h2) {
       nodes.push(
-        <h2 key={blockKey++} className="mb-1 mt-3 text-base font-bold text-slate-900">
+        <h2 key={blockKey++} className="mb-1 mt-3 text-base font-bold text-slate-900 dark:text-white">
           {inlineMarkdown(h2[1])}
         </h2>,
       );
@@ -207,7 +207,7 @@ function renderMarkdown(content: string): React.ReactNode {
     }
     if (h1) {
       nodes.push(
-        <h1 key={blockKey++} className="mb-1 mt-3 text-lg font-bold text-slate-900">
+        <h1 key={blockKey++} className="mb-1 mt-3 text-lg font-bold text-slate-900 dark:text-white">
           {inlineMarkdown(h1[1])}
         </h1>,
       );
@@ -225,7 +225,7 @@ function renderMarkdown(content: string): React.ReactNode {
       nodes.push(
         <blockquote
           key={blockKey++}
-          className="my-1 border-l-4 border-indigo-300 pl-3 text-slate-600 italic"
+          className="my-1 border-l-4 border-indigo-300 dark:border-indigo-700 pl-3 text-slate-600 dark:text-slate-300 italic"
         >
           {quoteLines.map((ql, qi) => (
             <Fragment key={qi}>
@@ -261,7 +261,7 @@ function renderMarkdown(content: string): React.ReactNode {
             <thead>
               <tr className="border-b border-gray-300">
                 {headers.map((header, hi) => (
-                  <th key={hi} className="py-1 pr-4 font-semibold text-slate-800">
+                  <th key={hi} className="py-1 pr-4 font-semibold text-slate-800 dark:text-slate-100">
                     {inlineMarkdown(header)}
                   </th>
                 ))}
@@ -269,9 +269,9 @@ function renderMarkdown(content: string): React.ReactNode {
             </thead>
             <tbody>
               {rows.map((row, ri) => (
-                <tr key={ri} className="border-b border-gray-200">
+                <tr key={ri} className="border-b border-gray-200 dark:border-gray-700">
                   {row.map((cell, ci) => (
-                    <td key={ci} className="py-1 pr-4 text-slate-700">
+                    <td key={ci} className="py-1 pr-4 text-slate-700 dark:text-slate-300">
                       {inlineMarkdown(cell)}
                     </td>
                   ))}
@@ -294,7 +294,7 @@ function renderMarkdown(content: string): React.ReactNode {
       nodes.push(
         <ul key={blockKey++} className="my-1 list-disc pl-5">
           {items.map((item, ii) => (
-            <li key={ii} className="my-0 text-slate-700">
+            <li key={ii} className="my-0 text-slate-700 dark:text-slate-300">
               {inlineMarkdown(item)}
             </li>
           ))}
@@ -313,7 +313,7 @@ function renderMarkdown(content: string): React.ReactNode {
       nodes.push(
         <ol key={blockKey++} className="my-1 list-decimal pl-5">
           {items.map((item, ii) => (
-            <li key={ii} className="my-0 text-slate-700">
+            <li key={ii} className="my-0 text-slate-700 dark:text-slate-300">
               {inlineMarkdown(item)}
             </li>
           ))}
@@ -324,7 +324,7 @@ function renderMarkdown(content: string): React.ReactNode {
 
     // Horizontal rule
     if (/^---+$/.test(line.trim())) {
-      nodes.push(<hr key={blockKey++} className="my-2 border-gray-200" />);
+      nodes.push(<hr key={blockKey++} className="my-2 border-gray-200 dark:border-gray-700" />);
       index++;
       continue;
     }
@@ -337,7 +337,7 @@ function renderMarkdown(content: string): React.ReactNode {
 
     // Regular paragraph line
     nodes.push(
-      <p key={blockKey++} className="my-1 text-slate-800">
+      <p key={blockKey++} className="my-1 text-slate-800 dark:text-slate-100">
         {inlineMarkdown(line)}
       </p>,
     );
@@ -355,7 +355,7 @@ function ChatBubble({ message, agentIndex }: { message: ChatMessage; agentIndex:
       {!isUser && message.agentName && (
         <span
           className={`mb-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${
-            isCoordinator ? "bg-amber-100 text-amber-800 border-amber-300" : agentColor(agentIndex)
+            isCoordinator ? "bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-700" : agentColor(agentIndex)
           }`}
         >
           {message.agentName}
@@ -365,9 +365,9 @@ function ChatBubble({ message, agentIndex }: { message: ChatMessage; agentIndex:
         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
           isUser
             ? "bg-indigo-600 text-white"
-            : isCoordinator
-              ? "bg-amber-50 border border-amber-200 text-amber-900"
-              : "bg-gray-100 text-slate-800"
+            : (isCoordinator
+              ? "bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-700 text-amber-900 dark:text-amber-200"
+              : "bg-gray-100 dark:bg-gray-800 text-slate-800 dark:text-slate-100")
         }`}
       >
         {isUser ? (
@@ -540,7 +540,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
     if (!input.trim() || loading || agentDefs.length === 0) return;
     const userMessage: ChatMessage = { role: "user", content: input.trim() };
     // Capture history BEFORE adding the new user message
-    const priorMessages = messages.slice();
+    const priorMessages = [...messages];
     setMessages((previous) => [...previous, userMessage]);
     setInput("");
     setLoading(true);
@@ -699,21 +699,21 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
 
   return (
     <div className="flex flex-col">
-      <h2 className="mb-1 text-2xl font-bold text-slate-900">Test Your Agent</h2>
-      <p className="mb-3 text-slate-500">
+      <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white">Test Your Agent</h2>
+      <p className="mb-3 text-slate-500 dark:text-slate-400">
         Chat live with your composed agent{isMultiAgent ? "s" : ""} before downloading.
         {isMultiAgent && collaborate
           ? ` Agents debate in ${rounds} round${rounds > 1 ? "s" : ""} — each reads the full transcript and builds on, challenges, or extends what was said.`
-          : isMultiAgent
+          : (isMultiAgent
             ? " An orchestrator routes each message to the best specialist."
-            : ""}
+            : "")}
         {reflective
           ? " A Coordinator reviews each draft and requests iteration if the reasoning is too shallow."
           : ""}
       </p>
 
       {/* ── Limitations disclaimer ─────────────────────────────────────────── */}
-      <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800">
+      <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 px-4 py-3 text-xs text-amber-800 dark:text-amber-200">
         <span className="mt-0.5 shrink-0 text-base leading-none">⚠️</span>
         <div>
           <span className="font-semibold">Preview mode — behaviour only.</span> This sandbox tests
@@ -726,25 +726,25 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
       </div>
 
       {/* ── Config bar ────────────────────────────────────────────────────── */}
-      <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-gray-200 bg-white px-4 py-3">
+      <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3">
         {/* Security badge */}
-        <span className="flex items-center gap-1.5 text-xs text-emerald-700">
+        <span className="flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-300">
           <span>🔒</span>
           <span>
-            Server-side key via <code className="rounded bg-emerald-50 px-1">OPENAI_API_KEY</code>
+            Server-side key via <code className="rounded bg-emerald-50 dark:bg-emerald-950 px-1">OPENAI_API_KEY</code>
           </span>
         </span>
 
-        <div className="hidden h-4 w-px bg-gray-200 sm:block" />
+        <div className="hidden h-4 w-px bg-gray-200 dark:bg-gray-700 sm:block" />
 
         {/* Model selector */}
         <label className="flex items-center gap-2 text-sm">
-          <span className="font-medium text-slate-600">Model</span>
+          <span className="font-medium text-slate-600 dark:text-slate-300">Model</span>
           <select
             value={model}
             data-testid="model-selector"
             onChange={(e) => setModel(e.target.value)}
-            className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+            className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
           >
             {MODELS.map((m) => (
               <option key={m.id} value={m.id} title={m.note}>
@@ -756,14 +756,14 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
 
         {systemPrompt && (
           <>
-            <div className="hidden h-4 w-px bg-gray-200 sm:block" />
+            <div className="hidden h-4 w-px bg-gray-200 dark:bg-gray-700 sm:block" />
             <button
               type="button"
               onClick={() => setShowPrompt((v) => !v)}
-              className="flex items-center gap-1 rounded-md border border-gray-200 px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-50"
+              className="flex items-center gap-1 rounded-md border border-gray-200 dark:border-gray-700 px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-50 dark:bg-gray-900"
             >
               🧩 System Prompt
-              <span className="ml-1 text-slate-400">{showPrompt ? "▲" : "▼"}</span>
+              <span className="ml-1 text-slate-400 dark:text-slate-500">{showPrompt ? "▲" : "▼"}</span>
             </button>
           </>
         )}
@@ -771,14 +771,14 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
         {/* Collaborate toggle — only meaningful with multiple agents */}
         {isMultiAgent && (
           <>
-            <div className="hidden h-4 w-px bg-gray-200 sm:block" />
+            <div className="hidden h-4 w-px bg-gray-200 dark:bg-gray-700 sm:block" />
             <button
               type="button"
               onClick={() => setCollaborate((v) => !v)}
               className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition ${
                 collaborate
-                  ? "border-violet-300 bg-violet-50 text-violet-700"
-                  : "border-gray-200 text-slate-500 hover:bg-slate-50"
+                  ? "border-violet-300 dark:border-violet-600 bg-violet-50 dark:bg-violet-950 text-violet-700 dark:text-violet-300"
+                  : "border-gray-200 dark:border-gray-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-gray-900"
               }`}
             >
               🗣 Collaborate
@@ -789,11 +789,11 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
             {/* Rounds selector — visible only when Collaborate is on */}
             {collaborate && (
               <label className="flex items-center gap-1.5 text-xs">
-                <span className="font-medium text-violet-700">Rounds</span>
+                <span className="font-medium text-violet-700 dark:text-violet-300">Rounds</span>
                 <select
                   value={rounds}
                   onChange={(e) => setRounds(Number(e.target.value))}
-                  className="rounded-md border border-violet-200 bg-violet-50 px-1.5 py-1 text-xs text-violet-800 outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-300"
+                  className="rounded-md border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-950 px-1.5 py-1 text-xs text-violet-800 dark:text-violet-300 outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-300"
                 >
                   {[1, 2, 3, 4, 5].map((n) => (
                     <option key={n} value={n}>
@@ -808,14 +808,14 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
 
         {/* Reflect toggle — Coordinator enforces iterative reasoning before final answers */}
         <>
-          <div className="hidden h-4 w-px bg-gray-200 sm:block" />
+          <div className="hidden h-4 w-px bg-gray-200 dark:bg-gray-700 sm:block" />
           <button
             type="button"
             onClick={() => setReflective((v) => !v)}
             className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition ${
               reflective
-                ? "border-amber-300 bg-amber-50 text-amber-700"
-                : "border-gray-200 text-slate-500 hover:bg-slate-50"
+                ? "border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300"
+                : "border-gray-200 dark:border-gray-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-gray-900"
             }`}
           >
             🔄 Reflect
@@ -828,7 +828,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
 
       {/* Collapsible system prompt */}
       {showPrompt && systemPrompt && (
-        <div className="mb-4 rounded-xl border border-gray-200 bg-white px-4 pb-4 pt-3">
+        <div className="mb-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 pb-4 pt-3">
           <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap rounded-lg bg-slate-900 p-4 text-[11px] leading-relaxed text-slate-100">
             {systemPrompt}
           </pre>
@@ -841,8 +841,8 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
         <div className="flex w-64 flex-shrink-0 flex-col gap-4">
           {/* Agent roster */}
           {agentDefs.length > 0 && (
-            <div className="rounded-xl border border-gray-200 bg-white p-4">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 {isMultiAgent ? `${agentDefs.length} Sub-Agents` : "Agent"}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -855,20 +855,20 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                   </span>
                 ))}
                 {reflective && (
-                  <span className="rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+                  <span className="rounded-full border border-amber-300 dark:border-amber-700 bg-amber-100 dark:bg-amber-900 px-3 py-1 text-xs font-medium text-amber-800 dark:text-amber-200">
                     🔄 Coordinator
                   </span>
                 )}
               </div>
               {isMultiAgent && (
-                <p className="mt-2 text-[11px] text-slate-400">
+                <p className="mt-2 text-[11px] text-slate-400 dark:text-slate-500">
                   {collaborate
                     ? `🗣 ${rounds} round${rounds > 1 ? "s" : ""} — agents debate and build on each other's responses.`
                     : "✦ Orchestrator routes each message to the best specialist."}
                 </p>
               )}
               {reflective && (
-                <p className="mt-2 text-[11px] text-slate-400">
+                <p className="mt-2 text-[11px] text-slate-400 dark:text-slate-500">
                   🔄 Coordinator reviews each response and requests iteration if reasoning is
                   shallow.
                 </p>
@@ -878,14 +878,14 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
 
           {/* Token / cost estimate */}
           {(totalCharsIn > 0 || totalCharsOut > 0) && (
-            <div className="rounded-xl border border-gray-200 bg-white p-4">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 💰 Est. Cost
               </p>
-              <p className="font-mono text-sm font-semibold text-slate-800">
+              <p className="font-mono text-sm font-semibold text-slate-800 dark:text-slate-100">
                 {estimateCost(model, totalCharsIn, totalCharsOut)}
               </p>
-              <p className="mt-1 text-[10px] text-slate-400">
+              <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
                 ~{Math.round(totalCharsIn / 4).toLocaleString()} in&nbsp;/&nbsp; ~
                 {Math.round(totalCharsOut / 4).toLocaleString()} out tokens
               </p>
@@ -894,20 +894,20 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
           )}
 
           {/* Workspace file upload */}
-          <div className="flex flex-1 flex-col rounded-xl border border-gray-200 bg-white p-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="flex flex-1 flex-col rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               📁 Workspace Files
             </p>
             <div className="mb-3 flex flex-wrap gap-2">
               {workspaceFiles.length === 0 ? (
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-400 dark:text-slate-500">
                   Drop files here to give agents context from your workspace.
                 </p>
               ) : (
                 workspaceFiles.map((name) => (
                   <span
                     key={name}
-                    className="rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 font-mono text-xs text-slate-600"
+                    className="rounded-full border border-slate-200 dark:border-gray-700 bg-slate-100 dark:bg-gray-700 px-2 py-0.5 font-mono text-xs text-slate-600 dark:text-slate-300"
                   >
                     {name}
                   </span>
@@ -915,7 +915,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
               )}
             </div>
             <label
-              className="mt-auto flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 px-3 py-4 text-center text-xs text-slate-400 transition hover:border-indigo-300 hover:text-indigo-500"
+              className="mt-auto flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700 px-3 py-4 text-center text-xs text-slate-400 dark:text-slate-500 transition hover:border-indigo-300 hover:text-indigo-500"
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
                 e.preventDefault();
@@ -940,14 +940,14 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 </>
               )}
             </label>
-            {uploadError && <p className="mt-2 text-xs text-red-600">{uploadError}</p>}
+            {uploadError && <p className="mt-2 text-xs text-red-600 dark:text-red-300">{uploadError}</p>}
           </div>
         </div>
 
         {/* RIGHT — chat */}
-        <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+        <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
           {/* ── Tab bar ──────────────────────────────────────────────────── */}
-          <div className="flex items-center gap-0.5 overflow-x-auto rounded-t-xl border-b border-gray-200 bg-white px-2 pt-1">
+          <div className="flex items-center gap-0.5 overflow-x-auto rounded-t-xl border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 pt-1">
             <TabPill label="All" active={activeTab === "all"} onClick={() => setActiveTab("all")} />
             {isMultiAgent &&
               agentDefs.map((agent, index) => (
@@ -975,7 +975,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                     setSummary("");
                     setActiveTab("all");
                   }}
-                  className="rounded px-2 py-1 text-[11px] text-slate-400 transition hover:text-red-500"
+                  className="rounded px-2 py-1 text-[11px] text-slate-400 dark:text-slate-500 transition hover:text-red-500"
                 >
                   ✕ Clear
                 </button>
@@ -989,7 +989,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
               {!summary && !summarizing && (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                   <span className="mb-2 text-4xl">✦</span>
-                  <p className="mb-4 max-w-xs text-sm text-slate-500">
+                  <p className="mb-4 max-w-xs text-sm text-slate-500 dark:text-slate-400">
                     Generate a structured summary of the conversation — topics discussed, what each
                     agent contributed, key decisions, and suggested next steps.
                   </p>
@@ -1003,14 +1003,14 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 </div>
               )}
               {summarizing && !summary && (
-                <div className="flex items-center gap-2 text-sm text-slate-400">
+                <div className="flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500">
                   <span className="inline-block size-3 animate-spin rounded-full border-2 border-indigo-400 border-t-transparent" />
                   Generating summary…
                 </div>
               )}
               {summary && (
                 <div className="flex flex-col gap-3">
-                  <pre className="whitespace-pre-wrap rounded-xl border border-gray-200 bg-white px-5 py-4 font-sans text-sm leading-relaxed text-slate-800">
+                  <pre className="whitespace-pre-wrap rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-5 py-4 font-sans text-sm leading-relaxed text-slate-800 dark:text-slate-100">
                     {summary}
                   </pre>
                   <div className="flex items-center gap-3">
@@ -1018,12 +1018,12 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                       type="button"
                       onClick={() => void generateSummary()}
                       disabled={summarizing}
-                      className="rounded-md border border-gray-200 px-3 py-1.5 text-xs text-slate-600 transition hover:bg-slate-50 disabled:opacity-40"
+                      className="rounded-md border border-gray-200 dark:border-gray-700 px-3 py-1.5 text-xs text-slate-600 dark:text-slate-300 transition hover:bg-slate-50 dark:bg-gray-900 disabled:opacity-40"
                     >
                       ↺ Regenerate
                     </button>
                     {summarizing && (
-                      <span className="flex items-center gap-1.5 text-xs text-slate-400">
+                      <span className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
                         <span className="inline-block size-2.5 animate-spin rounded-full border-2 border-indigo-400 border-t-transparent" />
                         Regenerating…
                       </span>
@@ -1033,7 +1033,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 </div>
               )}
               {summaryError && !summary && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
                   {summaryError}
                 </div>
               )}
@@ -1043,7 +1043,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
             <>
               <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4">
                 {filteredMessages.length === 0 && (
-                  <p className="text-center text-sm text-slate-400">
+                  <p className="text-center text-sm text-slate-400 dark:text-slate-500">
                     {chatEmptyMessage(agentDefs.length, messages.length > 0, activeTab !== "all")}
                   </p>
                 )}
@@ -1051,11 +1051,11 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                   const agentIndex =
                     message.agentName === "🔄 Coordinator"
                       ? -1
-                      : message.agentName === undefined
+                      : (message.agentName === undefined
                         ? 0
                         : (agentIndexMap.get(
                             agentDefs.find((agent) => agent.name === message.agentName)?.id ?? "",
-                          ) ?? 0);
+                          ) ?? 0));
                   return (
                     // biome-ignore lint/suspicious/noArrayIndexKey: stable list
                     <ChatBubble key={index} message={message} agentIndex={agentIndex} />
@@ -1063,10 +1063,10 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                 })}
                 {loading && (
                   <div className="flex justify-start">
-                    <div className="rounded-2xl bg-gray-100 px-4 py-2.5 text-sm text-slate-400">
+                    <div className="rounded-2xl bg-gray-100 dark:bg-gray-800 px-4 py-2.5 text-sm text-slate-400 dark:text-slate-500">
                       {thinkingAgent ? (
                         <span>
-                          <span className="font-medium text-slate-600">{thinkingAgent}</span> is
+                          <span className="font-medium text-slate-600 dark:text-slate-300">{thinkingAgent}</span> is
                           thinking…
                         </span>
                       ) : (
@@ -1076,7 +1076,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                   </div>
                 )}
                 {error && (
-                  <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
                     {error}
                   </div>
                 )}
@@ -1084,7 +1084,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
               </div>
 
               {/* Input bar */}
-              <div className="flex gap-2 border-t border-gray-200 p-3">
+              <div className="flex gap-2 border-t border-gray-200 dark:border-gray-700 p-3">
                 <input
                   type="text"
                   data-testid="chat-input"
@@ -1094,7 +1094,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
                   onKeyDown={(event) => {
                     if (event.key === "Enter") void send();
                   }}
-                  className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                  className="flex-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
                 />
                 <button
                   type="button"
@@ -1117,7 +1117,7 @@ export function StepTestAgent({ job, onNext, onBack }: StepProperties) {
           type="button"
           onClick={onBack}
           data-testid="step-back-button"
-          className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
+          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2.5 font-medium text-slate-700 dark:text-slate-300 transition hover:bg-gray-50 dark:bg-gray-800"
         >
           ← Back
         </button>

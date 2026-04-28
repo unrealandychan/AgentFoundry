@@ -130,7 +130,7 @@ export function GitHubImportPanel({ onImport }: GitHubImportPanelProperties) {
   const previewMap = result ? buildPreviewMap(result.skills, result.rawFiles) : {};
 
   return (
-    <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+    <div className="rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950 p-4">
       <h3 className="mb-1 font-semibold text-slate-800">Import from GitHub</h3>
       <p className="mb-3 text-xs text-slate-500">
         Paste a public GitHub repo URL. We&apos;ll scan for{" "}
@@ -183,7 +183,7 @@ export function GitHubImportPanel({ onImport }: GitHubImportPanelProperties) {
       </div>
 
       {error && (
-        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="mt-3 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
           {error}
         </div>
       )}
@@ -258,7 +258,7 @@ export function GitHubImportPanel({ onImport }: GitHubImportPanelProperties) {
                             e.stopPropagation();
                             setOpenPreviewId(isPreviewOpen ? null : skill.id);
                           }}
-                          className="ml-auto shrink-0 rounded border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500 hover:border-indigo-300 hover:text-indigo-600"
+                          className="ml-auto shrink-0 rounded border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 px-2 py-0.5 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:border-indigo-300 hover:text-indigo-600"
                         >
                           {isPreviewOpen ? "▲ Hide" : "📄 Preview"}
                         </button>

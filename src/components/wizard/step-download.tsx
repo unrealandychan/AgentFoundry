@@ -14,8 +14,8 @@ interface StepProperties {
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline gap-2 text-sm">
-      <span className="w-32 shrink-0 font-medium text-slate-500">{label}</span>
-      <span className="text-slate-900">{value}</span>
+      <span className="w-32 shrink-0 font-medium text-slate-500 dark:text-slate-400">{label}</span>
+      <span className="text-slate-900 dark:text-white">{value}</span>
     </div>
   );
 }
@@ -54,23 +54,23 @@ function AgentsSdkSnippet({ projectName }: { projectName: string }) {
   const [open, setOpen] = useState(false);
   const code = lang === "python" ? PYTHON_SNIPPET(projectName) : TS_SNIPPET(projectName);
   return (
-    <div className="mb-6 rounded-xl border border-indigo-100 bg-indigo-50/40 p-4">
+    <div className="mb-6 rounded-xl border border-indigo-100 dark:border-indigo-900 bg-indigo-50/40 dark:bg-indigo-950/40 p-4">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         data-testid="sdk-snippet-toggle"
         className="flex w-full items-center justify-between text-left"
       >
-        <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600">
+        <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
           🤖 Agents SDK Quick-Start
         </span>
         <span className="text-xs text-indigo-400">{open ? "▲ hide" : "▼ show"}</span>
       </button>
       {open && (
         <div className="mt-3">
-          <p className="mb-2 text-xs text-slate-500">
+          <p className="mb-2 text-xs text-slate-500 dark:text-slate-400">
             Ready-to-run harness using the OpenAI Agents SDK. Your{" "}
-            <code className="rounded bg-white px-1 font-mono text-xs">AGENTS.md</code> becomes the
+            <code className="rounded bg-white dark:bg-gray-900 px-1 font-mono text-xs">AGENTS.md</code> becomes the
             system prompt.
           </p>
           <div className="mb-2 flex gap-2">
@@ -83,7 +83,7 @@ function AgentsSdkSnippet({ projectName }: { projectName: string }) {
                 className={`rounded-md px-3 py-1 text-xs font-medium transition ${
                   lang === l
                     ? "bg-indigo-600 text-white"
-                    : "bg-white text-slate-600 border border-gray-200 hover:bg-slate-50"
+                    : "bg-white dark:bg-gray-900 text-slate-600 border border-gray-200 dark:border-gray-700 hover:bg-slate-50 dark:bg-gray-900"
                 }`}
               >
                 {l === "python" ? "🐍 Python" : "🔷 TypeScript"}
@@ -93,7 +93,7 @@ function AgentsSdkSnippet({ projectName }: { projectName: string }) {
           <pre className="overflow-x-auto rounded-lg bg-slate-900 px-4 py-3 text-[0.75rem] leading-relaxed text-slate-100">
             {code}
           </pre>
-          <p className="mt-2 text-[10px] text-slate-400">
+          <p className="mt-2 text-[10px] text-slate-400 dark:text-slate-500">
             Install: <code className="font-mono">pip install openai-agents</code> (Python) ·{" "}
             <code className="font-mono">npm i @openai/agents</code> (TypeScript)
           </p>
@@ -148,8 +148,8 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
       const data = (await response.json()) as { url?: string; error?: string };
       if (!response.ok) throw new Error(data.error ?? "Export failed");
       setGistUrl(data.url ?? null);
-    } catch (err) {
-      setGistError(err instanceof Error ? err.message : "Unknown error");
+    } catch (error) {
+      setGistError(error instanceof Error ? error.message : "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -158,35 +158,31 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
   const hasToken = token.trim().length > 0;
 
   return (
-    <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+    <div className="mb-6 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-900 p-4">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         data-testid="gist-export-toggle"
         className="flex w-full items-center justify-between text-left"
       >
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           🐙 Export as GitHub Gist
         </span>
-        <span className="text-xs text-slate-400">{open ? "▲ hide" : "▼ show"}</span>
+        <span className="text-xs text-slate-400 dark:text-slate-500">{open ? "▲ hide" : "▼ show"}</span>
       </button>
       {open && (
         <div className="mt-3 space-y-3">
-          <p className="text-xs text-slate-500">
-            Paste a{" "}
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Export all generated files as a private GitHub Gist. Paste a{" "}
             <a
               href="https://github.com/settings/tokens/new?scopes=gist&description=AgentFoundry"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-indigo-600 underline"
+              className="text-indigo-600 dark:text-indigo-400 underline"
             >
               personal access token
             </a>{" "}
-            with <code className="rounded bg-white px-1 font-mono text-xs">gist</code> scope to
-            create a private Gist.{" "}
-            <span className="text-slate-400">
-              No token? Leave it blank — files will download as a ZIP instead.
-            </span>
+            with <code className="rounded bg-white dark:bg-gray-900 px-1 font-mono text-xs">gist</code> scope.
           </p>
           <div className="flex gap-2">
             <input
@@ -195,7 +191,7 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
               data-testid="gist-token-input"
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="flex-1 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
             <button
               type="button"
@@ -208,17 +204,12 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
             </button>
           </div>
           {gistError && (
-            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
               {gistError}
             </p>
           )}
-          {gistUrl === "__zip__" && (
-            <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
-              ✓ ZIP downloaded successfully!
-            </p>
-          )}
-          {gistUrl && gistUrl !== "__zip__" && (
-            <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+          {gistUrl && (
+            <p className="rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 px-3 py-2 text-sm text-green-700 dark:text-green-300">
               ✓ Gist created:{" "}
               <a href={gistUrl} target="_blank" rel="noopener noreferrer" className="underline">
                 {gistUrl}
@@ -271,7 +262,7 @@ export function StepDownload({ job, onBack }: StepProperties) {
 
   if (!template) {
     return (
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-800">
+      <div className="rounded-xl border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 p-6 text-amber-800 dark:text-amber-200">
         Please go back and choose a template first.
       </div>
     );
@@ -279,13 +270,13 @@ export function StepDownload({ job, onBack }: StepProperties) {
 
   return (
     <div>
-      <h2 className="mb-1 text-2xl font-bold text-slate-900">Download Your Package</h2>
-      <p className="mb-6 text-slate-500">
+      <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white">Download Your Package</h2>
+      <p className="mb-6 text-slate-500 dark:text-slate-400">
         Your starter package is ready. Download a ZIP with all generated files and setup scripts.
       </p>
 
-      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
-        <h3 className="mb-4 font-semibold text-slate-800">Package Summary</h3>
+      <div className="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
+        <h3 className="mb-4 font-semibold text-slate-800 dark:text-slate-100">Package Summary</h3>
         <div className="flex flex-col gap-2">
           <SummaryRow label="Template" value={template.name} />
           <SummaryRow label="Project" value={job.projectName ?? "—"} />
@@ -307,11 +298,11 @@ export function StepDownload({ job, onBack }: StepProperties) {
         </div>
       </div>
 
-      <div className="mb-6 rounded-xl border border-gray-100 bg-slate-50 p-4">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+      <div className="mb-6 rounded-xl border border-gray-100 dark:border-gray-700 bg-slate-50 dark:bg-gray-900 p-4">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
           Included Files
         </p>
-        <div className="grid grid-cols-2 gap-1 font-mono text-xs text-slate-600 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-1 font-mono text-xs text-slate-600 dark:text-slate-300 sm:grid-cols-3">
           {[
             "README.md",
             "AGENTS.md",
@@ -331,13 +322,13 @@ export function StepDownload({ job, onBack }: StepProperties) {
       <AgentsSdkSnippet projectName={job.projectName ?? "my-agent"} />
 
       {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="mb-4 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-4 py-3 text-sm text-red-700 dark:text-red-300">
           {error}
         </div>
       )}
 
       {done && (
-        <div className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+        <div className="mb-4 rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 px-4 py-3 text-sm text-green-700 dark:text-green-300">
           ✓ Downloaded successfully! Check your downloads folder.
         </div>
       )}
@@ -350,7 +341,7 @@ export function StepDownload({ job, onBack }: StepProperties) {
           type="button"
           onClick={onBack}
           data-testid="step-back-button"
-          className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
+          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2.5 font-medium text-slate-700 dark:text-slate-300 transition hover:bg-gray-50 dark:bg-gray-800"
         >
           ← Back
         </button>

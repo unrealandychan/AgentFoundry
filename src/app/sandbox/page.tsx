@@ -73,7 +73,7 @@ function SessionList({
   };
 
   return (
-    <aside className="flex h-full w-64 flex-shrink-0 flex-col border-r border-gray-200 bg-gray-50">
+    <aside className="flex h-full w-64 flex-shrink-0 flex-col border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
         <span className="font-semibold text-slate-800 text-sm">🧪 Sandbox</span>
@@ -242,8 +242,10 @@ function ChatPanel({ session, onMessagesChange }: ChatPanelProps) {
       let buffer = "";
       let assembled = "";
 
-      while (true) {
+      let streamDone = false;
+      while (!streamDone) {
         const { done, value } = await reader.read();
+        streamDone = done;
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
 
@@ -398,7 +400,6 @@ function SandboxInner() {
       setActiveId(all[0].id);
       setActiveSession(all[0]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleNewFromSkill(skillId: string, personaText: string, skillTitle: string) {

@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { NextRequest } from "next/server";
+import { scheduleWorkspaceCleanup } from "@/lib/workspace-cleanup";
 
 // Max file size: 2 MB
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -108,5 +109,6 @@ export async function POST(request: NextRequest) {
 
   await fs.writeFile(destinationPath, buffer);
 
+  scheduleWorkspaceCleanup();
   return Response.json({ name: safeName, size: file.size });
 }

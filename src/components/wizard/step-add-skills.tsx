@@ -184,7 +184,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
   const [error, setError] = useState<string | null>(null);
 
   const inputClass =
-    "w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400";
+    "w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400";
 
   const handleSave = useCallback(async () => {
     if (!title.trim() || !persona.trim()) {
@@ -234,7 +234,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
         type="button"
         onClick={() => setOpen(true)}
         data-testid="create-skill-open-button"
-        className="flex w-full items-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-white px-4 py-3 text-sm font-medium text-slate-500 transition hover:border-indigo-400 hover:text-indigo-600"
+        className="flex w-full items-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-white dark:bg-gray-900 px-4 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 transition hover:border-indigo-400 hover:text-indigo-600 dark:text-indigo-400"
       >
         <span className="text-lg leading-none">+</span>
         Create a custom skill…
@@ -243,16 +243,16 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
   }
 
   return (
-    <div className="rounded-xl border-2 border-indigo-300 bg-indigo-50 p-5">
+    <div className="rounded-xl border-2 border-indigo-300 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-950 p-5">
       <div className="mb-4 flex items-center justify-between">
-        <p className="font-semibold text-slate-900">✏️ Create Custom Skill</p>
+        <p className="font-semibold text-slate-900 dark:text-white">✏️ Create Custom Skill</p>
         <button
           type="button"
           onClick={() => {
             setOpen(false);
             setError(null);
           }}
-          className="text-slate-400 hover:text-slate-600"
+          className="text-slate-400 dark:text-slate-500 hover:text-slate-600"
         >
           ✕
         </button>
@@ -260,7 +260,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
 
       <div className="flex flex-col gap-3">
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-700">
+          <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
             Title <span className="text-red-500">*</span>
           </label>
           <input
@@ -273,7 +273,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-700">Short description</label>
+          <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Short description</label>
           <input
             type="text"
             data-testid="custom-skill-description"
@@ -284,7 +284,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-700">
+          <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
             Instructions / Persona <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -295,13 +295,13 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
             onChange={(event) => setPersona(event.target.value)}
             className={inputClass}
           />
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
             These instructions become the agent's system prompt when this skill is selected.
           </p>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-700">
-            Tags <span className="text-slate-400">(comma-separated)</span>
+          <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
+            Tags <span className="text-slate-400 dark:text-slate-500">(comma-separated)</span>
           </label>
           <input
             type="text"
@@ -314,7 +314,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
         </div>
 
         {error && (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-3 py-2 text-sm text-red-700 dark:text-red-300">
             {error}
           </p>
         )}
@@ -326,7 +326,7 @@ function CreateSkillPanel({ onCreated }: { onCreated: (skill: SkillManifest) => 
               setOpen(false);
               setError(null);
             }}
-            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-gray-50"
+            className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-gray-50 dark:bg-gray-800"
           >
             Cancel
           </button>
@@ -363,10 +363,10 @@ function SkillCard({
       data-testid={`skill-card-${skill.id}`}
       className={`group relative flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-sm ${
         selected
-          ? "border-indigo-500 bg-indigo-50"
-          : highlighted
-            ? "border-amber-300 bg-amber-50 hover:border-indigo-300"
-            : "border-gray-200 bg-white hover:border-indigo-300"
+          ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950 dark:border-indigo-400"
+          : (highlighted
+            ? "border-amber-300 bg-amber-50 dark:bg-amber-950 dark:border-amber-500 hover:border-indigo-300"
+            : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-indigo-300")
       }`}
     >
       {/* Checkbox toggle — takes up most of the card */}
@@ -378,20 +378,20 @@ function SkillCard({
       >
         <div
           className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
-            selected ? "border-indigo-600 bg-indigo-600" : "border-gray-300 bg-white"
+            selected ? "border-indigo-600 bg-indigo-600 dark:border-indigo-400 dark:bg-indigo-400" : "border-gray-300 bg-white dark:bg-gray-900"
           }`}
         >
           {selected && <span className="text-xs text-white">✓</span>}
         </div>
         <div>
           <div className="flex items-start gap-1">
-            <p className="font-semibold text-slate-900">{skill.title}</p>
+            <p className="font-semibold text-slate-900 dark:text-white">{skill.title}</p>
             {skill.tooltip && <Tooltip title="What this skill adds" body={skill.tooltip} />}
           </div>
-          <p className="mt-0.5 text-sm text-slate-500">{skill.description}</p>
+          <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{skill.description}</p>
           <div className="mt-2 flex flex-wrap gap-1">
             {skill.tags.map((tag) => (
-              <span key={tag} className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">
+              <span key={tag} className="rounded bg-slate-100 dark:bg-gray-700 px-1.5 py-0.5 text-xs text-slate-600">
                 {tag}
               </span>
             ))}
@@ -406,7 +406,7 @@ function SkillCard({
         rel="noreferrer"
         data-testid={`skill-test-${skill.id}`}
         onClick={(e) => e.stopPropagation()}
-        className="absolute right-3 top-3 hidden rounded-lg border border-indigo-200 bg-white px-2 py-1 text-xs font-medium text-indigo-600 shadow-sm transition hover:bg-indigo-50 group-hover:flex"
+        className="absolute right-3 top-3 hidden rounded-lg border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-gray-900 px-2 py-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 shadow-sm transition hover:bg-indigo-50 group-hover:flex"
         title="Open in Skill Sandbox"
       >
         ▶ Test
@@ -509,10 +509,10 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
 
   return (
     <div>
-      <h2 className="mb-1 text-2xl font-bold text-slate-900">Add Skill Packs</h2>
-      <p className="mb-6 text-slate-500">
+      <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-white">Add Skill Packs</h2>
+      <p className="mb-6 text-slate-500 dark:text-slate-400">
         Select built-in skills or import from a public GitHub repo. You can skip this step.
-        {skillsLoading && <span className="ml-2 text-xs text-slate-400">Loading skills…</span>}
+        {skillsLoading && <span className="ml-2 text-xs text-slate-400 dark:text-slate-500">Loading skills…</span>}
       </p>
 
       <div className="mb-6">
@@ -527,9 +527,9 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
       {customSkills.length > 0 && (
         <div className="mb-6">
           <div className="mb-3 flex items-baseline gap-2">
-            <p className="text-sm font-semibold text-slate-700">✏️ My Skills</p>
-            <span className="text-xs text-slate-400">Created by you</span>
-            <span className="ml-auto rounded-full bg-indigo-100 px-2 py-0.5 text-xs text-indigo-700">
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">✏️ My Skills</p>
+            <span className="text-xs text-slate-400 dark:text-slate-500">Created by you</span>
+            <span className="ml-auto rounded-full bg-indigo-100 dark:bg-indigo-900 px-2 py-0.5 text-xs text-indigo-700 dark:text-indigo-300">
               {customSkills.length}
             </span>
           </div>
@@ -550,9 +550,9 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
       {importedSkills.length > 0 && (
         <div className="mb-6">
           <div className="mb-3 flex items-baseline gap-2">
-            <p className="text-sm font-semibold text-slate-700">📥 Imported Skills</p>
-            <span className="text-xs text-slate-400">From GitHub</span>
-            <span className="ml-auto rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">📥 Imported Skills</p>
+            <span className="text-xs text-slate-400 dark:text-slate-500">From GitHub</span>
+            <span className="ml-auto rounded-full bg-slate-100 dark:bg-gray-700 px-2 py-0.5 text-xs text-slate-500 dark:text-slate-400">
               {importedSkills.length}
             </span>
           </div>
@@ -573,11 +573,11 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
       {recommendedSkills.length > 0 && (
         <div className="mb-6">
           <div className="mb-3 flex items-baseline gap-2">
-            <p className="text-sm font-semibold text-slate-700">
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
               ⭐ Recommended for {selectedTemplate?.name ?? "this template"}
             </p>
-            <span className="text-xs text-slate-400">Best match based on your template</span>
-            <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700">
+            <span className="text-xs text-slate-400 dark:text-slate-500">Best match based on your template</span>
+            <span className="ml-auto rounded-full bg-amber-100 dark:bg-amber-900 px-2 py-0.5 text-xs text-amber-700 dark:text-amber-300">
               {recommendedSkills.length}
             </span>
           </div>
@@ -599,9 +599,9 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
       {skillsByCategory.map((cat) => (
         <div key={cat.key} className="mb-6">
           <div className="mb-3 flex items-baseline gap-2">
-            <p className="text-sm font-semibold text-slate-700">{cat.label}</p>
-            <span className="text-xs text-slate-400">{cat.description}</span>
-            <span className="ml-auto rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">{cat.label}</p>
+            <span className="text-xs text-slate-400 dark:text-slate-500">{cat.description}</span>
+            <span className="ml-auto rounded-full bg-slate-100 dark:bg-gray-700 px-2 py-0.5 text-xs text-slate-500 dark:text-slate-400">
               {cat.skills.length}
             </span>
           </div>
@@ -623,7 +623,7 @@ export function StepAddSkills({ job, onUpdateJob, onNext, onBack }: StepProperti
           type="button"
           onClick={onBack}
           data-testid="skills-back-button"
-          className="rounded-lg border border-gray-200 bg-white px-6 py-2.5 font-medium text-slate-700 transition hover:bg-gray-50"
+          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2.5 font-medium text-slate-700 dark:text-slate-300 transition hover:bg-gray-50 dark:bg-gray-800"
         >
           ← Back
         </button>
