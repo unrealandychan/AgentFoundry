@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import JSZip from "jszip";
 import { compose } from "@/lib/composer";
 import type { GenerationJob } from "@/types";
 
@@ -16,7 +17,8 @@ const JobSchema = z.object({
 
 const RequestSchema = z.object({
   job: JobSchema,
-  githubToken: z.string().min(1).max(500),
+  // githubToken is optional — omitting it triggers a ZIP download fallback
+  githubToken: z.string().min(1).max(500).optional(),
 });
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -37,6 +39,26 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   const { job, githubToken } = parsed.data;
   const pkg = compose(job as GenerationJob);
+
+  // ── Fallback: no token → return a ZIP blob ────────────────────────────────
+  if (!githubToken) {
+    const zip = new JSZip();
+    for (const file of pkg.files) {
+      if (file.content.length > 100_000) continue;
+      zip.file(file.path, file.content);
+    }
+    if (zip.files && Object.keys(zip.files).length === 0) {
+      return NextResponse.json({ error: "No files to export" }, { status: 400 });
+    }
+    const zipBuffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" });
+    return new NextResponse(new Uint8Array(zipBuffer), {
+      headers: {
+        "Content-Type": "application/zip",
+        "Content-Disposition": `attachment; filename="${job.projectName ?? "agent-starter"}.zip"`,
+        "X-Fallback": "zip",
+      },
+    });
+  }
 
   // Build Gist files object — include text files only (AGENTS.md, README.md, etc.)
   const gistFiles: Record<string, { content: string }> = {};

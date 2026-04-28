@@ -112,19 +112,41 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
   const [gistUrl, setGistUrl] = useState<string | null>(null);
   const [gistError, setGistError] = useState<string | null>(null);
 
-  async function createGist() {
-    if (!token.trim() || !job.templateId) return;
+  /**
+   * POST /api/gist with an optional githubToken.
+   * - With token  → server creates a GitHub Gist and returns { url }
+   * - Without token → server returns a ZIP blob (X-Fallback: zip header)
+   */
+  async function handleExport() {
+    if (!job.templateId) return;
     setLoading(true);
     setGistError(null);
     setGistUrl(null);
     try {
+      const body: Record<string, unknown> = { job };
+      if (token.trim()) body.githubToken = token.trim();
+
       const response = await fetch("/api/gist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ job, githubToken: token.trim() }),
+        body: JSON.stringify(body),
       });
+
+      // ZIP fallback path — server signals this with X-Fallback: zip
+      if (response.headers.get("X-Fallback") === "zip") {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = `${job.projectName ?? "agent-starter"}.zip`;
+        anchor.click();
+        URL.revokeObjectURL(url);
+        setGistUrl("__zip__"); // sentinel so UI shows success
+        return;
+      }
+
       const data = (await response.json()) as { url?: string; error?: string };
-      if (!response.ok) throw new Error(data.error ?? "Gist creation failed");
+      if (!response.ok) throw new Error(data.error ?? "Export failed");
       setGistUrl(data.url ?? null);
     } catch (err) {
       setGistError(err instanceof Error ? err.message : "Unknown error");
@@ -132,6 +154,8 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
       setLoading(false);
     }
   }
+
+  const hasToken = token.trim().length > 0;
 
   return (
     <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -149,7 +173,7 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
       {open && (
         <div className="mt-3 space-y-3">
           <p className="text-xs text-slate-500">
-            Export all generated files as a private GitHub Gist. Paste a{" "}
+            Paste a{" "}
             <a
               href="https://github.com/settings/tokens/new?scopes=gist&description=AgentFoundry"
               target="_blank"
@@ -158,12 +182,16 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
             >
               personal access token
             </a>{" "}
-            with <code className="rounded bg-white px-1 font-mono text-xs">gist</code> scope.
+            with <code className="rounded bg-white px-1 font-mono text-xs">gist</code> scope to
+            create a private Gist.{" "}
+            <span className="text-slate-400">
+              No token? Leave it blank — files will download as a ZIP instead.
+            </span>
           </p>
           <div className="flex gap-2">
             <input
               type="password"
-              placeholder="ghp_…"
+              placeholder="ghp_… (optional — blank = ZIP download)"
               data-testid="gist-token-input"
               value={token}
               onChange={(e) => setToken(e.target.value)}
@@ -171,12 +199,12 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
             />
             <button
               type="button"
-              onClick={() => void createGist()}
+              onClick={() => void handleExport()}
               data-testid="gist-create-button"
-              disabled={loading || !token.trim() || !job.templateId}
+              disabled={loading || !job.templateId}
               className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-40"
             >
-              {loading ? "Creating…" : "Create Gist"}
+              {loading ? "Exporting…" : hasToken ? "Create Gist" : "⬇ Download ZIP"}
             </button>
           </div>
           {gistError && (
@@ -184,7 +212,12 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
               {gistError}
             </p>
           )}
-          {gistUrl && (
+          {gistUrl === "__zip__" && (
+            <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+              ✓ ZIP downloaded successfully!
+            </p>
+          )}
+          {gistUrl && gistUrl !== "__zip__" && (
             <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
               ✓ Gist created:{" "}
               <a href={gistUrl} target="_blank" rel="noopener noreferrer" className="underline">
