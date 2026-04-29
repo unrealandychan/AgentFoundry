@@ -217,7 +217,7 @@ function ChatPanel({ session, onMessagesChange }: ChatPanelProps) {
     onMessagesChange();
 
     try {
-      const updated = getSession(session.id);
+      const updated = await getSession(session.id);
       if (!updated) return;
 
       const resp = await fetch("/api/sandbox/chat", {
@@ -368,105 +368,104 @@ function SandboxInner() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [activeSession, setActiveSession] = useState<SandboxSession | null>(null);
 
-  // Load sessions from localStorage on mount + handle ?skill= query param
+  // Load sessions from server (with localStorage fallback) on mount + handle ?skill= query param
   useEffect(() => {
-    const all = listSessions();
-    setSessions(all);
+    void listSessions().then((all) => {
+      setSessions(all);
 
-    const skillParam = searchParams.get("skill");
-    const sessionParam = searchParams.get("session");
+      const skillParam = searchParams.get("skill");
+      const sessionParam = searchParams.get("session");
 
-    if (sessionParam) {
-      // Resume a specific session
-      const found = all.find((s) => s.id === sessionParam);
-      if (found) {
-        setActiveId(found.id);
-        setActiveSession(found);
-        return;
+      if (sessionParam) {
+        const found = all.find((s) => s.id === sessionParam);
+        if (found) {
+          setActiveId(found.id);
+          setActiveSession(found);
+          return;
+        }
       }
-    }
 
-    if (skillParam) {
-      // Create new session for this skill
-      const skill = staticSkills.find((s) => s.id === skillParam);
-      if (skill) {
-        handleNewFromSkill(skill.id, skill.personaText, skill.title);
-        return;
+      if (skillParam) {
+        const skill = staticSkills.find((s) => s.id === skillParam);
+        if (skill) {
+          handleNewFromSkill(skill.id, skill.personaText, skill.title);
+          return;
+        }
       }
-    }
 
-    // Default: open most recent session
-    if (all.length > 0) {
-      setActiveId(all[0].id);
-      setActiveSession(all[0]);
-    }
+      if (all.length > 0) {
+        setActiveId(all[0]!.id);
+        setActiveSession(all[0]!);
+      }
+    });
   }, []);
 
   function handleNewFromSkill(skillId: string, personaText: string, skillTitle: string) {
     const name = `${skillTitle} · ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
     const session = createSession(skillId, personaText, name);
-    const all = listSessions();
-    setSessions(all);
+    void listSessions().then((all) => setSessions(all));
     setActiveId(session.id);
     setActiveSession(session);
     router.replace(`/sandbox?session=${session.id}`);
   }
 
   function handleNew() {
-    // Open with first available skill or blank persona
     const first = staticSkills[0];
     if (first) {
       handleNewFromSkill(first.id, first.personaText, first.title);
     } else {
       const session = createSession(undefined, "You are a helpful assistant.", "New session");
-      const all = listSessions();
-      setSessions(all);
+      void listSessions().then((all) => setSessions(all));
       setActiveId(session.id);
       setActiveSession(session);
     }
   }
 
   function handleSelect(id: string) {
-    // Quick-start pill — create new session
     if (id.startsWith("__new__")) {
       const skillId = id.replace("__new__", "");
       const skill = staticSkills.find((s) => s.id === skillId);
       if (skill) handleNewFromSkill(skill.id, skill.personaText, skill.title);
       return;
     }
-    const found = getSession(id);
-    if (!found) return;
-    setActiveId(id);
-    setActiveSession(found);
-    router.replace(`/sandbox?session=${id}`);
+    void getSession(id).then((found) => {
+      if (!found) return;
+      setActiveId(id);
+      setActiveSession(found);
+      router.replace(`/sandbox?session=${id}`);
+    });
   }
 
   function handleRename(id: string, name: string) {
     renameSession(id, name);
-    const all = listSessions();
-    setSessions(all);
-    if (activeSession?.id === id) {
-      setActiveSession(getSession(id));
-    }
+    void listSessions().then((all) => {
+      setSessions(all);
+      if (activeSession?.id === id) {
+        const updated = all.find((s) => s.id === id) ?? null;
+        setActiveSession(updated);
+      }
+    });
   }
 
   function handleDelete(id: string) {
     deleteSession(id);
-    const all = listSessions();
-    setSessions(all);
-    if (activeId === id) {
-      const next = all[0] ?? null;
-      setActiveId(next?.id ?? null);
-      setActiveSession(next);
-      router.replace(next ? `/sandbox?session=${next.id}` : "/sandbox");
-    }
+    void listSessions().then((all) => {
+      setSessions(all);
+      if (activeId === id) {
+        const next = all[0] ?? null;
+        setActiveId(next?.id ?? null);
+        setActiveSession(next);
+        router.replace(next ? `/sandbox?session=${next.id}` : "/sandbox");
+      }
+    });
   }
 
   function refreshActiveSession() {
     if (!activeId) return;
-    const updated = getSession(activeId);
-    setActiveSession(updated);
-    setSessions(listSessions());
+    void getSession(activeId).then((updated) => {
+      setActiveSession(updated);
+    });
+    void listSessions().then((all) => setSessions(all));
   }
 
   return (
