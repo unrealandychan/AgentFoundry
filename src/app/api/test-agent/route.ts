@@ -9,6 +9,28 @@ import { buildHistory } from "@/lib/agent-runner/history";
 import { createAgents } from "@/lib/agent-runner/agents";
 import { streamSolo, streamReflect, streamCollaborate } from "@/lib/agent-runner/stream";
 
+// ── Module-level SDK initialisation (runs once per cold-start) ───────────────
+//
+// Calling setDefaultModelProvider() on every request causes a race condition:
+// concurrent requests may overwrite each other's provider mid-flight.
+// Initialising once at module load is safe because env vars are immutable at
+// runtime and the SDK provider is process-wide state.
+
+function initSDK() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return; // handled per-request below
+  const baseURL = process.env.OPENAI_BASE_URL || undefined;
+  setDefaultModelProvider(new OpenAIProvider({ apiKey, ...(baseURL ? { baseURL } : {}) }));
+  // Use Chat Completions API (universally supported by proxies). The SDK defaults to
+  // the newer Responses API (/v1/responses) which many proxies don't implement.
+  setOpenAIAPI("chat_completions");
+  // Disable tracing globally — it always targets api.openai.com regardless of baseURL,
+  // causing 401s when using a proxy key.
+  setTracingDisabled(true);
+}
+
+initSDK();
+
 // ── Route handler ─────────────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
@@ -48,17 +70,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Configure the SDK model provider so OPENAI_BASE_URL is respected. The SDK does not
-  // auto-read OPENAI_BASE_URL — we pass it explicitly via OpenAIProvider.
-  const baseURL = process.env.OPENAI_BASE_URL || undefined;
-  setDefaultModelProvider(new OpenAIProvider({ apiKey, ...(baseURL ? { baseURL } : {}) }));
-  // Use Chat Completions API (universally supported by proxies). The SDK defaults to
-  // the newer Responses API (/v1/responses) which many proxies don't implement.
-  setOpenAIAPI("chat_completions");
-  // Disable tracing globally — it always targets api.openai.com regardless of baseURL,
-  // causing 401s when using a proxy key. Per-run tracingDisabled is not supported in
-  // @openai/agents 0.8.3, so the global call is the correct approach here.
-  setTracingDisabled(true);
 
   const { agents, message: userMessage, history, model, sessionId, collaborate, reflective, rounds } =
     parsed.data;
