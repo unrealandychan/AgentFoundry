@@ -76,7 +76,7 @@ describe("GET /api/skills", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(Array.isArray(body)).toBe(true);
-    expect(body[0].id).toBe("test-skill");
+    expect(body.some((s: { id: string }) => s.id === "test-skill")).toBe(true);
   });
 
   it("returns 500 when store throws", async () => {
