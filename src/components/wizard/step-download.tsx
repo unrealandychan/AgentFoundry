@@ -116,6 +116,9 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
    * POST /api/gist with an optional githubToken.
    * - With token  → server creates a GitHub Gist and returns { url }
    * - Without token → server returns a ZIP blob (X-Fallback: zip header)
+   *
+   * The token is passed via the Authorization header (Bearer scheme) rather
+   * than in the request body to prevent it appearing in server access-logs.
    */
   async function handleExport() {
     if (!job.templateId) return;
@@ -123,13 +126,13 @@ function GistExport({ job }: { job: Partial<GenerationJob> }) {
     setGistError(null);
     setGistUrl(null);
     try {
-      const body: Record<string, unknown> = { job };
-      if (token.trim()) body.githubToken = token.trim();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token.trim()) headers["Authorization"] = `Bearer ${token.trim()}`;
 
       const response = await fetch("/api/gist", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        headers,
+        body: JSON.stringify({ job }),
       });
 
       // ZIP fallback path — server signals this with X-Fallback: zip
