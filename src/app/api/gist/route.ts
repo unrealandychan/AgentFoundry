@@ -4,12 +4,24 @@ import JSZip from "jszip";
 import { compose } from "@/lib/composer";
 import { GenerationJobSchema } from "@/lib/schemas";
 
+// githubToken is intentionally NOT part of the request body.
+// Tokens in JSON bodies appear in server access-logs and error-reporting tools
+// (Datadog, Sentry, Next.js default logging). The caller must pass the token
+// via the Authorization header instead:
+//   Authorization: Bearer <github_token>
 const RequestSchema = z.object({
   job: GenerationJobSchema,
-  githubToken: z.string().min(1).max(500),
 });
 
 export async function POST(request: Request): Promise<NextResponse> {
+  // ── Extract GitHub token from Authorization header ────────────────────────
+  // Expected: "Authorization: Bearer <token>"
+  // Empty / missing header → fall through to ZIP fallback.
+  const authHeader = request.headers.get("Authorization") ?? "";
+  const githubToken = authHeader.startsWith("Bearer ")
+    ? authHeader.slice(7).trim()
+    : "";
+
   let body: unknown;
   try {
     body = await request.json();
@@ -25,7 +37,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 
-  const { job, githubToken } = parsed.data;
+  const { job } = parsed.data;
   const pkg = compose(job);
 
   // ── Fallback: no token → return a ZIP blob ────────────────────────────────

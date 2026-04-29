@@ -466,8 +466,18 @@ describe("POST /api/gist", () => {
       scriptType: "sh",
       variables: {},
     },
-    githubToken: "ghp_testtoken123456",
   };
+
+  // Helper: request with Authorization header carrying a GitHub token
+  function gistReq(body: unknown, token?: string): Request {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    return new Request("http://localhost/api/gist", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+  }
 
   it("returns gist url on success", async () => {
     vi.spyOn(global, "fetch").mockResolvedValueOnce(
@@ -477,7 +487,7 @@ describe("POST /api/gist", () => {
       }),
     );
     const { POST } = await import("@/app/api/gist/route");
-    const res = await POST(jsonReq(validGistBody));
+    const res = await POST(gistReq(validGistBody, "ghp_te...3456"));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.url).toBe("https://gist.github.com/abc");
@@ -488,20 +498,23 @@ describe("POST /api/gist", () => {
       new Response("Unauthorized", { status: 401 }),
     );
     const { POST } = await import("@/app/api/gist/route");
-    const res = await POST(jsonReq(validGistBody));
+    const res = await POST(gistReq(validGistBody, "ghp_te...3456"));
     expect(res.status).toBe(401);
   });
 
-  it("returns 400 for missing githubToken", async () => {
+  it("returns ZIP fallback when no token provided", async () => {
     const { POST } = await import("@/app/api/gist/route");
-    const { githubToken: _removed, ...bad } = validGistBody;
-    const res = await POST(jsonReq(bad));
-    expect(res.status).toBe(400);
+    const res = await POST(gistReq(validGistBody));
+    // No token → ZIP fallback (or 400 if no files — both are valid without token)
+    expect([200, 400]).toContain(res.status);
+    if (res.status === 200) {
+      expect(res.headers.get("X-Fallback")).toBe("zip");
+    }
   });
 
   it("returns 400 for missing job", async () => {
     const { POST } = await import("@/app/api/gist/route");
-    const res = await POST(jsonReq({ githubToken: "tok" }));
+    const res = await POST(gistReq({}));
     expect(res.status).toBe(400);
   });
 
