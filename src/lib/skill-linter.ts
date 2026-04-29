@@ -1,7 +1,14 @@
 /**
  * Skill linter — checks SKILL.md content against the canonical structure.
- * Pure function, no I/O, no dependencies.
+ * Pure function, no I/O.
+ *
+ * Uses `gray-matter` for YAML frontmatter parsing instead of hand-rolled
+ * regex, which (a) avoids a ReDoS-prone dynamic-RegExp in fmField() and
+ * (b) correctly handles multi-line values, quoted strings, and edge cases.
  */
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const matter = require("gray-matter") as typeof import("gray-matter");
 
 export interface LintCheck {
   id: string;
@@ -21,24 +28,8 @@ export interface LintResult {
   checks: LintCheck[];
 }
 
-function parseFrontmatter(content: string): { body: string; fm: string } {
-  if (!content.startsWith("---")) return { body: content, fm: "" };
-  const end = content.indexOf("\n---", 3);
-  if (end === -1) return { body: content, fm: "" };
-  return {
-    fm: content.slice(3, end),
-    body: content.slice(end + 4),
-  };
-}
-
 function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
-}
-
-/** Extract the value of a frontmatter field, or "" if absent. */
-function fmField(fm: string, field: string): string {
-  const match = new RegExp(`^\\s*${field}\\s*:\\s*(.+)`, "m").exec(fm);
-  return match ? match[1].trim() : "";
 }
 
 /** Return all ## headings found in body, in order. */
@@ -80,35 +71,47 @@ function missingSectionDetail(sectionName: string, sections: string[], addHint: 
 }
 
 export function lintSkill(content: string): LintResult {
-  const { fm, body } = parseFrontmatter(content);
-  const h2s = listH2s(body);
-  const words = wordCount(body);
-  const nameValue = fmField(fm, "name");
-  const descValue = fmField(fm, "description");
-  const invocableValue = fmField(fm, "user-invocable");
+  // gray-matter parses YAML frontmatter safely (no ReDoS, handles quoted strings etc.)
+  const parsed = matter(content);
+  const hasFrontmatter = content.trimStart().startsWith("---");
+  const body = parsed.content; // body without frontmatter
+  const fmData = parsed.data as Record<string, unknown>;
+
+  const nameValue = typeof fmData["name"] === "string" ? fmData["name"] : "";
+  const descValue =
+    typeof fmData["description"] === "string" ? fmData["description"] : "";
+  const invocableRaw = fmData["user-invocable"];
+  const invocableValue =
+    invocableRaw === true
+      ? "true"
+      : typeof invocableRaw === "string"
+        ? invocableRaw
+        : "";
   const h1Match = /^#\s+\S.+/m.exec(body);
   const personaMatch = /you are\b.+/i.exec(body);
   const hasOutputFormat = /^##\s+output format/im.test(body);
   const hasConstraints = /^##\s+constraints?/im.test(body);
+  const h2s = listH2s(body);
+  const words = wordCount(body);
 
   const checks: LintCheck[] = [
     // ── Frontmatter ──────────────────────────────────────────────
     {
       id: "has-frontmatter",
       label: "YAML frontmatter block",
-      passed: fm !== "",
+      passed: hasFrontmatter,
       points: 8,
       earned: 0,
       hint: "Wrap the top of the file with --- ... --- and add fields inside.",
       detail:
-        fm === ""
+        !hasFrontmatter
           ? "No `---` block found at the start of the file. The file must begin with `---` followed by YAML fields and closing `---`."
           : "Frontmatter block found ✓",
     },
     {
       id: "frontmatter-name",
       label: "`name` field in frontmatter",
-      passed: /^\s*name\s*:/m.test(fm),
+      passed: nameValue !== "",
       points: 10,
       earned: 0,
       hint: "Add `name: your-skill-name` (kebab-case) inside the frontmatter block.",
@@ -120,7 +123,7 @@ export function lintSkill(content: string): LintResult {
     {
       id: "frontmatter-description",
       label: "`description` field in frontmatter",
-      passed: /^\s*description\s*:/m.test(fm),
+      passed: descValue !== "",
       points: 10,
       earned: 0,
       hint: 'Add `description: "Short description. Usage: /skill-name [args]"` in frontmatter.',
@@ -132,7 +135,7 @@ export function lintSkill(content: string): LintResult {
     {
       id: "frontmatter-invocable",
       label: "`user-invocable: true` in frontmatter",
-      passed: /^\s*user-invocable\s*:\s*true/m.test(fm),
+      passed: invocableValue === "true",
       points: 5,
       earned: 0,
       hint: "Add `user-invocable: true` so the skill appears in agent rosters.",
