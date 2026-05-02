@@ -28,12 +28,12 @@ async function coordinatorCheck(
   agentName: string,
   userMessage: string,
   draftResponse: string,
-  model: string = "gpt-4o-mini",
+  activeModel: string,
 ): Promise<{ approved: boolean; feedback: string }> {
   const coordinatorAgent = new Agent({
     name: "Coordinator",
     instructions: COORDINATOR_INSTRUCTIONS,
-    model,
+    model: activeModel,
   });
   const result = await run(
     coordinatorAgent,
@@ -334,7 +334,7 @@ export function streamCollaborate(
                 name: "ConvergenceChecker",
                 instructions:
                   "You decide whether a multi-agent discussion needs more rounds. Reply with ONLY 'CONTINUE' or 'STOP'. Reply 'STOP' when: the user message is casual/conversational, the agents have fully answered the question, or there is clear consensus with nothing new to add. Reply 'CONTINUE' only when there is genuine unresolved disagreement or a complex topic that genuinely benefits from another round.",
-                model: "gpt-4o-mini",
+                model: activeModel,
               });
               const checkResult = await run(
                 convergenceAgent,
