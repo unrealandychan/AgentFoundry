@@ -3,6 +3,9 @@
  *
  * Route handlers are imported directly and called with `new Request(...)`.
  * External dependencies (skill-store, OpenAI, GitHub fetch) are vi.mock'd.
+ *
+ * fix(#54): vi.resetAllMocks() is called before each test to prevent cross-test
+ * mock pollution (stale mock return values leaking between describe blocks).
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
@@ -59,6 +62,11 @@ function jsonReq(body: unknown, method = "POST"): Request {
 function getReq(url = "http://localhost/api/test"): Request {
   return new Request(url, { method: "GET" });
 }
+
+// ── Global reset — prevents cross-test mock pollution (fix #54) ───────────────
+beforeEach(() => {
+  vi.resetAllMocks();
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // skills/route.ts
