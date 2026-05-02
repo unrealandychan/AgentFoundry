@@ -16,7 +16,8 @@ const RequestSchema = z.object({
 });
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const ip = forwardedFor?.split(",")[0]?.trim() || "127.0.0.1";
   const rateLimit = await checkRateLimit(ip);
   const rateLimitHeaders = {
     "X-RateLimit-Remaining": String(rateLimit.remaining),
