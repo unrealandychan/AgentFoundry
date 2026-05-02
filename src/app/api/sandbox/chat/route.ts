@@ -15,6 +15,7 @@
 import type { NextRequest } from "next/server";
 import OpenAI from "openai";
 import { z } from "zod";
+import { checkApiKey } from "@/lib/auth";
 
 const MessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
@@ -47,6 +48,11 @@ function makeClient(): OpenAI | null {
 }
 
 export async function POST(request: NextRequest): Promise<Response> {
+  const auth = checkApiKey(request);
+  if (!auth.authorized) {
+    return Response.json({ error: "Unauthorized", message: auth.reason }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
