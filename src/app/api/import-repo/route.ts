@@ -33,7 +33,7 @@ const SKILL_FOLDER_SIGNALS = new Set([
   ".cursor",
 ]);
 
-function parseRepoUrl(url: string): { owner: string; repo: string } | null {
+export function parseRepoUrl(url: string): { owner: string; repo: string } | null {
   try {
     const parsed = new URL(url);
     if (parsed.hostname !== "github.com") return null;
@@ -83,7 +83,7 @@ async function fetchFileContent(downloadUrl: string): Promise<string> {
 }
 
 /** Extract a named section (## Heading) from markdown, returns its body text. */
-function extractSection(content: string, ...headings: string[]): string {
+export function extractSection(content: string, ...headings: string[]): string {
   for (const heading of headings) {
     // Match ## Heading\n...content...until next ## or end of string
     const pattern = new RegExp(`^##\\s+${heading}\\s*\\n([\\s\\S]*?)(?=^##\\s|$)`, "im");
@@ -93,7 +93,7 @@ function extractSection(content: string, ...headings: string[]): string {
   return "";
 }
 
-function extractSkillFromMarkdown(content: string, path: string, repoName: string): SkillManifest {
+export function extractSkillFromMarkdown(content: string, path: string, repoName: string): SkillManifest {
   const lines = content.split("\n");
 
   // Title: prefer # heading, else parent folder name, else repo name
