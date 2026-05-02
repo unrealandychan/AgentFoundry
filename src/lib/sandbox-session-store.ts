@@ -127,15 +127,17 @@ class MongoSessionStore implements SandboxSessionStore {
 
   async list(): Promise<SandboxSession[]> {
     const col = await this.col();
-    return col
+    const docs = await col
       .find({}, { projection: { _id: 0 } })
       .sort({ updatedAt: -1 })
-      .toArray() as unknown as SandboxSession[];
+      .toArray();
+    return docs as unknown as SandboxSession[];
   }
 
   async get(id: string): Promise<SandboxSession | null> {
     const col = await this.col();
-    return col.findOne({ id }, { projection: { _id: 0 } }) as unknown as SandboxSession | null;
+    const doc = await col.findOne({ id }, { projection: { _id: 0 } });
+    return doc as unknown as SandboxSession | null;
   }
 
   async upsert(session: SandboxSession): Promise<SandboxSession> {

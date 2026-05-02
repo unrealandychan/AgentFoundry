@@ -1,5 +1,5 @@
-import { Agent, run } from "@openai/agents";
-import type { AgentInputItem } from "@openai/agents";
+import { Agent, run, RunRawModelStreamEvent } from "@openai/agents";
+import type { AgentInputItem, RunStreamEvent, StreamEventTextStream } from "@openai/agents";
 import { RECOMMENDED_PROMPT_PREFIX, type AgentDef } from "./agents";
 
 // ── Shared encoding helpers ────────────────────────────────────────────────
@@ -28,11 +28,12 @@ async function coordinatorCheck(
   agentName: string,
   userMessage: string,
   draftResponse: string,
+  model: string = "gpt-4o-mini",
 ): Promise<{ approved: boolean; feedback: string }> {
   const coordinatorAgent = new Agent({
     name: "Coordinator",
     instructions: COORDINATOR_INSTRUCTIONS,
-    model: "gpt-4o-mini",
+    model,
   });
   const result = await run(
     coordinatorAgent,
@@ -52,14 +53,23 @@ async function coordinatorCheck(
 
 // ── Stream delta helper ────────────────────────────────────────────────────
 
-function isTextDelta(event: unknown): event is { type: string; data: { type: string; delta: string } } {
-  if (typeof event !== "object" || event === null) return false;
-  const e = event as Record<string, unknown>;
-  if (e["type"] !== "raw_model_stream_event") return false;
-  const data = e["data"];
-  if (typeof data !== "object" || data === null) return false;
-  const d = data as Record<string, unknown>;
-  return d["type"] === "output_text_delta" && typeof d["delta"] === "string";
+/**
+ * Type guard that narrows a `RunStreamEvent` to a raw model text-delta event.
+ *
+ * Uses the SDK's discriminated union types:
+ *  - `RunRawModelStreamEvent`   → `type === "raw_model_stream_event"`
+ *  - `StreamEventTextStream`    → `data.type === "output_text_delta"`, `data.delta: string`
+ *
+ * `instanceof RunRawModelStreamEvent` is used first (SDK class guard), then
+ * the `data.type` literal is checked to confirm it is a text-delta event.
+ */
+function isTextDelta(
+  event: RunStreamEvent,
+): event is RunRawModelStreamEvent & { data: StreamEventTextStream } {
+  return (
+    event instanceof RunRawModelStreamEvent &&
+    event.data.type === "output_text_delta"
+  );
 }
 
 // ── Solo streaming ─────────────────────────────────────────────────────────
@@ -140,7 +150,7 @@ export function streamReflect(
 
         let coordinatorFeedback = "";
         try {
-          const { approved, feedback } = await coordinatorCheck(activeAgentName, userMessage, draftText);
+          const { approved, feedback } = await coordinatorCheck(activeAgentName, userMessage, draftText, activeModel);
           if (!approved) coordinatorFeedback = feedback;
         } catch {
           /* skip coordinator on error */
@@ -278,7 +288,7 @@ export function streamCollaborate(
             // ── Coordinator reflection pass ─────────────────────────────
             if (reflective && fullText) {
               try {
-                const { approved, feedback } = await coordinatorCheck(agent.name, userMessage, fullText);
+                const { approved, feedback } = await coordinatorCheck(agent.name, userMessage, fullText, activeModel);
                 if (!approved && feedback) {
                   controller.enqueue(encodeTransitionHeader(COORDINATOR_AGENT_META));
                   controller.enqueue(enc.encode(`**Reflection needed:** ${feedback}`));

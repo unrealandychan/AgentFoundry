@@ -36,8 +36,8 @@ RUN addgroup --system --gid 1001 nodejs \
 # Copy standalone bundle produced by Next.js
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static     ./.next/static
-# Copy public assets if they exist
-COPY --from=builder /app/public ./public
+# Copy public assets (glob so the COPY is a no-op when the directory is absent)
+COPY --from=builder /app/public* ./public/
 
 USER nextjs
 

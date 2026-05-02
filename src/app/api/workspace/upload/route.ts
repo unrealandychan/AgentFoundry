@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { NextRequest } from "next/server";
 import { scheduleWorkspaceCleanup } from "@/lib/workspace-cleanup";
+import { checkApiKey } from "@/lib/auth";
 
 // Max file size: 2 MB
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -56,6 +57,11 @@ function sanitizeFileName(name: string): string | null {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = checkApiKey(request);
+  if (!auth.authorized) {
+    return Response.json({ error: "Unauthorized", message: auth.reason }, { status: 401 });
+  }
+
   let formData: FormData;
   try {
     formData = await request.formData();
