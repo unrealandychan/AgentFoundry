@@ -105,14 +105,11 @@ export const TestAgentRequestSchema = z.object({
   rounds: z.number().int().min(1).max(5).optional().default(2),
 });
 
-export const SummarizeMessageSchema = z.object({
-  role: z.enum(["user", "assistant"]),
-  content: z.string().min(1).max(8000),
-  agentName: z.string().optional(),
-});
+/** @deprecated Use {@link ChatHistoryMessageSchema} — identical shape */
+export const SummarizeMessageSchema = ChatHistoryMessageSchema;
 
 export const SummarizeChatRequestSchema = z.object({
-  messages: z.array(SummarizeMessageSchema).min(1).max(200),
+  messages: z.array(ChatHistoryMessageSchema).min(1).max(200),
   agents: z
     .array(z.object({ id: z.string().min(1), name: z.string().min(1) }))
     .min(1)

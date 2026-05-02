@@ -28,11 +28,12 @@ async function coordinatorCheck(
   agentName: string,
   userMessage: string,
   draftResponse: string,
+  model: string = "gpt-4o-mini",
 ): Promise<{ approved: boolean; feedback: string }> {
   const coordinatorAgent = new Agent({
     name: "Coordinator",
     instructions: COORDINATOR_INSTRUCTIONS,
-    model: "gpt-4o-mini",
+    model,
   });
   const result = await run(
     coordinatorAgent,
@@ -140,7 +141,7 @@ export function streamReflect(
 
         let coordinatorFeedback = "";
         try {
-          const { approved, feedback } = await coordinatorCheck(activeAgentName, userMessage, draftText);
+          const { approved, feedback } = await coordinatorCheck(activeAgentName, userMessage, draftText, activeModel);
           if (!approved) coordinatorFeedback = feedback;
         } catch {
           /* skip coordinator on error */
@@ -278,7 +279,7 @@ export function streamCollaborate(
             // ── Coordinator reflection pass ─────────────────────────────
             if (reflective && fullText) {
               try {
-                const { approved, feedback } = await coordinatorCheck(agent.name, userMessage, fullText);
+                const { approved, feedback } = await coordinatorCheck(agent.name, userMessage, fullText, activeModel);
                 if (!approved && feedback) {
                   controller.enqueue(encodeTransitionHeader(COORDINATOR_AGENT_META));
                   controller.enqueue(enc.encode(`**Reflection needed:** ${feedback}`));
