@@ -46,6 +46,11 @@ vi.mock("@/lib/skill-bindings", () => ({
   getSkillFileBinding: () => mockBinding,
 }));
 
+// Mock rate-limit so tests never exhaust the in-memory bucket
+vi.mock("@/lib/rate-limit", () => ({
+  checkRateLimit: vi.fn().mockResolvedValue({ allowed: true, remaining: 9, resetAt: Date.now() + 60_000 }),
+}));
+
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
 function jsonReq(body: unknown, method = "POST"): Request {

@@ -1,8 +1,10 @@
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import JSZip from "jszip";
 import { compose } from "@/lib/composer";
 import { GenerationJobSchema } from "@/lib/schemas";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 // githubToken is intentionally NOT part of the request body.
 // Tokens in JSON bodies appear in server access-logs and error-reporting tools
@@ -13,7 +15,20 @@ const RequestSchema = z.object({
   job: GenerationJobSchema,
 });
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const rateLimit = await checkRateLimit(ip);
+  const rateLimitHeaders = {
+    "X-RateLimit-Remaining": String(rateLimit.remaining),
+    "X-RateLimit-Reset": String(rateLimit.resetAt),
+  };
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Rate limit exceeded", retryAfter: Math.ceil((rateLimit.resetAt - Date.now()) / 1000) },
+      { status: 429, headers: rateLimitHeaders },
+    );
+  }
+
   // ── Extract GitHub token from Authorization header ────────────────────────
   // Expected: "Authorization: Bearer <token>"
   // Empty / missing header → fall through to ZIP fallback.

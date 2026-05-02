@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { z } from "zod";
 import { lintSkill } from "@/lib/skill-linter";
 import type { LintResult } from "@/lib/skill-linter";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const GenerateSchema = z.object({
   action: z.literal("generate"),
@@ -176,6 +177,19 @@ function ndjsonStream(
 }
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const rateLimit = await checkRateLimit(ip);
+  const rateLimitHeaders = {
+    "X-RateLimit-Remaining": String(rateLimit.remaining),
+    "X-RateLimit-Reset": String(rateLimit.resetAt),
+  };
+  if (!rateLimit.allowed) {
+    return Response.json(
+      { error: "Rate limit exceeded", retryAfter: Math.ceil((rateLimit.resetAt - Date.now()) / 1000) },
+      { status: 429, headers: rateLimitHeaders },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
