@@ -3,6 +3,7 @@ import JSZip from "jszip";
 import { z } from "zod";
 import { getSkillStore } from "@/lib/skill-store";
 import { getSkillFileBinding } from "@/lib/skill-bindings";
+import { checkApiKey } from "@/lib/auth";
 
 const BodySchema = z.object({
   skillIds: z.array(z.string().min(1)).min(1).max(50),
@@ -58,6 +59,11 @@ function buildInstallGuide(skillTitles: string[]): string {
 
 /** POST /api/skills/download — returns a ZIP of selected SKILL.md files */
 export async function POST(request: NextRequest) {
+  const auth = checkApiKey(request);
+  if (!auth.authorized) {
+    return Response.json({ error: "Unauthorized", message: auth.reason }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();

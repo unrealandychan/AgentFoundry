@@ -7,6 +7,7 @@ import type {
   IntegrationManifest,
   AgentTarget,
 } from "@/types";
+import { stringify as yamlStringify } from "yaml";
 import { getTemplate, getSkills, getIntegrations } from "@/lib/registry";
 import { AGENT_TARGET_FILES } from "@/lib/agent-targets";
 
@@ -77,10 +78,13 @@ ${skillSections || "No skills configured."}
 }
 
 function buildSkillFileContent(skill: SkillManifest): string {
-  const tags = skill.tags.join(", ");
-  const compat = skill.compatibility.join(", ");
-  const desc = skill.description.replaceAll("'", String.raw`\'`);
-  return `---\nname: ${skill.id}\ndescription: '${desc}'\ntags: [${tags}]\ncompatibility: [${compat}]\n---\n\n# ${skill.title}\n\n## Overview\n\nKeywords: ${skill.tags.join(", ")}\n\n## Instructions\n\n${skill.personaText}\n\n## When to Use This Skill\n\n- User needs help with: ${skill.tags.join(", ")}\n- Compatible with: ${compat} projects\n`;
+  const frontmatter = yamlStringify({
+    name: skill.id,
+    description: skill.description,
+    tags: skill.tags,
+    compatibility: skill.compatibility,
+  }).trimEnd();
+  return `---\n${frontmatter}\n---\n\n# ${skill.title}\n\n## Overview\n\nKeywords: ${skill.tags.join(", ")}\n\n## Instructions\n\n${skill.personaText}\n\n## When to Use This Skill\n\n- User needs help with: ${skill.tags.join(", ")}\n- Compatible with: ${skill.compatibility.join(", ")} projects\n`;
 }
 
 function buildMcpConfig(integrations: IntegrationManifest[]): string {

@@ -59,12 +59,19 @@ class FileBackedSkillStore implements SkillStore {
 
   async list(): Promise<SkillManifest[]> {
     const ids = await this.binding.listIds();
-    const results = await Promise.all(
-      ids.map(async (id) => {
-        const content = await this.binding.readFile(id);
-        return content ? parseSkillContent(id, content) : null;
-      }),
-    );
+    // Cap concurrent S3/file reads to avoid exhausting connections or hitting rate limits
+    const CONCURRENCY = 10;
+    const results: (SkillManifest | null)[] = [];
+    for (let i = 0; i < ids.length; i += CONCURRENCY) {
+      const batch = ids.slice(i, i + CONCURRENCY);
+      const batchResults = await Promise.all(
+        batch.map(async (id) => {
+          const content = await this.binding.readFile(id);
+          return content ? parseSkillContent(id, content) : null;
+        }),
+      );
+      results.push(...batchResults);
+    }
     return results
       .filter((skill): skill is SkillManifest => skill !== null)
       .sort((skillA, skillB) => skillA.title.localeCompare(skillB.title));
@@ -149,15 +156,24 @@ class MongoSkillStore implements SkillStore {
 
   async list(): Promise<SkillManifest[]> {
     const col = await this.col();
-    return col
+    const docs = await col
       .find({}, { projection: { _id: 0 } })
       .sort({ title: 1 })
-      .toArray() as unknown as SkillManifest[];
+      .toArray();
+    return docs
+      .map((doc) => {
+        const result = SkillManifestSchema.safeParse(doc);
+        return result.success ? result.data : null;
+      })
+      .filter((skill): skill is SkillManifest => skill !== null);
   }
 
   async get(id: string): Promise<SkillManifest | null> {
     const col = await this.col();
-    return col.findOne({ id }, { projection: { _id: 0 } }) as unknown as SkillManifest | null;
+    const doc = await col.findOne({ id }, { projection: { _id: 0 } });
+    if (!doc) return null;
+    const result = SkillManifestSchema.safeParse(doc);
+    return result.success ? result.data : null;
   }
 
   async create(skill: SkillManifest): Promise<SkillManifest> {
@@ -175,12 +191,14 @@ class MongoSkillStore implements SkillStore {
     delete (safePatch as { _id?: unknown })._id;
 
     const col = await this.col();
-    const result = await col.findOneAndUpdate(
+    const raw = await col.findOneAndUpdate(
       { id },
       { $set: safePatch },
       { returnDocument: "after", projection: { _id: 0 } },
     );
-    return result as unknown as SkillManifest | null;
+    if (!raw) return null;
+    const validated = SkillManifestSchema.safeParse(raw);
+    return validated.success ? validated.data : null;
   }
 
   async delete(id: string): Promise<boolean> {

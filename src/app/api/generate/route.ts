@@ -2,8 +2,37 @@ import type { NextRequest } from "next/server";
 import JSZip from "jszip";
 import { GenerationJobSchema } from "@/lib/schemas";
 import { compose } from "@/lib/composer";
+import { checkRateLimit } from "@/lib/rate-limit";
+
+function getClientIp(request: NextRequest) {
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) {
+    return realIp;
+  }
+
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const forwardedIp = forwardedFor
+    ?.split(",")
+    .map((value) => value.trim())
+    .find((value) => value.length > 0);
+
+  return forwardedIp ?? "127.0.0.1";
+}
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rateLimit = await checkRateLimit(ip);
+  const rateLimitHeaders = {
+    "X-RateLimit-Remaining": String(rateLimit.remaining),
+    "X-RateLimit-Reset": String(rateLimit.resetAt),
+  };
+  if (!rateLimit.allowed) {
+    return Response.json(
+      { error: "Rate limit exceeded", retryAfter: Math.ceil((rateLimit.resetAt - Date.now()) / 1000) },
+      { status: 429, headers: rateLimitHeaders },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
