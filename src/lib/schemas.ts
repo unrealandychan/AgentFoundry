@@ -88,11 +88,13 @@ export const AgentDefinitionSchema = z.object({
   instructions: z.string().min(1).max(MAX_INSTRUCTIONS_CHARS),
 });
 
-export const ChatHistoryMessageSchema = z.object({
+export const MessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
   content: z.string().min(1).max(8000),
   agentName: z.string().optional(),
 });
+
+export const ChatHistoryMessageSchema = MessageSchema;
 
 export const TestAgentRequestSchema = z.object({
   agents: z.array(AgentDefinitionSchema).min(1).max(16),
@@ -105,11 +107,10 @@ export const TestAgentRequestSchema = z.object({
   rounds: z.number().int().min(1).max(5).optional().default(2),
 });
 
-/** @deprecated Use {@link ChatHistoryMessageSchema} — identical shape */
-export const SummarizeMessageSchema = ChatHistoryMessageSchema;
+export const SummarizeMessageSchema = MessageSchema;
 
 export const SummarizeChatRequestSchema = z.object({
-  messages: z.array(ChatHistoryMessageSchema).min(1).max(200),
+  messages: z.array(SummarizeMessageSchema).min(1).max(200),
   agents: z
     .array(z.object({ id: z.string().min(1), name: z.string().min(1) }))
     .min(1)
