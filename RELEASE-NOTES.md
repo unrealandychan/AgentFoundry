@@ -1,5 +1,55 @@
 # Release Notes
 
+## v0.11.0 — Security Hardening, Test Coverage, Refactoring & Bug Fixes
+**2026-05-02**
+
+### Security
+
+- **Rate limiting on all API routes** — `checkRateLimit()` applied to every outbound API route (test-agent, summarize, skill-builder, import-repo, generate). Prevents abuse and API cost explosion from unauthenticated callers. (PR #62)
+- **Auth guard on skill download & sandbox endpoints** — `/api/skills/download` and sandbox-related endpoints now require authentication before serving content. (PR #63)
+- **YAML injection prevention in `buildSkillFileContent()`** — replaced hand-rolled YAML template literal with `yaml.stringify()` from the `yaml` package. Prevents colon / newline injection attacks in generated SKILL.md files. (#42)
+- **Path traversal confirmed mitigated** — `upload/route.ts` `sanitizeSessionId()` guard verified and documented; no additional code change needed. (#46)
+
+### Fixed
+
+- **`coordinatorCheck()` now respects active model** — the coordinator and convergence agents previously hard-coded `gpt-4o-mini`. They now accept and forward the `model` param chosen by the user in the UI. (PR #58, #48)
+- **MongoDB unsafe casts replaced with Zod validation** — all `as unknown as SkillManifest` and `as unknown as SandboxSession[]` patterns in `skill-store.ts` and `sandbox-session-store.ts` replaced with `SkillManifestSchema.safeParse()` / runtime type guards. Throws descriptive errors on invalid data instead of silently passing bad shapes. (PR #60, #44)
+- **S3 `FileBackedSkillStore.list()` concurrency cap** — `Promise.all()` over all S3 objects now batched in chunks of 10 to prevent socket exhaustion on large buckets. (#53)
+- **`/api/health` endpoint added** — new `GET /api/health` route returns `{ status: "ok", timestamp }` for load-balancer and uptime-monitor probes. (#50)
+- **`SummarizeMessageSchema` de-duplicated** — aliased to `ChatHistoryMessageSchema`; duplicate Zod schema definition removed. (PR #59, #45)
+- **Sandbox session persistence** — sandbox session state now persisted server-side with `localStorage` as a fallback. Session survives page refresh. (#35)
+- **Orphan SDK agents in multi-agent `createAgents()`** — unused `sdkAgents` map entries are now cleaned up after each run to prevent memory leaks. (#34)
+- **Custom skills missing from wizard downstream steps** — `GET /api/skills` now merges registry + store results so custom and imported skills appear in Customize, Preview, Test Agent, and ZIP. (#33)
+- **ReDoS risk in frontmatter parser** — replaced custom regex frontmatter parser with `gray-matter` which handles malformed YAML safely. (#32)
+- **GitHub token moved to Authorization header** — `GITHUB_TOKEN` now sent as `Authorization: Bearer …` instead of a request body field, matching GitHub API spec. (#31)
+- **OpenAI SDK provider initialised once** — provider was being re-instantiated on every request; moved to module-level singleton to avoid performance and connection-pool issues. (#30)
+- **Docker `COPY` for optional `public/` directory** — `Dockerfile` now uses glob pattern so builds succeed even when the `public/` folder is absent. (PR #57)
+- **`npm test` script alias added** — `package.json` now exposes a bare `test` script that delegates to `vitest run`, fixing CI pipelines that call `npm test`. (PR #55, #37)
+- **Vitest mock pollution fixed** — global `beforeEach(vi.resetAllMocks())` added to `api-routes.test.ts` so cross-test mock state bleed no longer causes false positives. (#54)
+
+### Refactored
+
+- **`step-test-agent.tsx` God Component split** — 1135-line monolith broken into focused modules: (#43)
+  - `src/components/wizard/utils/chatUtils.ts` — constants, interfaces, pure helpers (`truncateInstructions`, `estimateCost`, `agentColor`, `inlineMarkdown`, `renderMarkdown`)
+  - `src/components/wizard/ChatBubble.tsx` — isolated chat bubble sub-component
+  - `src/components/wizard/hooks/useAgentDefs.ts` — derives `agentDefs`, `agentIndexMap`, `systemPrompt` from `job`
+  - `src/components/wizard/hooks/useTestAgentChat.ts` — all chat state + streaming `sendMessage`, `uploadFiles`, `clearHistory`
+  - `src/components/wizard/hooks/useSummary.ts` — summary panel state + `generateSummary`
+  - Main component reduced from **1135 → 525 lines**
+- **`isTextDelta()` uses official SDK types** — replaced `event: unknown` + manual `Record<string, unknown>` casting with `RunStreamEvent` union type, `instanceof RunRawModelStreamEvent` guard, and `StreamEventTextStream` from `@openai/agents`. (#52)
+- **Shared `MessageSchema` extracted** — `ChatHistoryMessageSchema` and `SummarizeMessageSchema` now share a single base schema definition in `schemas.ts`. (PR #59)
+
+### Tests
+
+- **`composer.ts` unit tests** — ZIP assembly logic, `buildSkillFileContent()`, and `compose()` covered by vitest tests. (PR #56)
+- **`import-repo` route unit tests** — 32 tests added in `src/lib/__tests__/import-repo.test.ts` covering `parseRepoUrl`, `extractSection`, `extractSkillFromMarkdown`, and the POST handler (rate limit, 404, successful import, README fallback, network errors). (#47)
+
+### Roadmap updates
+
+- ✅ **Dark mode** shipped (was P3) — removed from backlog.
+
+---
+
 ## v0.10.0 — Full MCP Registry Expansion, Category Filtering & New Templates/Skills
 **2026-04-17**
 
