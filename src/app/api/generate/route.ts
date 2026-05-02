@@ -4,8 +4,23 @@ import { GenerationJobSchema } from "@/lib/schemas";
 import { compose } from "@/lib/composer";
 import { checkRateLimit } from "@/lib/rate-limit";
 
+function getClientIp(request: NextRequest) {
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) {
+    return realIp;
+  }
+
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const forwardedIp = forwardedFor
+    ?.split(",")
+    .map((value) => value.trim())
+    .find((value) => value.length > 0);
+
+  return forwardedIp ?? "127.0.0.1";
+}
+
 export async function POST(request: NextRequest) {
-  const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const ip = getClientIp(request);
   const rateLimit = await checkRateLimit(ip);
   const rateLimitHeaders = {
     "X-RateLimit-Remaining": String(rateLimit.remaining),
