@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import type { SkillManifest } from "@/types";
 import { ImportRepoRequestSchema } from "@/lib/schemas";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 interface GitHubContent {
   name: string;
@@ -201,6 +202,20 @@ async function scanSkillFolders(
 }
 
 export async function POST(request: NextRequest) {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const ip = forwardedFor?.split(",")[0]?.trim() || "127.0.0.1";
+  const rateLimit = await checkRateLimit(ip);
+  const rateLimitHeaders = {
+    "X-RateLimit-Remaining": String(rateLimit.remaining),
+    "X-RateLimit-Reset": String(rateLimit.resetAt),
+  };
+  if (!rateLimit.allowed) {
+    return Response.json(
+      { error: "Rate limit exceeded", retryAfter: Math.ceil((rateLimit.resetAt - Date.now()) / 1000) },
+      { status: 429, headers: rateLimitHeaders },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
